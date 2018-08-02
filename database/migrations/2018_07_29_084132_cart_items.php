@@ -16,9 +16,10 @@ class CartItems extends Migration
         Schema::create('cart_items', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('cart_id')->unsigned();
-            $table->foreign('cart_id')->references('id')->on('cart');
+            $table->foreign('cart_id')->references('id')->on('cart2');
             $table->integer('item_id')->unsigned();
             $table->foreign('item_id')->references('id')->on('items');
+            $table->integer('qty')->unsigned();
             $table->timestamps();
         });
     }

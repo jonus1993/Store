@@ -16,7 +16,7 @@ class ItemsController extends Controller
 
         return view('items.index', compact('items'));
     }
-
+    
 
     public function getAddToCart(Request $request, $id)
     {

@@ -27,9 +27,9 @@ class AddressController extends Controller
      
         
         $request->validate([
-            'street' => 'required|max:255',
-            'city' => 'required',
-            'zipcode' => 'required',
+            'street' => 'bail|required|max:255',
+            'city' => 'required|min:2',
+            'zipcode' => 'required|size:5',
         ]);
           
         $address = new Address();

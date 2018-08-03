@@ -32,10 +32,5 @@ class Cart extends Model
         $this->totalQty++;
         $this->totalPrice += $item->price;
     }
-    public function delete($item, $id) {
-        $storedItem = ['qty' => 0, 'price' => $item->price, 'item' => $item];
-        $this->items[$id] = $storedItem;
-        $this->totalQty++;
-        $this->totalPrice += $item->price;
-    }
+    
 }

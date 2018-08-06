@@ -11,4 +11,10 @@ class Cart_Items extends Model
     ];
     
     protected $table = 'cart_items';
+    
+    
+//    odwoładnie do relacji
+    function item() {
+        return $this->belongsTo(Items::class);
+    }
 }

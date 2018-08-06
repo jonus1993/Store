@@ -39,10 +39,16 @@ Route::post('/address', [
 
 Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');
 Route::get('/items2/datatables.data', 'DatatablesController@anyData')->name('datatables.data');
-Route::get('/items2/{item}', [
+Route::get('/items2/{item}/{qty?}', [
     'uses' => 'DatatablesController@getAddToCart',
     'as' => 'item2.addToCart'
 ]);
+
+Route::get('/cart2/{item}', [
+    'uses' => 'DatatablesController@delFromCart',
+    'as' => 'item2.delFromCart'
+]);
+
 //Route::get('/items2', 'DatatablesController', [
 //    'anyData' => 'datatables.data',
 //    'getIndex' => 'datatables',

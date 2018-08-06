@@ -28,18 +28,18 @@ class DatatablesController extends Controller {
     }
 
     //prywatna funkcja sprawdza czy user ma koszyk w bazie
-    private function checkCartExist($userid) {
+    protected function checkCartExist($userid) {
 
         return Cart2::where('user_id', '=', $userid)->first();
     }
 
     //prywatna funkcja sprawdza czy koszyk jest pusty
-    private function checkCartEmpty($cartid) {
+    protected function checkCartEmpty($cartid) {
 
-        return Cart_Items::where('cart_id', '=', $cartid)->get();
+        return Cart_Items::where('cart_id', '=', $cartid)->with('item')->get();
     }
 
-    public function getAddToCart(Request $request, Items $item) {
+    public function getAddToCart(Items $item, $qty=1) {
         // ściagamy cały obiek item dzięki odebranemu id
 //        $item = Items::find($id);
         // id usera tak jakby z sesji
@@ -60,9 +60,10 @@ class DatatablesController extends Controller {
             $cart_item = new Cart_Items;
             $cart_item->cart_id = $cart->id;
             $cart_item->item_id = $item->id;
+            $cart_item->qty=$qty;
         }
         //jak jest to tylko zwiekszamy jego ilosc i zapisujemy w bazie
-        $cart_item->qty++;
+        $cart_item->qty+=$qty;
         $cart_item->save();
 
         return redirect('/items2');
@@ -76,14 +77,48 @@ class DatatablesController extends Controller {
         // jak nie ma to pustke zwracamy
         if ($cart === null)
             return view("cart.emptycart");
-        $cart_item = $this->checkCartEmpty($cart->id);
-        if ($cart_item === null)
+        $cart_items = $this->checkCartEmpty($cart->id);
+        if ($cart_items === null)
             return view("cart.emptycart");
         
-        $itemsdt = Items::where('id', '=', $cart_item['item_id'])->get();
-
-        return view('cart.cart', ['items' => $itemstd]);
+//        dd($cart_items);
+//        /* @var $cart_items \Illuminate\Database\Eloquent\Collection      */
+//        $itemIds = array();        
+//        foreach ($cart_items as $cart_item) {
+//            $itemIds[] = $cart_item->item_id;
+//        }        
+//        $itemsdt = Items::whereIn('id', $itemIds)->get();
+//        
+//        przykład odowołania do atrybutu po relacji
+//        $cart_items[0]->item->price
+        //$itemsdt = Items::whereIn('id', $cart_items->get('item_id'))->get();
+  
+//        return view('cart.cart', ['items' => $itemsdt]);
+//         return view('cart.cart')->with('items', $itemsdt);
+        
+        return view('cart.cart', compact('cart_items'));
     }
+    
+    public function delFromCart($id){
+        
+        Cart_Items::where('item_id', $id)->delete();
+        return redirect('/cart2');
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     public function getItems() {
         $itemas = DB::table('items')->get();

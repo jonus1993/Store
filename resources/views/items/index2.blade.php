@@ -9,6 +9,7 @@ Colours
             <th>ID</th>
             <th>NAME</th>
             <th>PRICE</th>
+            <th>AMOUNT</th>
             <th>TO CART</th>
         </tr>
     </thead>
@@ -25,28 +26,58 @@ Colours
 <!-- App scripts -->
 <script>
     $(function () {
-    $('#items-table').DataTable({
-    processing: true,
+        $('#items-table').DataTable({
+            processing: true,
             serverSide: true,
             ajax: 'http://127.0.0.1:8000/items2/datatables.data',
             columns: [
-            {data: 'id'},
-            {data: 'name'},
-            {data: 'price'},
-//                {defaultContent: "<button>ADD</button>"}
+                {data: 'id'},
+                {data: 'name'},
+                {data: 'price'},
+//              {defaultContent: "<button>ADD</button>"}
 //              {defaultContent: "<a class='btn btn-info' href="{{ route('item2.addToCart', 'id' ) }}">ADD</a>"}
-
-            {data: 'id',
+                {data: 'id',
                     render: function (data, type, row) {
-                    return '<a href="{{ route('item2.addToCart', ':data')}}">ADD</a>'.replace(':data',data);
+                        return '<input id="input' + data + '" type="number">'
+                    }},
+                {data: 'id',
+                    render: function (data, type, row) {
+                        return '<a class=add2cart href="{{ route('item2.addToCart', ':data')}}">ADD</a>'.replace(':data', data);
                     }
-            }
+                }
             ]
 
-    });
+        });
     });
 
 
+</script>
+
+<script>
+    $('#items-table').on('click', 'a.add2cart', function (e) {
+        e.preventDefault();
+
+        var cd = this.href.match(/^http(s)?:\/\/(www\.)?127.0.0.1:8000\/items2\/[0-9]+/)[0];
+//        var cd = this.href.match(/[0-9]+/)[0];
+        var id = cd.slice(30);
+
+        console.log(id);
+
+        var url = this.href + '/' + getInputValue(id);
+        console.log(url);
+
+        return false;
+    });
+</script>
+
+
+<script>
+    function getInputValue(numb) {
+        return $('#input' + numb).val();
+
+        var value = document.getElementById('input' + numb).value;
+        return value;
+    }
 </script>
 @endpush
 

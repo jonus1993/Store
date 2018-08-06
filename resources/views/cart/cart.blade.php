@@ -12,12 +12,12 @@
 
             <th>DELETE</th>
         </tr>
-        @foreach($items as $item)
+        @foreach($cart_items as $item)
             <tr>
-                <td>{{ $item['name'] }}</td>
+                <td>{{ $item->item->name }}</td>
                 <td>{{ $item['qty'] }}</td>
-                <td>{{ $item['price'] }}</td>
-                <td><a class="btn btn-info" href="#">DELETE</a></td>
+                <td>{{ $item->item->price*$item['qty'] }}</td>
+                <td><a class="btn btn-info" href="{{route('item2.delFromCart', ['id' => $item->item->id])}}">DELETE</a></td>
 
             </tr>
         @endforeach

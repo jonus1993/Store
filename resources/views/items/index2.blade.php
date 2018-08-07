@@ -55,16 +55,19 @@ Colours
 
 <script>
     $('#items-table').on('click', 'a.add2cart', function (e) {
-        e.preventDefault();
+//         If this method is called, the default action of the event will not be triggered.
+//        e.preventDefault();
 
         var cd = this.href.match(/^http(s)?:\/\/(www\.)?127.0.0.1:8000\/items2\/[0-9]+/)[0];
-//        var cd = this.href.match(/[0-9]+/)[0];
-        var id = cd.slice(30);
+//        var cd = this.href.match(/\d+$/)[0];
+        var id = cd.substring(29);
 
         console.log(id);
 
         var url = this.href + '/' + getInputValue(id);
         console.log(url);
+        //przekierowanie
+        window.location = url;
 
         return false;
     });

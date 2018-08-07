@@ -19,7 +19,8 @@ class CreateAddressesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('street');
             $table->string('city');
-            $table->integer('zip_code')->unsigned();
+            $table->string('zip_code');
+            $table->integer('phone')->unsigned();
             $table->timestamps();
         });
     }

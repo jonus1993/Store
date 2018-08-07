@@ -26,7 +26,11 @@
         </div>
         <div class="form-group">
             <label for="zipcode">Zip-code:</label>
-            <input type="number" class="form-control" name="zipcode" id="zipcode">
+            <input type="text" class="form-control" name="zipcode" id="zipcode">
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone:</label>
+            <input type="text" class="form-control" name="phone" id="phone">
         </div>
         <!--{{ csrf_field() }}-->
         <button type="submit" class="btn btn-primary">Add</button>

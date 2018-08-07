@@ -39,7 +39,8 @@ class DatatablesController extends Controller {
         return Cart_Items::where('cart_id', '=', $cartid)->with('item')->get();
     }
 
-    public function getAddToCart(Items $item, $qty=1) {
+    public function getAddToCart(Items $item, $qty = 1) {
+//        return $qty;
         // ściagamy cały obiek item dzięki odebranemu id
 //        $item = Items::find($id);
         // id usera tak jakby z sesji
@@ -60,10 +61,10 @@ class DatatablesController extends Controller {
             $cart_item = new Cart_Items;
             $cart_item->cart_id = $cart->id;
             $cart_item->item_id = $item->id;
-            $cart_item->qty=$qty;
+//            $cart_item->qty=$qty;
         }
         //jak jest to tylko zwiekszamy jego ilosc i zapisujemy w bazie
-        $cart_item->qty+=$qty;
+        $cart_item->qty += $qty;
         $cart_item->save();
 
         return redirect('/items2');
@@ -80,7 +81,20 @@ class DatatablesController extends Controller {
         $cart_items = $this->checkCartEmpty($cart->id);
         if ($cart_items === null)
             return view("cart.emptycart");
-        
+//        dd($cart_items);
+
+        $totalQty = 0;
+
+        $totalPrice = 0;
+
+        foreach ($cart_items as $cart_item) {
+            $qty = $cart_item->qty;
+            $totalQty += $qty;
+            $totalPrice += $cart_item->item->price * $qty;
+        }
+
+
+
 //        dd($cart_items);
 //        /* @var $cart_items \Illuminate\Database\Eloquent\Collection      */
 //        $itemIds = array();        
@@ -92,33 +106,33 @@ class DatatablesController extends Controller {
 //        przykład odowołania do atrybutu po relacji
 //        $cart_items[0]->item->price
         //$itemsdt = Items::whereIn('id', $cart_items->get('item_id'))->get();
-  
 //        return view('cart.cart', ['items' => $itemsdt]);
 //         return view('cart.cart')->with('items', $itemsdt);
-        
-        return view('cart.cart', compact('cart_items'));
+
+        return view('cart.cart', compact('cart_items', 'totalPrice', 'totalQty'));
+    }
+
+    public function delFromCart($id) {
+        $userid = auth()->id();
+        $cartid = Cart2::where('user_id', '=', $userid)->first();
+
+        $cartid = $cartid->id;
+
+        if ($id == 0) {
+
+            Cart_Items::where('cart_id', $cartid)->delete();
+        } else {
+            Cart_Items::where([['item_id', $id], ['cart_id', $cartid]])->delete();
+        }
+        return redirect()->route('goToCart2');
     }
     
-    public function delFromCart($id){
+    public function getCheckout(){
         
-        Cart_Items::where('item_id', $id)->delete();
-        return redirect('/cart2');
+        $addresses = app('App\Http\Controllers\HomeController')->getAddresses();
+        
+        return view('cart.checkout', compact('addresses'));
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
     public function getItems() {
         $itemas = DB::table('items')->get();

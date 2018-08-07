@@ -12,7 +12,9 @@
 
             <th>DELETE</th>
         </tr>
+         
         @foreach($cart_items as $item)
+  
             <tr>
                 <td>{{ $item->item->name }}</td>
                 <td>{{ $item['qty'] }}</td>
@@ -21,7 +23,15 @@
 
             </tr>
         @endforeach
+         <tr>
+                <td>TOTAL</td>
+                <td>{{ $totalQty }}</td>
+                <td>{{ $totalPrice }}</td>
+                <td><a class="btn btn-info" href="{{route('item2.delFromCart', ['id' => 0])}}">DELETE ALL</a></td>
+
+            </tr>
+        
     </table>
-   <div style="float: right;"><a class="btn btn-success" href="{{ route('checkout') }}">CHECKOUT</a></div>
+   <div style="float: right;"><a class="btn btn-success" href="{{ route('checkout2') }}">CHECKOUT</a></div>
 
 @endsection

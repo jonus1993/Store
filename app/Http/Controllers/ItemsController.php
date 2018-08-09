@@ -50,5 +50,7 @@ class ItemsController extends Controller
         $total = $cart->totalPrice;
         return view('items.checkout', ['total' => $total]);
     }
+    
+   
 
 }

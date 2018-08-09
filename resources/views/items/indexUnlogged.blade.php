@@ -43,8 +43,8 @@ Colours
                     }},
                 {data: 'id',
                     render: function (data, type, row) {
-                        
-                        return '<a class=add2cart href="{{ route('item2.addToCart', ':data')}}">ADD</a>'.replace(':data', data);
+
+                        return '<a class=add2cart href="{{ route('item.addToCart', ':data')}}">ADD</a>'.replace(':data', data);
                     }
                 }
             ]
@@ -73,11 +73,11 @@ Colours
 //        console.log(url);
         //przekierowanie
 //        window.location = url;
-            $.get(url, function (data) {
-    //            $(".result").html(data);
-    //            alert("Successfully added to Your Own Cart");
-    //            autoClose: 'cancelAction|8000',
-            });
+        $.get(url, function (data) {
+            //            $(".result").html(data);
+            //            alert("Successfully added to Your Own Cart");
+            //            autoClose: 'cancelAction|8000',
+        });
 
         return false;
     });

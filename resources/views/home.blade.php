@@ -27,18 +27,3 @@ Home
 
 <a class="btn btn-primary" href="{{ url('/address') }}" >Add Address</a>
 @endsection
-
-@section('scripts')
-<script>
-    $('.delbtn').click(function () {
-        $.ajax({
-            url: '/address/del/' + $(this).val(),
-            type: 'DELETE', // user.destroy
-            success: function (result) {
-                // Do something with the result
-            }
-        });
-    });
-</script>
-
-@endsection

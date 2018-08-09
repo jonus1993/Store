@@ -14,14 +14,16 @@ Checkout
     </ul>
 </div>
 @endif
-<form action="" method="post">
+<form action="{{route('finishOrder')}}" method="post">
     @csrf
-
+    @php($i = 1)
+ 
 
     <div class="row">
         @foreach($addresses as $address)
-        <input type="radio" name="address" value="{{$address['id']}}">
-        <address class="col-md-3">
+
+        <address class="rounded border border-primary col-md-3">
+            <input checked="checked" type="radio" name="address" value="{{$address['id']}}">
             <strong>Address {{$address['id']}}</strong><br>
             Street: {{$address['street']}} <br>
             City: {{$address['city']}} <br>
@@ -30,28 +32,33 @@ Checkout
         </address>
         @endforeach
     </div>
+    <table class="table table-hover">
+        <tr>
+            <th>NAME</th>
+            <th>QUANTATY</th>
+            <th>PRICE</th>
+        </tr>
 
 
+        @foreach($cart['cart_items'] as $cart_item)
+
+        <tr>
+            <td>{{ $cart_item->item->name }}</td>
+            <td>{{ $cart_item->qty }}</td>
+            <td>{{ $cart_item->item->price }}</td>
+        </tr>
+
+        @endforeach
+        <tr>
+            <th>TOTAL</th>
+            <th>{{ $cart['totalQty'] }}</th>
+            <th>{{ $cart['totalPrice'] }}</th>
+        </tr>
+    </table>
 
 
-<!--    <div class="form-group">
-        <label for="street">Street address:</label>
-        <input type="text" class="form-control" name="street" id="street" value="{{$address->street}}">
-    </div>
-    <div class="form-group">
-        <label for="city">City:</label>
-        <input type="text" class="form-control" name="city" id="city" value="{{$address->city}}">
-    </div>
-    <div class="form-group">
-        <label for="zipcode">Zip-code:</label>
-        <input type="text" class="form-control" name="zipcode" id="zipcode" value="{{$address->zip_code}}">
-    </div>
-    <div class="form-group">
-        <label for="phone">Phone:</label>
-        <input type="text" class="form-control" name="phone" id="phone" value="{{$address->phone}}">
-    </div>
-    {{ csrf_field() }}
-    <button type="submit" class="btn btn-primary">Edit</button>-->
+    <div style="float: right;">
+        <button class="btn btn-success" type="submit">MAKE ORDER</button></div>
 
 </form>
 @endsection

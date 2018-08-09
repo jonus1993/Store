@@ -23,7 +23,7 @@ Route::get('/checkout', [
 ]);
 
 Route::post('/checkout', [
-    'uses' => 'ItemsController@postCheckout',
+    'uses' => 'GuestsOrdersController@postCheckout',
     'as' => 'checkout'
 ]);
 
@@ -32,8 +32,22 @@ Route::get('/checkout2', [
     'as' => 'checkout2'
 ]);
 
+Route::post('/order', [
+    'uses' => 'OrdersController@saveOrder',
+    'as' => 'finishOrder'
+]);
+
+Route::get('/allorders', [
+    'uses' => 'OrdersController@showOrders',
+    'as' => 'allOrders'
+]);
+Route::get('/order/{orderid}', [
+    'uses' => 'OrdersController@showOrder',
+    'as' => 'showOrder'
+]);
 
 
+//grupa routingów z prefixem /address/
 Route::prefix('address')->group(function () {
     Route::get('/', [
         'uses' => 'AddressController@index',
@@ -72,7 +86,7 @@ Route::get('/items2/{item}/{qty?}', [
         ]
 );
 
-Route::get('/cart2', 'DatatablesController@getCart')->name('goToCart2');
+Route::get('/cart2', 'DatatablesController@getCartView')->name('goToCart2');
 
 Route::get('/cart2/{id}', [
     'uses' => 'DatatablesController@delFromCart',

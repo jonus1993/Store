@@ -5,16 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
 use App\Items;
-use Illuminate\Http\Request;
 use App\Cart2;
 use App\Cart_Items;
+use App\Address;
+use Illuminate\Support\Facades\Auth;
 
 class DatatablesController extends Controller {
 
+//    public function __construct() {
+//        $this->middleware('auth');
+//    }
+
     public function getIndex() {
 
-
-        return view('items.index2');
+        if (Auth::check())
+            return view('items.index2');
+        else
+            return view('items.indexUnlogged');
     }
 
     public function anyData() {
@@ -75,13 +82,15 @@ class DatatablesController extends Controller {
         $userid = auth()->id();
         //patrzymy czy user już koszyk ma w bazie
         $cart = $this->checkCartExist($userid);
+
         // jak nie ma to pustke zwracamy
         if ($cart === null)
-            return view("cart.emptycart");
+            return view('cart.emptycart');
         $cart_items = $this->checkCartEmpty($cart->id);
-        if ($cart_items === null)
-            return view("cart.emptycart");
-//        dd($cart_items);
+        /* @var $cart_items \Illuminate\Database\Eloquent\Collection      */
+        if ($cart_items->isEmpty())
+            return view('cart.emptycart');
+
 
         $totalQty = 0;
 
@@ -93,10 +102,9 @@ class DatatablesController extends Controller {
             $totalPrice += $cart_item->item->price * $qty;
         }
 
-
+        return compact('cart_items', 'totalQty', 'totalPrice');
 
 //        dd($cart_items);
-//        /* @var $cart_items \Illuminate\Database\Eloquent\Collection      */
 //        $itemIds = array();        
 //        foreach ($cart_items as $cart_item) {
 //            $itemIds[] = $cart_item->item_id;
@@ -108,30 +116,56 @@ class DatatablesController extends Controller {
         //$itemsdt = Items::whereIn('id', $cart_items->get('item_id'))->get();
 //        return view('cart.cart', ['items' => $itemsdt]);
 //         return view('cart.cart')->with('items', $itemsdt);
-
-        return view('cart.cart', compact('cart_items', 'totalPrice', 'totalQty'));
     }
 
+    public function getCartView() {
+//        dd($this->getCart());
+        $cart = $this->getCart();
+        if (!is_array($cart)) {
+            return $cart;
+        }
+
+        return view('cart.cart', $cart);
+    }
+
+    //usuwanie przedmiotów z koszyka/koszyka
     public function delFromCart($id) {
         $userid = auth()->id();
         $cartid = Cart2::where('user_id', '=', $userid)->first();
 
         $cartid = $cartid->id;
-
+        $Cart2 = new Cart2();
+        //usuwanie całego koszyka
         if ($id == 0) {
 
-            Cart_Items::where('cart_id', $cartid)->delete();
+//            Cart_Items::where('cart_id', $cartid)->delete();
+//            Cart2::where('id', $cartid)->delete();
+
+            $Cart2->delCart($cartid);
         } else {
             Cart_Items::where([['item_id', $id], ['cart_id', $cartid]])->delete();
+            $cartEmpty = Cart_Items::where('cart_id', $cartid)->first();
+
+            if (!$cartEmpty)
+//                Cart2::where('id', $cartid)->delete();
+                $Cart2->delCart($cartid);
         }
+
+
         return redirect()->route('goToCart2');
     }
-    
-    public function getCheckout(){
-        
+
+    public function getCheckout() {
+
         $addresses = app('App\Http\Controllers\HomeController')->getAddresses();
-        
-        return view('cart.checkout', compact('addresses'));
+//        $addresses = auth()->user()->addresses(); //?
+//        dd($addresses);
+        $cart = $this->getCart();
+        if (!is_array($cart)) {
+            return $cart;
+        }
+
+        return view('cart.checkout', compact('addresses', 'cart'));
     }
 
     public function getItems() {

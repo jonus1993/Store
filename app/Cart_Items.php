@@ -14,7 +14,7 @@ class Cart_Items extends Model
     
     
 //    odwoładnie do relacji
-    function item() {
+   function item() {
         return $this->belongsTo(Items::class);
     }
 }

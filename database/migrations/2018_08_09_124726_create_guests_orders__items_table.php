@@ -24,7 +24,7 @@ class CreateGuestsOrdersItemsTable extends Migration {
          Schema::table('guests_orders__items', function (Blueprint $table) {
             $table->foreign('order_id')
                 ->references('id')
-                ->on('guestsorders');
+                ->on('guests_orders');
         });
     }
     

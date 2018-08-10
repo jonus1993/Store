@@ -63,12 +63,15 @@
 
 
             @if (Route::has('login'))
-            
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('/items') }}">Items</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('/items2') }}">ItemsDT</a>
+            </li>
             
             @auth
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('/items2') }}">Items</a>
-            </li>
+            
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('goToCart2') }}">Shopping Cart</a>
             </li>
@@ -93,9 +96,7 @@
                 </div>
             </li> 
             @else
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('/items') }}">Items2</a>
-            </li>
+                
             <!--            <li class="nav-item active">
                             <a class="nav-link" href="{{ url('/items') }}">Items <span class="sr-only">(current)</span></a>
                         </li>-->

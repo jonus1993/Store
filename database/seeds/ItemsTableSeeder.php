@@ -11,12 +11,14 @@ class ItemsTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker = \Faker\Factory::create();
-        for ($i=0; $i<100; $i++) {
-            $items = new Items();
-            $items->name = $faker->colorName;
-            $items->price = $faker->numberBetween(0, 1100);
-            $items->save();
+        $faker = \Faker\Factory::create('pl_PL');
+        for ($i=0; $i<33; $i++) {
+            $item = new Items();
+            $item->name = $faker-> colorName;
+            $item->price = $faker->randomFloat(2, 1, 100);
+            $item->category_id = $faker->numberBetween(1, 6);
+            $item->save();
+            $item->tags()->attach($faker->numberBetween(1, 6));
             }
         
     }

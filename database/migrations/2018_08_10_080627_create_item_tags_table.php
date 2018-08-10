@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Items extends Migration
+class CreateItemTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class Items extends Migration
      */
     public function up()
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('item_tags', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->double('price');
+            $table->integer('item_id')->unsigned();
+            $table->foreign('item_id')->references('id')->on('items');
+            $table->integer('tag_id')->unsigned();
+            $table->foreign('tag_id')->references('id')->on('tags');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class Items extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('item_tags');
     }
 }

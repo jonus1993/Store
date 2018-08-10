@@ -18,15 +18,15 @@ class ItemsController extends Controller
     }
     
 
-    public function getAddToCart(Request $request, $id)
+    public function getAddToCart(Request $request, $id, $qty=1)
     {
         $item = Items::find($id);
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
-        $cart->add($item, $item->id);
+        $cart->add($item, $item->id, $qty);
 
         $request->session()->put('cart', $cart);
-        return redirect('/items');
+        
 
     }
 

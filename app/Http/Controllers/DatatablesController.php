@@ -7,31 +7,56 @@ use Yajra\Datatables\Datatables;
 use App\Items;
 use App\Cart2;
 use App\Cart_Items;
-use App\Address;
-use Illuminate\Support\Facades\Auth;
+use App\Tags;
+use App\Categories;
+use Illuminate\Http\Request;
 
 class DatatablesController extends Controller {
 
 //    public function __construct() {
 //        $this->middleware('auth');
 //    }
+    protected $items;
 
     public function getIndex() {
 
-        if (Auth::check())
-            return view('items.index2');
-        else
-            return view('items.indexUnlogged');
+        $tags = Tags::all();
+        $categories = Categories::all();
+
+
+//        if (Auth::check())
+        return view('items.index2', compact('tags', 'categories'));
+//        else
+//            return view('items.indexUnlogged');
     }
 
     public function anyData() {
-        $items = Items::select(['id', 'name', 'price']);
-
+//        $items = Items::select(['items.id', 'items.name', 'price', 'category_id'])->with('category')->with('tags');
+        
+            $items = Items::select()->with('category')->with('tags');
+        
+            
+//        dd($items->toSql());
+//        dd($items ->get());
 //             ->limit(10)
 //             ->get()->toArray();
 //     
 //     dd($items);
         return Datatables::of($items)->make();
+    }
+
+    public function postIndex(Request $request) {
+
+        $tags = Tags::all();
+        $categories = Categories::all();
+
+        $tagInput = $request->input('tags');
+        $catInput = $request->input('categories');
+
+        $items = Items::select()->with('category')->with('tags')->whereIn('categories.name', $catInput)->whereIn('tags.friend_name', $tagInput);
+//        dd($items);
+        $this->items=$items;
+        return view('items.index2', compact('tags', 'categories'));
     }
 
     //prywatna funkcja sprawdza czy user ma koszyk w bazie

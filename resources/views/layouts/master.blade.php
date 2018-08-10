@@ -26,7 +26,7 @@
     </head>
     <body>
         @include('partials.header')
-
+        @yield('sidebar')
         <div class="container">
             @yield('content')
         </div>

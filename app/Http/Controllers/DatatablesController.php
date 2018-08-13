@@ -10,53 +10,62 @@ use App\Cart_Items;
 use App\Tags;
 use App\Categories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class DatatablesController extends Controller {
 
 //    public function __construct() {
 //        $this->middleware('auth');
 //    }
+
     protected $items;
 
     public function getIndex() {
-
+//        $this->state = 1;
         $tags = Tags::all();
         $categories = Categories::all();
 
-
-//        if (Auth::check())
+//        dd($this->items);
         return view('items.index2', compact('tags', 'categories'));
-//        else
-//            return view('items.indexUnlogged');
     }
 
     public function anyData() {
-//        $items = Items::select(['items.id', 'items.name', 'price', 'category_id'])->with('category')->with('tags');
-        
-            $items = Items::select()->with('category')->with('tags');
-        
-            
+
+        //        $items = Items::select(['items.id', 'items.name', 'price', 'category_id'])->with('category')->with('tags');
+//        dd($items);
+//        if (!$request->exists)
+//        $this->items = Items::with('category')->with('tags');
+//        else{
+//             $tagInput = $request->input('tags');
+//             $catInput = $request->input('categories');
+//             $this->items = Items::with('category')->whereIn('category_id', $catInput)->get();
+//        }
 //        dd($items->toSql());
 //        dd($items ->get());
 //             ->limit(10)
 //             ->get()->toArray();
 //     
 //     dd($items);
+//        $tagInput = $request->input('tags');
+//        $catInput = $request->input('categories');
+//
+
+//        $tagInput = Tags::select('friend_name')->get();
+//        $catInput = Categories::select('id')->get();
+//        $catInput = Input::get('categories', $catInput);
+//        $tagInput = Input::get('tags', $tagInput);
+//
+//        $tagIds = Tags::select('id')->whereIn('friend_name', $tagInput)->get();
+//        $items = Items::whereIn('category_id', $catInput)
+//                ->whereHas('tags', function ($q) use($tagIds) {
+//                    $q->whereIn('tag_id', $tagIds);
+//                })
+//                ->with('category')
+//                ->with('tags');
+        $items = Items::with('category')->with('tags');
+
+
         return Datatables::of($items)->make();
-    }
-
-    public function postIndex(Request $request) {
-
-        $tags = Tags::all();
-        $categories = Categories::all();
-
-        $tagInput = $request->input('tags');
-        $catInput = $request->input('categories');
-
-        $items = Items::select()->with('category')->with('tags')->whereIn('categories.name', $catInput)->whereIn('tags.friend_name', $tagInput);
-//        dd($items);
-        $this->items=$items;
-        return view('items.index2', compact('tags', 'categories'));
     }
 
     //prywatna funkcja sprawdza czy user ma koszyk w bazie

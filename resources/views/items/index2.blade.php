@@ -10,11 +10,11 @@ Colours
 <div class="w3-sidebar w3-bar-block" style="width:10%"> 
     <h3 class="w3-bar-item">Filtry</h3>
     <h4 class="w3-bar-item">Tagi</h4>
-    <form action="{{route('datatables.filtered')}}" method="post">
+    <form id="theForm">
         @csrf
         @foreach($tags as $tag)
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1" name="tags[]" value="{{ $tag->friend_name }}">
+            <input type="checkbox" class="tagi" id="tagi" name="tags[]" value="{{ $tag->friend_name }}">
             <label class="form-check-label" for="exampleCheck1">{{ $tag->name }}</label>
         </div>
         @endforeach
@@ -22,7 +22,7 @@ Colours
         <h4 class="w3-bar-item">Kategorie</h4>
         @foreach($categories as $cat)
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1" name="categories[]" value="{{ $cat->name }}">
+            <input type="checkbox" class="kateg" id="kateg" name="categories[]" value="{{ $cat->id }}">
             <label class="form-check-label" for="exampleCheck1">{{ $cat->name }}</label>
         </div>
         @endforeach
@@ -61,11 +61,39 @@ Colours
 <!-- DataTables -->
 <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
+
+
 <script>
-$(function () {
-    $('#items-table').DataTable({
+//   $(function () { $("#theForm").ajaxSubmit({url: 'http://127.0.0.1:8000/items2/datatables.data', type: 'get'})});
+//var myArray = [0,1,2];
+// var   needle = 1;
+//    if( !contains.call(myArray, needle))
+//    alert('cos'); // true
+$(document).ready(function () {
+
+
+//$(document).ready(function () {
+//    $.fn.dataTableExt.afnFiltering.push(function (oSettings, aData, iDataIndex) {
+////       var checked = $('.kateg').is(':checked');
+//        var cat = $('.kateg').val();
+//        console.log(1);
+//        var cats = aData[3];
+//        if (contains.call(cats, cat)) {
+//            return true;
+//        }
+//
+//        return false;
+//    });
+//    var oTable = $('#example').dataTable();
+//    $('#checkbox').on("click", function(e) {
+//        oTable.fnDraw();
+//    });
+
+
+    var table = $('#items-table').DataTable({
         processing: true,
-        serverSide: true,
+        serverSide: false,
+        responsive: true,
         ajax: 'http://127.0.0.1:8000/items2/datatables.data',
         columns: [
             {data: 'id'},
@@ -85,9 +113,40 @@ $(function () {
         ]
 
     });
-});</script>
+
+    $.fn.dataTable.ext.search.push(
+            function (settings, data, dataIndex) {
+                var cat = $('.kateg').val();
+                console.log(cat);
+                var cats = data[3];
+
+                data[3] = cat;
+                if (contains.call(cats, cat))
+                {
+
+                    return true;
+                }
+                return false;
+            }
+    );
+
+// $('#tagi, #kateg').keyup( function() {
+//        table.draw();
+//    } );
+
+    $('.kateg').on("click", function (e) {
+//        if ($(this).is(':checked')) {
+        table.draw();
+
+//        } else {
+//            table.draw();
+//        }
+    });
+});
+</script>
 
 
+<!--dodawanie do koszyk-->
 <script>
     $('#items-table').on('click', 'a.add2cart', function (e) {
 //         If this method is called, the default action of the event will not be triggered.
@@ -111,7 +170,7 @@ $(function () {
         return false;
     });</script>
 
-
+<!--pobieranie wartości inputa-->
 <script>
     function getInputValue(numb) {
         return $('#input' + numb).val();
@@ -119,5 +178,34 @@ $(function () {
         return value;
     }
 </script>
+
+<!--funkcja sprawdza czy tablica zawiera wartość-->
+<script>
+    var contains = function (needle) {
+        // Per spec, the way to identify NaN is that it is not equal to itself
+        var findNaN = needle !== needle;
+        var indexOf;
+
+        if (!findNaN && typeof Array.prototype.indexOf === 'function') {
+            indexOf = Array.prototype.indexOf;
+        } else {
+            indexOf = function (needle) {
+                var i = -1, index = -1;
+
+                for (i = 0; i < this.length; i++) {
+                    var item = this[i];
+
+                    if ((findNaN && item !== item) || item === needle) {
+                        index = i;
+                        break;
+                    }
+                }
+
+                return index;
+            };
+        }
+
+        return indexOf.call(this, needle) > -1;
+    };</script>
 @endpush
 

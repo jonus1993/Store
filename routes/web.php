@@ -5,6 +5,7 @@ Route::get('/', function () {
 });
 
 Route::get('/items', 'ItemsController@index');
+Route::post('/items', 'ItemsController@postIndex')->name('filter.data');
 
 Route::get('/items/{id}/{qty?}', [
     'uses' => 'ItemsController@getAddToCart',
@@ -76,8 +77,7 @@ Route::prefix('address')->group(function () {
 
 
 Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');
-Route::get('/items2/datatables.data', 'DatatablesController@anyData')->name('datatables.data');
-Route::post('/items2', 'DatatablesController@postIndex')->name('datatables.filtered');
+Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');
 Route::get('/items2/{item}/{qty?}', [
 //    function($qty = 1) {
 //        return $qty;

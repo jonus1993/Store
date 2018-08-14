@@ -62,39 +62,39 @@ Colours
 <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
 
-
 <script>
 //   $(function () { $("#theForm").ajaxSubmit({url: 'http://127.0.0.1:8000/items2/datatables.data', type: 'get'})});
 //var myArray = [0,1,2];
 // var   needle = 1;
 //    if( !contains.call(myArray, needle))
 //    alert('cos'); // true
+
 $(document).ready(function () {
-
-
-//$(document).ready(function () {
-//    $.fn.dataTableExt.afnFiltering.push(function (oSettings, aData, iDataIndex) {
-////       var checked = $('.kateg').is(':checked');
-//        var cat = $('.kateg').val();
-//        console.log(1);
-//        var cats = aData[3];
-//        if (contains.call(cats, cat)) {
-//            return true;
-//        }
-//
-//        return false;
-//    });
-//    var oTable = $('#example').dataTable();
-//    $('#checkbox').on("click", function(e) {
-//        oTable.fnDraw();
-//    });
-
 
     var table = $('#items-table').DataTable({
         processing: true,
-        serverSide: false,
+        serverSide: true,
         responsive: true,
-        ajax: 'http://127.0.0.1:8000/items2/datatables.data',
+        "ajax": {
+            "url": "http://127.0.0.1:8000/items2/datatables.data",
+            "data": function (d) {
+//                    return $.extend({}, d, {
+                console.log($('.kateg'));
+
+                d.categories = [];
+                $('.kateg:checked').each(function () {
+                    d.categories.push(this.value);
+                });
+                d.tags = [];
+                $('.tagi:checked').each(function () {
+                    d.tags.push(this.value);
+                });
+
+                console.log(d.categories);
+
+//                    });
+            }
+        },
         columns: [
             {data: 'id'},
             {data: 'name'},
@@ -114,36 +114,15 @@ $(document).ready(function () {
 
     });
 
-    $.fn.dataTable.ext.search.push(
-            function (settings, data, dataIndex) {
-                var cat = $('.kateg').val();
-                console.log(cat);
-                var cats = data[3];
-
-                data[3] = cat;
-                if (contains.call(cats, cat))
-                {
-
-                    return true;
-                }
-                return false;
-            }
-    );
-
-// $('#tagi, #kateg').keyup( function() {
-//        table.draw();
-//    } );
-
-    $('.kateg').on("click", function (e) {
-//        if ($(this).is(':checked')) {
+    $('.kateg').click(function (e) {
         table.draw();
-
-//        } else {
-//            table.draw();
-//        }
     });
-});
-</script>
+    $('.tagi').click(function (e) {
+        table.draw();
+    });
+
+
+});</script>
 
 
 <!--dodawanie do koszyk-->
@@ -185,16 +164,13 @@ $(document).ready(function () {
         // Per spec, the way to identify NaN is that it is not equal to itself
         var findNaN = needle !== needle;
         var indexOf;
-
         if (!findNaN && typeof Array.prototype.indexOf === 'function') {
             indexOf = Array.prototype.indexOf;
         } else {
             indexOf = function (needle) {
                 var i = -1, index = -1;
-
                 for (i = 0; i < this.length; i++) {
                     var item = this[i];
-
                     if ((findNaN && item !== item) || item === needle) {
                         index = i;
                         break;

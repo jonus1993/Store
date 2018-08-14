@@ -29,7 +29,8 @@ class DatatablesController extends Controller {
         return view('items.index2', compact('tags', 'categories'));
     }
 
-    public function anyData() {
+    public function anyData(Request $request) {
+
 
         //        $items = Items::select(['items.id', 'items.name', 'price', 'category_id'])->with('category')->with('tags');
 //        dd($items);
@@ -46,23 +47,22 @@ class DatatablesController extends Controller {
 //             ->get()->toArray();
 //     
 //     dd($items);
-//        $tagInput = $request->input('tags');
-//        $catInput = $request->input('categories');
-//
+        $tagInput = $request->input('tags');
+        $catInput =  request()->input('categories');
 
-//        $tagInput = Tags::select('friend_name')->get();
-//        $catInput = Categories::select('id')->get();
-//        $catInput = Input::get('categories', $catInput);
-//        $tagInput = Input::get('tags', $tagInput);
-//
-//        $tagIds = Tags::select('id')->whereIn('friend_name', $tagInput)->get();
-//        $items = Items::whereIn('category_id', $catInput)
-//                ->whereHas('tags', function ($q) use($tagIds) {
-//                    $q->whereIn('tag_id', $tagIds);
-//                })
-//                ->with('category')
-//                ->with('tags');
-        $items = Items::with('category')->with('tags');
+        $tagInput = Tags::select('friend_name')->get();
+        $catInput = Categories::select('id')->get();
+        $catInput = Input::get('categories', $catInput);
+        $tagInput = Input::get('tags', $tagInput);
+
+        $tagIds = Tags::select('id')->whereIn('friend_name', $tagInput)->get();
+        $items = Items::whereIn('category_id', $catInput)
+                ->whereHas('tags', function ($q) use($tagIds) {
+                    $q->whereIn('tag_id', $tagIds);
+                })
+                ->with('category')
+                ->with('tags');
+//        $items = Items::with('category')->with('tags');
 
 
         return Datatables::of($items)->make();

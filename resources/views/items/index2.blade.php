@@ -10,7 +10,7 @@ Colours
 <div class="w3-sidebar w3-bar-block" style="width:10%"> 
     <h3 class="w3-bar-item">Filtry</h3>
     <h4 class="w3-bar-item">Tagi</h4>
-    <form id="theForm">
+    <form id="frm" >
         @csrf
         @foreach($tags as $tag)
         <div class="form-check">
@@ -27,7 +27,7 @@ Colours
         </div>
         @endforeach
         <br>
-        <input class="btn btn-dark" type="submit" value="Filtruj" />
+        <!--<input class="btn btn-dark" type="submit" value="Filtruj" />-->
     </form>
 </div>
 @endsection
@@ -60,21 +60,37 @@ Colours
 
 <!-- DataTables -->
 <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-
+<script src="http://malsup.github.com/jquery.form.js"></script> 
 
 <script>
-//   $(function () { $("#theForm").ajaxSubmit({url: 'http://127.0.0.1:8000/items2/datatables.data', type: 'get'})});
-//var myArray = [0,1,2];
-// var   needle = 1;
-//    if( !contains.call(myArray, needle))
-//    alert('cos'); // true
+
 
 $(document).ready(function () {
+//
+//    $(function () {
+//        $("#frm").ajaxSubmit({url: 'http://127.0.0.1:8000/items2/datatables.data', type: 'get'})
+//    });
+
 
     var table = $('#items-table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
+//        ajax: "http://127.0.0.1:8000/items2/datatables.data",
+//        "ajax": {
+//            "url": "http://127.0.0.1:8000/items2/datatables.data",
+//            "type": "POST",
+//
+//            "data": function (d) {
+//                $('frm').submit(function () {
+//                    var frm_data = $('frm').serializeArray();
+//                    $.each(frm_data, function (key, val) {
+//                        d[val.name] = val.value;
+//                        console.log(val.value);
+//                    });
+//                });
+//            }
+//        },
         "ajax": {
             "url": "http://127.0.0.1:8000/items2/datatables.data",
             "data": function (d) {
@@ -114,12 +130,10 @@ $(document).ready(function () {
 
     });
 
-    $('.kateg').click(function (e) {
+    $('.kateg, .tagi').click(function (e) {
         table.draw();
     });
-    $('.tagi').click(function (e) {
-        table.draw();
-    });
+
 
 
 });</script>
@@ -158,30 +172,5 @@ $(document).ready(function () {
     }
 </script>
 
-<!--funkcja sprawdza czy tablica zawiera wartość-->
-<script>
-    var contains = function (needle) {
-        // Per spec, the way to identify NaN is that it is not equal to itself
-        var findNaN = needle !== needle;
-        var indexOf;
-        if (!findNaN && typeof Array.prototype.indexOf === 'function') {
-            indexOf = Array.prototype.indexOf;
-        } else {
-            indexOf = function (needle) {
-                var i = -1, index = -1;
-                for (i = 0; i < this.length; i++) {
-                    var item = this[i];
-                    if ((findNaN && item !== item) || item === needle) {
-                        index = i;
-                        break;
-                    }
-                }
-
-                return index;
-            };
-        }
-
-        return indexOf.call(this, needle) > -1;
-    };</script>
 @endpush
 

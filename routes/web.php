@@ -1,17 +1,43 @@
 <?php
 
+use App\User;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/items', 'ItemsController@index');
-Route::post('/items', 'ItemsController@postIndex')->name('filter.data');
+Route::prefix('items')->group(function () {
+    Route::get('/', 'ItemsController@index');
+    Route::post('/', 'ItemsController@postIndex')->name('filter.data');
 
-Route::get('/items/{id}/{qty?}', [
-    'uses' => 'ItemsController@getAddToCart',
-    'as' => 'item.addToCart'
-]);
+    Route::get('/{id}/{qty?}', [
+        'uses' => 'ItemsController@getAddToCart',
+        'as' => 'item.addToCart'
+    ]);
+});
 
+
+
+Route::prefix('item')->group(function () {
+    
+    Route::get('/new/', [
+        'uses' => 'ModeratorController@createNewItem',
+        'as' => 'item.create'
+    ]);
+    Route::post('/new', [
+        'uses' => 'ModeratorController@saveNewItem',
+        'as' => 'item.create'
+    ]);
+    Route::get('/edit/{id}', [
+        'uses' => 'ModeratorController@editItem',
+        'as' => 'item.edit'
+    ]);
+    Route::post('/edit/{id}', [
+        'uses' => 'ModeratorController@updateItem',
+        'as' => 'item.ediy'
+    ]);
+    
+});
 
 
 Route::get('/cart', 'ItemsController@getCart');
@@ -66,7 +92,7 @@ Route::prefix('address')->group(function () {
         'uses' => 'AddressController@update',
         'as' => 'address.edit'
     ]);
-    
+
     Route::delete('del/{id}', [
         'uses' => 'AddressController@delete',
         'as' => 'address.del'

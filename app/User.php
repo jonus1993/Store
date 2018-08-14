@@ -31,6 +31,22 @@ class User extends Authenticatable {
         return $this->belongsToMany(Roles::class, 'roles_has_users', 'users_id', 'roles_id')->withTimestamps();
     }
 
+    public function isAdmin() {
+        if ($this->roles()->where('name', 'Admin')->exists())
+            return true;
+        return false;
+    }
+
+//    public function isAdmin() {
+//        foreach ($this->roles()->get() as $role) {
+//            if ($role->name == 'Admin') {
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
+
     public function cart() {
         return $this->hasOne('App\Cart2');
     }

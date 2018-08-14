@@ -14,23 +14,17 @@ use Illuminate\Support\Facades\Input;
 
 class DatatablesController extends Controller {
 
-//    public function __construct() {
-//        $this->middleware('auth');
-//    }
+
 
     protected $items;
 
     public function getIndex() {
-//        $this->state = 1;
         $tags = Tags::all();
         $categories = Categories::all();
-
-//        dd($this->items);
         return view('items.index2', compact('tags', 'categories'));
     }
 
     public function anyData(Request $request) {
-
 
         //        $items = Items::select(['items.id', 'items.name', 'price', 'category_id'])->with('category')->with('tags');
 //        dd($items);

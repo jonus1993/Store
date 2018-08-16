@@ -14,7 +14,11 @@ Add Colour
     </ul>
 </div>
 @endif
-<form action="{{route('item.create')}}" method="post">
+<!--wyświetlnia wiadomości-->
+@if (Session::has('message'))
+   <div class="alert alert-info">{{ Session::get('message') }}</div>
+@endif
+<form action="{{route('item.create')}}" method="post" enctype="multipart/form-data">
     @csrf
     <div class="form-group">
         <label for="name">colour name:</label>
@@ -37,7 +41,11 @@ Add Colour
         <label class="checkbox-inline"><input name="tags[]" type="checkbox" value="{{ $tag->id }}">{{ $tag->name }}</label>
         @endforeach
     </div>
-    <!--{{ csrf_field() }}-->
+    <div class="form-group">
+    <label for="photo">Photo</label>
+    <input type="file" class="form-control-file" name="photo" id="photo">
+  </div>
+    
     <button type="submit" class="btn btn-primary">Add</button>
 
 </form>

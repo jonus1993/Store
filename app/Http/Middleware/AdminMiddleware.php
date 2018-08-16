@@ -4,8 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-class AdminMiddleware
-{
+
+class AdminMiddleware {
+
     /**
      * The Guard implementation.
      *
@@ -19,8 +20,7 @@ class AdminMiddleware
      * @param  Guard  $auth
      * @return void
      */
-    public function __construct(Guard $auth)
-    {
+    public function __construct(Guard $auth) {
         $this->auth = $auth;
     }
 
@@ -31,12 +31,13 @@ class AdminMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
+    public function handle($request, Closure $next) {
         if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+//            abort(403, 'Unauthorized action.');
+            return redirect()->route('login');
         }
 
         return $next($request);
     }
+
 }

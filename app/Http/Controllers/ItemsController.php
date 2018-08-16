@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Cart;
 use App\Items;
 use App\Tags;
-use App\ItemTag;
 use App\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -18,6 +17,8 @@ class ItemsController extends Controller {
         $categories = Categories::all();
         return view('items.index', compact('items', 'tags', 'categories'));
     }
+    
+    
 
     public function postIndex(Request $request) {
         $tags = Tags::all();

@@ -53,15 +53,7 @@ Colours
             <td>@foreach($item->tags as $tag){{ 
                 $tag->name }} <br>
                 @endforeach</td>
-            @auth
-            @if(auth()->user()->isAdmin())
-            <td><a class="btn btn-info" href="{{route('item.edit', ['id' => $item->id])}}">EDIT</a></td>
-            <td><a class="btn btn-info" href="{{route('item.del', ['id' => $item->id])}}">DEL</a></td>
-            
-            @endauth
-            @endif
-            <td><a class="btn btn-info" href="{{route('item'.(auth()->id() ? '2' : '').'.addToCart', ['id' => $item->id])}}">ADD</a></td>
-            
+            <td><a class="btn btn-info" href="{{route('item.addToCart', ['id' => $item->id])}}">ADD</a></td>
         </tr>
         @endforeach
     </table>

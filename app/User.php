@@ -37,24 +37,12 @@ class User extends Authenticatable {
         return false;
     }
 
-//    public function isAdmin() {
-//        foreach ($this->roles()->get() as $role) {
-//            if ($role->name == 'Admin') {
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
 
     public function cart() {
         return $this->hasOne('App\Cart2');
     }
 
-    /**
-     * 
-     * @return 
-     */
+   
     public function addresses() {
         return $this->hasMany(Address::class);
     }

@@ -112,7 +112,10 @@ $(document).ready(function () {
             }
         },
         columns: [
-            {data: 'id'},
+             {data: 'id',
+                render: function (data, type, row) {
+                    return '<a href="{{ route('item.get', ':data')}}"> show</a>'.replace(':data', data);
+                }},
             {data: 'name'},
             {data: 'price'},
             {data: 'category.name'},

@@ -18,6 +18,7 @@ class Items extends Migration {
             $table->double('price');
             $table->integer('category_id');
 //            $table->foreign('category_id')->references('id')->on('categories');
+            $table->string('photo_name');
             $table->timestamps();
         });
     }

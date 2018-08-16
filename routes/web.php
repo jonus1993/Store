@@ -1,7 +1,5 @@
 <?php
 
-use App\User;
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -19,7 +17,7 @@ Route::prefix('items')->group(function () {
 
 
 Route::prefix('item')->group(function () {
-    
+
     Route::get('/new/', [
         'uses' => 'ModeratorController@createNewItem',
         'as' => 'item.create'
@@ -28,15 +26,22 @@ Route::prefix('item')->group(function () {
         'uses' => 'ModeratorController@saveNewItem',
         'as' => 'item.create'
     ]);
+    Route::get('/{id}', [
+        'uses' => 'ModeratorController@getItem',
+        'as' => 'item.get'
+    ]);
     Route::get('/edit/{id}', [
         'uses' => 'ModeratorController@editItem',
         'as' => 'item.edit'
     ]);
     Route::post('/edit/{id}', [
         'uses' => 'ModeratorController@updateItem',
-        'as' => 'item.ediy'
+        'as' => 'item.edit'
     ]);
-    
+    Route::get('/del/{id}', [
+        'uses' => 'ModeratorController@deleteItem',
+        'as' => 'item.del'
+    ]);
 });
 
 
@@ -99,15 +104,13 @@ Route::prefix('address')->group(function () {
     ]);
 });
 
-
-
+Route::get('/manage', 'ManageController@getUserslist')->name('manage');
+Route::get('/manage/del/{id}', 'ManageController@deleteUser')->name('del.user');
+Route::get('/manage/{id}', 'ManageController@changeUser')->name('chg.user');
 
 Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');
 Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');
 Route::get('/items2/{item}/{qty?}', [
-//    function($qty = 1) {
-//        return $qty;
-//    },
     'uses' => 'DatatablesController@getAddToCart',
     'as' => 'item2.addToCart',
         ]
@@ -120,14 +123,9 @@ Route::get('/cart2/{id}', [
     'as' => 'item2.delFromCart'
 ]);
 
-//Route::get('/items2', 'DatatablesController', [
-//    'anyData' => 'datatables.data',
-//    'getIndex' => 'datatables',
-//]);
-
 
 Route::get('/items3', 'DatatablesController@getItems')->name('get.items');
-
+Route::auth();
 
 
 Auth::routes();

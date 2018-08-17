@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class ManageController extends Controller {
+    
+     public function __construct() {
+        $this->middleware('auth');
+        $this->middleware('admin');
+    }
 
     public function getUserslist() {
         $roles = Roles::all();

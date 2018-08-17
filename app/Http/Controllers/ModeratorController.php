@@ -14,7 +14,6 @@ class ModeratorController extends Controller {
 
     public function __construct() {
         $this->middleware('auth');
-        $this->middleware('admin');
     }
 
     /**
@@ -48,8 +47,7 @@ class ModeratorController extends Controller {
 //       dd($item);
         return view('items.show', compact('item'));
     }
-    
-   
+
     public function saveNewItem(Request $request) {
 
         $request->validate([

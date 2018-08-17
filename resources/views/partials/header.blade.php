@@ -15,17 +15,23 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('/items2') }}">ItemsDT</a>
             </li>
+            @if(Route::has('login'))
+            <!--jeżeli użytkownik autoryzowany-->
+            @if(Auth::check())
 
-            @auth
-            @if(auth()->user()->isAdmin())
+            @can('moderator-allowed', Auth::user())
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('item.create') }}">ADD item</a>
             </li>
-             <li class="nav-item">
+            @endcan
+            <!--jeżeli użytkownik to admin -->
+            @if(auth()->user()->isAdmin())
+            <li class="nav-item">
                 <a class="nav-link" href="{{ route('manage') }}">Manage</a>
             </li>
+            @endif
 
-            @endauth
+
 
 
             <li class="nav-item">
@@ -34,7 +40,7 @@
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                   {{Auth::user()->name}}
+                    {{Auth::user()->name}}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="{{ url('/home') }}">MyAccount</a>
@@ -52,9 +58,9 @@
                 </div>
             </li> 
 
-            @endauth
 
-            @guest
+            <!--jeżeli użytkownik nieautoryzowany-->
+            @else
             <li class="nav-item"> 
                 <a class="nav-link" href="{{ url('/cart') }}"> Shopping Cart
                     <span class="badge">{{ Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span>
@@ -66,7 +72,8 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('register') }}">Register</a>
             </li>
-            @endguest
+            @endif
+            @endif
 
 
 

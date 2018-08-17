@@ -15,8 +15,12 @@ Route::prefix('items')->group(function () {
 });
 
 
+Route::get('/item/{id}', [
+    'uses' => 'ModeratorController@getItem',
+    'as' => 'item.get'
+]);
 
-Route::prefix('item')->group(function () {
+Route::group(['middleware' => 'can:moderator-allowed'], function () {
 
     Route::get('/new/', [
         'uses' => 'ModeratorController@createNewItem',
@@ -26,10 +30,7 @@ Route::prefix('item')->group(function () {
         'uses' => 'ModeratorController@saveNewItem',
         'as' => 'item.create'
     ]);
-    Route::get('/{id}', [
-        'uses' => 'ModeratorController@getItem',
-        'as' => 'item.get'
-    ]);
+
     Route::get('/edit/{id}', [
         'uses' => 'ModeratorController@editItem',
         'as' => 'item.edit'
@@ -38,12 +39,12 @@ Route::prefix('item')->group(function () {
         'uses' => 'ModeratorController@updateItem',
         'as' => 'item.edit'
     ]);
-    Route::get('/del/{id}', [
-        'uses' => 'ModeratorController@deleteItem',
-        'as' => 'item.del'
-    ]);
 });
 
+Route::get('/del/{id}', 'ModeratorController@deleteItem',['middleware' => 'can:change-item'], function() {
+    if (Gate::denies('change-item', Auth::user()))
+        return redirect()->back();
+})->name('item.del');
 
 Route::get('/cart', 'ItemsController@getCart');
 
@@ -104,10 +105,12 @@ Route::prefix('address')->group(function () {
     ]);
 });
 
-Route::get('/manage', 'ManageController@getUserslist')->name('manage');
-Route::get('/manage/del/{id}', 'ManageController@deleteUser')->name('del.user');
-Route::get('/manage/{id}/', 'ManageController@changeUser')->name('chg.user');
+Route::prefix('manage')->group(function () {
 
+    Route::get('/', 'ManageController@getUserslist')->name('manage');
+    Route::get('/del/{id}', 'ManageController@deleteUser')->name('del.user');
+    Route::get('/{id}/', 'ManageController@changeUser')->name('chg.user');
+});
 Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');
 Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');
 Route::get('/items2/{item}/{qty?}', [
@@ -124,10 +127,10 @@ Route::get('/cart2/{id}', [
 ]);
 
 
-Route::get('/items3', 'DatatablesController@getItems')->name('get.items');
 Route::auth();
 
 
+//z automatu przy authc sie tworzą
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

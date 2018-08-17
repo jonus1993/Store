@@ -84,7 +84,7 @@ class DatatablesController extends Controller {
         $cart_item->qty += $qty;
         $cart_item->save();
 
-        return redirect('/items2');
+        return redirect()->back();
     }
 
     public function getCart() {

@@ -18,7 +18,6 @@ Checkout
     @csrf
     @php($i = 1)
  
-
     <div class="row">
         @foreach($addresses as $address)
 
@@ -39,15 +38,12 @@ Checkout
             <th>PRICE</th>
         </tr>
 
-
         @foreach($cart['cart_items'] as $cart_item)
-
         <tr>
             <td>{{ $cart_item->item->name }}</td>
             <td>{{ $cart_item->qty }}</td>
             <td>{{ $cart_item->item->price }}</td>
         </tr>
-
         @endforeach
         <tr>
             <th>TOTAL</th>
@@ -55,7 +51,6 @@ Checkout
             <th>{{ $cart['totalPrice'] }}</th>
         </tr>
     </table>
-
 
     <div style="float: right;">
         <button class="btn btn-success" type="submit">MAKE ORDER</button></div>

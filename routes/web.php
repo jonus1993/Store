@@ -41,10 +41,10 @@ Route::group(['middleware' => 'can:moderator-allowed'], function () {
     ]);
 });
 
-Route::get('/del/{id}', 'ModeratorController@deleteItem',['middleware' => 'can:change-item'], function() {
-    if (Gate::denies('change-item', Auth::user()))
-        return redirect()->back();
-})->name('item.del');
+Route::get('/del/{id}', 'ModeratorController@deleteItem' 
+//    if (Gate::denies('change-item', Auth::user()))
+//        return redirect()->back();
+)->middleware('can:delete,App\User')->name('item.del');
 
 Route::get('/cart', 'ItemsController@getCart');
 

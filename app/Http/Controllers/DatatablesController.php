@@ -58,10 +58,9 @@ class DatatablesController extends Controller {
     }
 
     public function getAddToCart(Items $item, $qty = 1) {
-//        return $qty;
         // ściagamy cały obiek item dzięki odebranemu id
 //        $item = Items::find($id);
-        // id usera tak jakby z sesji
+
         $userid = auth()->id();
         //patrzymy czy user już koszyk ma w bazie
         $cart = $this->checkCartExist($userid);

@@ -72,8 +72,8 @@ $(document).ready(function () {
 //    });
 
 
-    var table = $('#items-table').DataTable({
-        processing: true,
+var table = $('#items-table').DataTable({
+processing: true,
         serverSide: true,
         responsive: true,
 //        ajax: "http://127.0.0.1:8000/items2/datatables.data",
@@ -92,53 +92,46 @@ $(document).ready(function () {
 //            }
 //        },
         "ajax": {
-            "url": "http://127.0.0.1:8000/items2/datatables.data",
-            "data": function (d) {
+        "url": "http://127.0.0.1:8000/items2/datatables.data",
+                "data": function (d) {
 //                    return $.extend({}, d, {
                 console.log($('.kateg'));
-
                 d.categories = [];
                 $('.kateg:checked').each(function () {
-                    d.categories.push(this.value);
+                d.categories.push(this.value);
                 });
                 d.tags = [];
                 $('.tagi:checked').each(function () {
-                    d.tags.push(this.value);
+                d.tags.push(this.value);
                 });
-
                 console.log(d.categories);
-
 //                    });
-            }
+                }
         },
         columns: [
-             {data: 'id',
+        {data: 'id',
                 render: function (data, type, row) {
-                    return '<a href="{{ route('item.get', ':data')}}"> show</a>'.replace(':data', data);
+                return '<a href="{{ route('item.get', ':data')}}"> show</a>'.replace(':data', data);
                 }},
-            {data: 'name'},
-            {data: 'price'},
-            {data: 'category.name'},
-            {data: 'tags[].name'},
+        {data: 'name'},
+        {data: 'price'},
+        {data: 'category.name'},
+        {data: 'tags[].name'},
 //              {defaultContent: "<button>ADD</button>"}
 //              {defaultContent: "<a class='btn btn-info' href="{{ route('item2.addToCart', 'id' ) }}">ADD</a>"}
-            {data: 'id',
+        {data: 'id',
                 render: function (data, type, row) {
-                    return '<input id="input' + data + '" type="number"><a class=add2cart href="{{ route('item'.(auth()->id() ? '2' : '').'.addToCart', ':data')}}"> add to cart</a>'.replace(':data', data);
+                return '<input id="input' + data + '" type="number"><a class=add2cart href="{{ route('item'.(auth()->id() ? '2' : '').'.addToCart', ':data')}}"> add to cart</a>'.replace(':data', data);
                 }},
         ],
         "columnDefs": [
-            {"orderable": false, "targets": 4}
+        {"orderable": false, "targets": 4}
         ]
 
-    });
-
-    $('.kateg, .tagi').click(function (e) {
-        table.draw();
-    });
-
-
-
+});
+$('.kateg, .tagi').click(function (e) {
+table.draw();
+});
 });</script>
 
 
@@ -151,27 +144,27 @@ $(document).ready(function () {
 //        var cd = this.href.match(/^http(s)?:\/\/(www\.)?127.0.0.1:8000\/items2\/[0-9]+/)[0];
 //        var id = cd.substring(29);
 
-        var id = this.href.match(/\d+$/)[0];
+    var id = this.href.match(/\d+$/)[0];
 //        console.log(id);
 
-        var url = this.href + '/' + getInputValue(id);
+    var url = this.href + '/' + getInputValue(id);
 //        console.log(url);
-        //przekierowanie
+    //przekierowanie
 //        window.location = url;
-        $.get(url, function (data) {
-            //            $(".result").html(data);
-            //            alert("Successfully added to Your Own Cart");
-            //            autoClose: 'cancelAction|8000',
-        });
-        return false;
+    $.get(url, function (data) {
+    //            $(".result").html(data);
+    //            alert("Successfully added to Your Own Cart");
+    //            autoClose: 'cancelAction|8000',
+    });
+    return false;
     });</script>
 
 <!--pobieranie wartości inputa-->
 <script>
     function getInputValue(numb) {
-        return $('#input' + numb).val();
-        var value = document.getElementById('input' + numb).value;
-        return value;
+    return $('#input' + numb).val();
+    var value = document.getElementById('input' + numb).value;
+    return value;
     }
 </script>
 

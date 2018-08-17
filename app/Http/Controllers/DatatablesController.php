@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Input;
 
 class DatatablesController extends Controller {
 
-
-
     protected $items;
 
     public function getIndex() {
@@ -26,23 +24,8 @@ class DatatablesController extends Controller {
 
     public function anyData(Request $request) {
 
-        //        $items = Items::select(['items.id', 'items.name', 'price', 'category_id'])->with('category')->with('tags');
-//        dd($items);
-//        if (!$request->exists)
-//        $this->items = Items::with('category')->with('tags');
-//        else{
-//             $tagInput = $request->input('tags');
-//             $catInput = $request->input('categories');
-//             $this->items = Items::with('category')->whereIn('category_id', $catInput)->get();
-//        }
-//        dd($items->toSql());
-//        dd($items ->get());
-//             ->limit(10)
-//             ->get()->toArray();
-//     
-//     dd($items);
         $tagInput = $request->input('tags');
-        $catInput =  request()->input('categories');
+        $catInput = request()->input('categories');
 
         $tagInput = Tags::select('friend_name')->get();
         $catInput = Categories::select('id')->get();

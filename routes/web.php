@@ -106,7 +106,7 @@ Route::prefix('address')->group(function () {
 
 Route::get('/manage', 'ManageController@getUserslist')->name('manage');
 Route::get('/manage/del/{id}', 'ManageController@deleteUser')->name('del.user');
-Route::get('/manage/{id}', 'ManageController@changeUser')->name('chg.user');
+Route::get('/manage/{id}/', 'ManageController@changeUser')->name('chg.user');
 
 Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');
 Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');

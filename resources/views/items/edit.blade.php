@@ -20,7 +20,6 @@ Add Colour
 @endif
 <div>
     @if($item->photo_name == null)
-    <h2>asdas</h2>
     <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/421.png')}}" alt="No Image"/>
     @else
     <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/'.$item->photo_name)}}" alt="No Image"/>
@@ -49,9 +48,12 @@ Add Colour
     <div class="form-group">
         @foreach($tags as $tag)
         <label class="checkbox-inline"><input name="tags[]" type="checkbox" value="{{ $tag->id }}"
-                                              @if ($tag->id == old('form-control', $item->tags=>id))
+                                              @foreach($item->tags as $tagItem)
+                                              @if ($tag->id == old('form-control', $tagItem->id))
                                               checked="checked"
-                                              @endif>{{ $tag->name }}</label>
+                                              @endif
+                                              @endforeach
+                                              >{{ $tag->name }}</label>
         @endforeach
     </div>
     <div class="form-group">

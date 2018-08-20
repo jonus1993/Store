@@ -7,6 +7,7 @@ use App\RolesHasUsers;
 use App\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class ManageController extends Controller {
     
@@ -16,6 +17,7 @@ class ManageController extends Controller {
     }
 
     public function getUserslist() {
+//        return Auth::user()->id;
         $roles = Roles::all();
         $users = User::with('roles')->get();
 //        dd($users);
@@ -42,8 +44,9 @@ class ManageController extends Controller {
             $user->roles_id = $roleID;
             $user->save();
         }
+        
         Session::flash('message', "Pomyślnie zmieniono uprawnienia");
-        return $this->getUserslist();
+        return redirect(route('manage'));
     }
 
 }

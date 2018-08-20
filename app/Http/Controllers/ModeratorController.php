@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Providers\ValidatorServiceProvider;
 use App\Items;
 use App\Tags;
 use App\ItemTag;
@@ -53,29 +54,31 @@ class ModeratorController extends Controller {
         $request->validate([
             'name' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
             'price' => 'required|regex:/^[0-9., ]+$/',
-            'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'photo_name' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'category_id' => 'required|numeric',
+            'tags' => 'nullable|array',
+            'tags.*' => 'integer'
         ]);
 
 
+
+        $input = $request->all();
         $item = new Items();
-        $item->name = $request->input('name');
-        $item->price = floatval($request->input('price'));
-        $item->category_id = $request->input('category');
-        if (Input::has('photo')) {
+        if (Input::has('photo_name')) {
 
             // get current time and append the upload file extension to it,
             // then put that name to $photoName variable.
-            $photoName = time() . '.' . $request->photo->getClientOriginalExtension();
+            $photoName = time() . '.' . $request->photo_name->getClientOriginalExtension();
 
             /*
               talk the select file and move it public directory and make avatars
               folder if doesn't exsit then give it that unique name.
              */
-            $request->photo->move(public_path('photos'), $photoName);
+            $request->photo_name->move(public_path('photos'), $photoName);
             $item->photo_name = $photoName;
         }
 
-        $item->save();
+        $item->fill($input)->save();
         if (Input::has('tags')) {
             $tags = $request->input('tags');
             foreach ($tags as $tagid) {
@@ -95,45 +98,53 @@ class ModeratorController extends Controller {
         $tags = Tags::all();
         $categories = Categories::all();
         $item = Items::where('id', '=', $itemid)->with('category')->with('tags')->first();
-//        dd($item);
+        //dd($item);
         return view('items.edit', compact('tags', 'categories', 'item'));
     }
 
-    public function updateItem(Request $request, $itemid) {
+    public function updateItem(Request $request, $itemID) {
 
         $request->validate([
             'name' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
             'price' => 'required|regex:/^[0-9., ]+$/',
-            'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'photo_name' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'category_id' => 'required|numeric',
+            'tags' => 'nullable|array',
+            'tags.*' => 'integer'
         ]);
 
+        if (Input::has('tags')) {
 
-        $item = Items::where('id', '=', $itemid)->first();
-        $item->name = $request->input('name');
-        $item->price = floatval($request->input('price'));
-        $item->category_id = $request->input('category');
-        if (Input::has('photo')) {
+            $tags = $request->input('tags');
+        }
+
+
+        $item = Items::where('id', '=', $itemID)->first();
+        $input = $request->all();
+
+        if (Input::has('photo_name')) {
 
             // get current time and append the upload file extension to it,
             // then put that name to $photoName variable.
-            $photoName = time() . '.' . $request->photo->getClientOriginalExtension();
+            $photoName = time() . '.' . $request->photo_name->getClientOriginalExtension();
 
             /*
               talk the select file and move it public directory and make avatars
               folder if doesn't exsit then give it that unique name.
              */
-            $request->photo->move(public_path('photos'), $photoName);
+            $request->photo_name->move(public_path('photos'), $photoName);
             $item->photo_name = $photoName;
         }
 
-        $item->save();
+        $item->fill($input)->save();
+
+        ItemTag::where('item_id', $item->id)->delete();
         if (Input::has('tags')) {
-            ItemTag::where('item_id', $item->id)->delete();
-            $tags = $request->input('tags');
-            foreach ($tags as $tagid) {
+
+            foreach ($tags as $tagID) {
                 $itemTag = new ItemTag();
                 $itemTag->item_id = $item->id;
-                $itemTag->tag_id = $tagid;
+                $itemTag->tag_id = $tagID;
                 $itemTag->save();
             }
         }
@@ -144,6 +155,7 @@ class ModeratorController extends Controller {
     }
 
     public function deleteItem($itemid) {
+
         ItemTag::where('item_id', $itemid)->delete();
         Items::where('id', '=', $itemid)->delete();
         Session::flash('message', "Pomyślnie dodano");

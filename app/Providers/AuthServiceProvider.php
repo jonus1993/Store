@@ -26,7 +26,9 @@ class AuthServiceProvider extends ServiceProvider {
      */
     public function boot() {
         $this->registerPolicies();
-
+        
+        
+        //gate - decyduje czy użytkownik może się dostać do sekcji dla moderatorów 
         Gate::define('moderator-allowed', function ($user) {
             $user = RolesHasUsers::where('users_id', $user->id)->get()->toArray();
 

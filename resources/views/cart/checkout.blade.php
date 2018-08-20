@@ -16,21 +16,43 @@ Checkout
 @endif
 <form action="{{route('finishOrder')}}" method="post">
     @csrf
-    @php($i = 1)
+  
  
     <div class="row">
+        @if($addresses->isEmpty())        
+         <div class="form-group">
+            <label for="street">Street address:</label>
+            <input type="text" class="form-control" name="street" id="street">
+        </div>
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" class="form-control" name="city" id="city">
+        </div>
+        <div class="form-group">
+            <label for="zipcode">Zip-code:</label>
+            <input type="text" class="form-control" name="zip_code" id="zipcode">
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone:</label>
+            <input type="text" class="form-control" name="phone" id="phone">
+        </div>
+        @else
         @foreach($addresses as $address)
-
         <address class="rounded border border-primary col-md-3">
-            <input checked="checked" type="radio" name="address" value="{{$address['id']}}">
+            <input checked="checked" type="radio" name="address_id" value="{{$address['id']}}">
             <strong>Address {{$address['id']}}</strong><br>
             Street: {{$address['street']}} <br>
             City: {{$address['city']}} <br>
             Zip Code: {{$address['zip_code']}} <br>
             Phone: {{$address['phone']}} <br>
         </address>
+        
         @endforeach
+        
+        @endif
     </div>
+    <a class="btn btn-info" href="{{route('address.add')}}">Add the new address</a>
+    <br>
     <table class="table table-hover">
         <tr>
             <th>NAME</th>

@@ -16,19 +16,18 @@ class CreateGuestsOrdersItemsTable extends Migration {
             $table->increments('id');
             $table->integer('order_id')->unsigned();
             $table->integer('item_id')->unsigned();
-            $table->foreign('item_id')->references('id')->on('items');
+            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
             $table->integer('qty')->unsigned();
             $table->timestamps();
         });
-        
-         Schema::table('guests_orders__items', function (Blueprint $table) {
+
+        Schema::table('guests_orders__items', function (Blueprint $table) {
             $table->foreign('order_id')
-                ->references('id')
-                ->on('guests_orders');
+                    ->references('id')
+                    ->on('guests_orders')
+                    ->onDelete('cascade');
         });
     }
-    
-    
 
     /**
      * Reverse the migrations.

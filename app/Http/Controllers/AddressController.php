@@ -17,50 +17,40 @@ class AddressController extends Controller {
 
     public function store(Request $request) {
 
-        $request->validate([
-            'street' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
-            'city' => 'required|min:2|max:128|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9.]+$/',
-            'zipcode' => 'required|size:6|regex:[[0-9][0-9]-[0-9][0-9][0-9]]',
-            'phone' => 'required|numeric',
-        ]);
-
         $address = new Address();
-        $address->user_id = auth()->id();
-        $address->street = $request->input('street');
-        $address->city = $request->input('city');
-        $address->zip_code = $request->input('zipcode');
-        $address->phone = $request->input('phone');
-        $address->save();
-        return redirect('/home');
+        $address->store($request);
+        return redirect()->getUrlGenerator()->previous();
     }
 
-    public function edit($addressid) {
+    public function edit($addressID) {
 
-        $address = Address::where('id', '=', $addressid)->first();
+        $address = Address::where('id', '=', $addressID)->first();
         return view('address.edit', compact('address'));
     }
 
-    public function update(Request $request, $addressid) {
+    public function update(Request $request, $addressID) {
+
+        $this->addressValidation($request);
+        $address = Address::where('id', '=', $addressID)->first();
+        $address->user_id = auth()->id();
+        $input = $request->all();
+        $address->fill($input)->save();
+        return redirect('/home');
+    }
+
+    public function addressValidation(Request $request) {
 
         $request->validate([
             'street' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
             'city' => 'required|min:2|max:128|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9.]+$/',
-            'zipcode' => 'required|size:6|regex:[[0-9][0-9]-[0-9][0-9][0-9]]',
+            'zip_code' => 'required|size:6|regex:[[0-9][0-9]-[0-9][0-9][0-9]]',
             'phone' => 'required|numeric',
         ]);
-
-        $address = Address::where('id', '=', $addressid)->first();
-        $address->street = $request->input('street');
-        $address->city = $request->input('city');
-        $address->zip_code = $request->input('zipcode');
-        $address->phone = $request->input('phone');
-        $address->save();
-        return redirect('/home');
     }
 
-    public function delete($addressid) {
+    public function delete($addressID) {
 
-        Address::where('id', '=', $addressid)->delete();
+        Address::where('id', '=', $addressID)->delete();
         return redirect('/home');
     }
 

@@ -39,9 +39,10 @@ Add Colour
         <label for="category">category:</label>
         <select class="form-control" name="category_id" id="category">
             @foreach($categories as $cat)
-            <option value="{{ $cat->id }}" @if ($cat->id == old('category_id', $item->category_id))
+            <option value="{{ $cat->id }}" @if ($cat->id == old('category_id', $item->category_id))) 
                     selected="selected"
-                    @endif>{{ $cat->name }}</option>
+                    @endif 
+                    >{{ $cat->name }}</option>
             @endforeach
         </select>
     </div>

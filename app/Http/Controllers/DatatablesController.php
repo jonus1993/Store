@@ -9,6 +9,7 @@ use App\Cart2;
 use App\Cart_Items;
 use App\Tags;
 use App\Categories;
+use App\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -167,7 +168,8 @@ class DatatablesController extends Controller {
 
     public function getCheckout() {
 
-        $addresses = app('App\Http\Controllers\HomeController')->getAddresses();
+        $addresses = new Address();
+        $addresses = $addresses->getAddresses();
 //        $addresses = auth()->user()->addresses(); //?
 //        dd($addresses);
         $cart = $this->getCart();

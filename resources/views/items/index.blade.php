@@ -42,7 +42,7 @@ Colours
             <th>PRICE</th>
             <th>CATEGORY</th>
             <th>PROMOS</th>
-            <th>AMOUNT</th>
+            <th>ACTIONS</th>
         </tr>
         @foreach($items as $item)
         <tr>
@@ -55,11 +55,19 @@ Colours
                 @endforeach</td>
             @auth
             @if(auth()->user()->isAdmin())
-            <td><a class="btn btn-info" href="{{route('item.edit', ['id' => $item->id])}}">EDIT</a></td>
+            
             <td><a class="btn btn-info" href="{{route('item.del', ['id' => $item->id])}}">DEL</a></td>
             
-            @endauth
+           
             @endif
+            
+
+            @can('moderator-allowed', Auth::user())
+              <td><a class="btn btn-info" href="{{route('item.edit', ['id' => $item->id])}}">EDIT</a></td>
+            @endcan
+             @endauth
+          
+            
             <td><a class="btn btn-info" href="{{route('item'.(auth()->id() ? '2' : '').'.addToCart', ['id' => $item->id])}}">ADD</a></td>
             
         </tr>

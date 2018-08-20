@@ -26,7 +26,7 @@
         </div>
         <div class="form-group">
             <label for="zipcode">Zip-code:</label>
-            <input type="text" class="form-control" name="zipcode" id="zipcode">
+            <input type="text" class="form-control" name="zip_code" id="zipcode">
         </div>
         <div class="form-group">
             <label for="phone">Phone:</label>

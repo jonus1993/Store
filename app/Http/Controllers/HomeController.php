@@ -21,14 +21,10 @@ class HomeController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function getAddresses() {
-        $userid = auth()->id();
-        return Address::where('user_id', '=', $userid)->get();
-    }
-
     public function index() {
 
-        $addresses = $this->getAddresses();
+        $addresses = new Address();
+        $addresses = $addresses->getAddresses();
 //        dd($addresses);
         return view('home', compact('addresses'));
     }

@@ -16,9 +16,9 @@ class Items extends Migration {
             $table->increments('id');
             $table->string('name');
             $table->double('price');
-            $table->integer('category_id');
-//            $table->foreign('category_id')->references('id')->on('categories');
-            $table->string('photo_name');
+            $table->integer('category_id')->unsigned()->nullable();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
+            $table->string('photo_name')->nullable();
             $table->timestamps();
         });
     }

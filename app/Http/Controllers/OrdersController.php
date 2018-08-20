@@ -8,6 +8,7 @@ use App\Cart_Items;
 use App\Cart2;
 use App\Order_Items;
 use Illuminate\Support\Facades\DB;
+use App\Address;
 
 class OrdersController extends Controller {
 
@@ -25,26 +26,32 @@ class OrdersController extends Controller {
 
 
     public function saveOrder(Request $request) {
-
-        $request->validate([
-            'address' => 'required',
-        ]);
-
         $this->userid = auth()->id();
+        if ($request->has('address_id')) {
+            $request->validate([
+                'address_id' => 'required|numeric',
+            ]);
+            $addressID = $request->input('address_id');
+        } else {
+
+            $address = new Address();
+            $addressID = $address->store($request);
+        }
+
         $Cart2 = new Cart2();
-        $cartid = $Cart2->getCartId($this->userid);
-        $cartid = $cartid->id;
-        $totalQty = Cart_Items::where('cart_id', $cartid)->sum('qty');
-        $totalPrice = Cart_Items::where('cart_id', $cartid)->with('item')->get();
+        $cartID = $Cart2->getCartId($this->userid);
+        $cartID = $cartID->id;
+        $totalQty = Cart_Items::where('cart_id', $cartID)->sum('qty');
+        $totalPrice = Cart_Items::where('cart_id', $cartID)->with('item')->get();
 //      dd($totalPrice);
         $totalPrc = 0;
         foreach ($totalPrice as $totPrc)
             $totalPrc += $totPrc['qty'] * $totPrc->item->price;
 
-        //tworzenie zamówienia nowego
+        //tworzenie nowego zamówienia 
         $order = new Orders();
         $order->user_id = $this->userid;
-        $order->address_id = $request->input('address');
+        $order->address_id = $addressID;
         $order->total_items = $totalQty;
         $order->total_cost = $totalPrc;
         $order->save();
@@ -59,7 +66,7 @@ class OrdersController extends Controller {
         }
         //usuwanie przedmiotów z koszyka w bazie
         //usuwanie koszyka z bazy
-        $Cart2->delCart($cartid);
+        $Cart2->delCart($cartID);
 
 
 
@@ -75,7 +82,7 @@ class OrdersController extends Controller {
 
     public function showOrder($orderId) {
 //        $order = DB::table('order__items')->where('order_id', $orderId)->get();
-         $order = Order_Items::where('order_id', $orderId)->with('item')->get();
+        $order = Order_Items::where('order_id', $orderId)->with('item')->get();
 
         return view('orders.Order', compact('order'));
     }

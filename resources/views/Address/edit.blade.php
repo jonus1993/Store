@@ -26,7 +26,7 @@ Edit Address
     </div>
     <div class="form-group">
         <label for="zipcode">Zip-code:</label>
-        <input type="text" class="form-control" name="zipcode" id="zipcode" value="{{$address->zip_code}}">
+        <input type="text" class="form-control" name="zip_code" id="zipcode" value="{{$address->zip_code}}">
     </div>
     <div class="form-group">
         <label for="phone">Phone:</label>

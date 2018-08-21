@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderPlaced;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Orders;
 use App\Cart_Items;
 use App\Cart2;
 use App\Order_Items;
-use Illuminate\Support\Facades\DB;
 use App\Address;
 use App\GuestsOrders_Items;
 
@@ -41,7 +42,9 @@ class OrdersController extends Controller {
 
         $Cart2 = new Cart2();
         $cartID = $Cart2->getCartId($this->userid);
+
         $cartID = $cartID->id;
+
         $totalQty = Cart_Items::where('cart_id', $cartID)->sum('qty');
         $totalPrice = Cart_Items::where('cart_id', $cartID)->with('item')->get();
 //      dd($totalPrice);
@@ -65,13 +68,15 @@ class OrdersController extends Controller {
             $orderItems->qty = $totPrc['qty'];
             $orderItems->save();
         }
+//wysyłanie wiadomości dla klienta
+//        $orderM = Order_Items::where('order_id', $order->id)->with('item')->get();
+//
+//        Mail::to(auth()->user())
+//                ->cc('jszwarc@merinosoft.com.pl')
+//                ->send(new OrderPlaced($orderM));
         //usuwanie przedmiotów z koszyka w bazie
         //usuwanie koszyka z bazy
         $Cart2->delCart($cartID);
-
-
-
-
         return view('orders.finished', ['orderid' => $order->id]);
     }
 
@@ -82,12 +87,20 @@ class OrdersController extends Controller {
     }
 
     public function showOrder($orderId, $state = 1) {
-//        $order = DB::table('order__items')->where('order_id', $orderId)->get();
-        if ($state == 1)
-            $order = Order_Items::where('order_id', $orderId)->with('item')->get();
-        else
-            $order = GuestsOrders_Items::where('order_id', $orderId)->with('item')->get();
 
+
+        if ($state == 1) {
+            $order = Orders::where('id', $orderId)->first();
+            if ($order->user_id == auth()->id() || auth()->user()->isAdmin())
+                $order = Order_Items::where('order_id', $orderId)->with('item')->get();
+            else
+                return abort(403, 'Unauthorized action.');
+        } else {
+            if (auth()->user()->isAdmin())
+                $order = GuestsOrders_Items::where('order_id', $orderId)->with('item')->get();
+            else
+                return abort(403, 'Unauthorized action.');
+        }
 
         return view('orders.Order', compact('order'));
     }

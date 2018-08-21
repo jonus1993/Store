@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Session;
 
 class AddressController extends Controller {
 
+    protected $addressM;
+
     public function __construct() {
         $this->middleware('auth');
     }
@@ -23,38 +25,40 @@ class AddressController extends Controller {
         return redirect('/home');
     }
 
-  
-
     public function edit($addressID) {
-
-        $address = Address::where('id', '=', $addressID)->first();
+        $this->authorization($addressID);
+        $address = $this->addressM;
         return view('address.edit', compact('address'));
     }
 
     public function update(Request $request, $addressID) {
-
+        $this->authorization($addressID);
         $this->addressValidation($request);
-        $address = Address::where('id', '=', $addressID)->first();
-        $address->user_id = auth()->id();
+        $address = $this->addressM;
         $input = $request->all();
         $address->fill($input)->save();
         return redirect('/home');
     }
 
-    public function addressValidation(Request $request) {
+    public function delete($addressID) {
+        $this->authorization($addressID);
+        $this->addressM->delete();
+        return redirect('/home');
+    }
 
+    public function authorization($addressID) {
+        $address = $this->addressM = Address::where('id', '=', $addressID)->first();
+        if ($address->user_id != auth()->id())
+            return abort(403, 'Unauthorized action.');
+    }
+
+    public function addressValidation(Request $request) {
         $request->validate([
             'street' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
             'city' => 'required|min:2|max:128|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9.]+$/',
             'zip_code' => 'required|size:6|regex:[[0-9][0-9]-[0-9][0-9][0-9]]',
             'phone' => 'required|numeric',
         ]);
-    }
-
-    public function delete($addressID) {
-
-        Address::where('id', '=', $addressID)->delete();
-        return redirect('/home');
     }
 
 }

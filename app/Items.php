@@ -3,8 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Ghanem\Rating\Traits\Ratingable as Rating;
 
-class Items extends Model {
+class Items extends Model 
+{
+    use Rating;
 
     protected $fillable = [
         'id','name','category_id','price'

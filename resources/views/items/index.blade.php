@@ -39,6 +39,7 @@ Colours
         <tr>
             <th>ID</th>
             <th>NAME</th>
+            <th>RATE</th>
             <th>PRICE</th>
             <th>CATEGORY</th>
             <th>PROMOS</th>
@@ -48,6 +49,7 @@ Colours
         <tr>
             <td>{{ $item->id }}</td>
             <td>{{ $item->name  }}</td>
+            <td></td>
             <td>{{ $item->price }}</td>
             <td>{{ $item->category->name }}</td>
             <td>@foreach($item->tags as $tag){{ 

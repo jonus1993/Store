@@ -4,6 +4,10 @@ Checkout
 @endsection
 @section('content')
 <h1>Finish your order!</h1>
+<!--wyświetlnia wiadomości-->
+@if (Session::has('message'))
+<div class="alert alert-info">{{ Session::get('message') }}</div>
+@endif
 @if ($errors->any())
 <h4 style="color: red">Something wents wrong... check it!</h4>
 <div class="alert alert-danger">
@@ -16,11 +20,9 @@ Checkout
 @endif
 <form action="{{route('finishOrder')}}" method="post">
     @csrf
-  
- 
     <div class="row">
         @if($addresses->isEmpty())        
-         <div class="form-group">
+        <div class="form-group">
             <label for="street">Street address:</label>
             <input type="text" class="form-control" name="street" id="street">
         </div>
@@ -46,9 +48,9 @@ Checkout
             Zip Code: {{$address['zip_code']}} <br>
             Phone: {{$address['phone']}} <br>
         </address>
-        
+
         @endforeach
-        
+
         @endif
     </div>
     <a class="btn btn-info" href="{{route('address.add')}}">Add the new address</a>

@@ -5,7 +5,10 @@ Home
 @section('content')
 
 
-
+<!--wyświetlnia wiadomości-->
+@if (Session::has('message'))
+   <div class="alert alert-info">{{ Session::get('message') }}</div>
+@endif
 <div class="row">
     @foreach($addresses as $address)
     <address class="col-md-3">

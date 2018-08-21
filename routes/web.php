@@ -71,7 +71,7 @@ Route::get('/allorders', [
     'uses' => 'OrdersController@showOrders',
     'as' => 'allOrders'
 ]);
-Route::get('/order/{orderid}', [
+Route::get('/order/{orderid}/{flag?}', [
     'uses' => 'OrdersController@showOrder',
     'as' => 'showOrder'
 ]);
@@ -107,7 +107,12 @@ Route::prefix('manage')->group(function () {
     Route::get('/', 'ManageController@getUserslist')->name('manage');
     Route::get('/del/{id}', 'ManageController@deleteUser')->name('del.user');
     Route::get('/{id}/', 'ManageController@changeUser')->name('chg.user');
+   
 });
+
+ Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');
+
+
 Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');
 Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');
 Route::get('/items2/{item}/{qty?}', [

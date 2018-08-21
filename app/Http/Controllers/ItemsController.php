@@ -55,6 +55,7 @@ class ItemsController extends Controller {
         $cart->add($item, $item->id, $qty);
 
         $request->session()->put('cart', $cart);
+        return redirect()->back();
     }
 
     public function getCart() {

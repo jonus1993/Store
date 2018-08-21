@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Address;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class AddressController extends Controller {
 
@@ -16,11 +17,13 @@ class AddressController extends Controller {
     }
 
     public function store(Request $request) {
-
         $address = new Address();
         $address->store($request);
-        return redirect()->getUrlGenerator()->previous();
+        Session::flash('message', "Pomyślnie dodano");
+        return redirect('/home');
     }
+
+  
 
     public function edit($addressID) {
 

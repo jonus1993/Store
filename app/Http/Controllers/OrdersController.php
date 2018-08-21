@@ -9,6 +9,7 @@ use App\Cart2;
 use App\Order_Items;
 use Illuminate\Support\Facades\DB;
 use App\Address;
+use App\GuestsOrders_Items;
 
 class OrdersController extends Controller {
 
@@ -80,9 +81,13 @@ class OrdersController extends Controller {
         return view('orders.allOrders', compact('orders'));
     }
 
-    public function showOrder($orderId) {
+    public function showOrder($orderId, $state = 1) {
 //        $order = DB::table('order__items')->where('order_id', $orderId)->get();
-        $order = Order_Items::where('order_id', $orderId)->with('item')->get();
+        if ($state == 1)
+            $order = Order_Items::where('order_id', $orderId)->with('item')->get();
+        else
+            $order = GuestsOrders_Items::where('order_id', $orderId)->with('item')->get();
+
 
         return view('orders.Order', compact('order'));
     }

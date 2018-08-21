@@ -13,40 +13,40 @@ All yourd orders
             <th>DATE</th>
             <th>ITEMS AMOUNT</th>
             <th>ORDER COST</th>
-
-
+            <th>WHO</th>
         </tr>
     </thead>
     <tbody>
         @foreach($orders as $order)
 
-        <tr class='clickable-row' data-href='{{route('showOrder', $order->id) }}'> 
+        <tr class='clickable-row' data-href='{{route('showOrder', [$order->id, ($order->new_column == "guest") ? 2 : ""]) }}'> 
             <td>{{ $order->id }}</td>
             <td>{{ $order->created_at }}</td>
-
             <td>{{ $order->total_items }}</td>
             <td>{{ $order->total_cost }}</td>
+            <td>{{ $order->new_column }}</td>
 
         </tr>
-   
-    @endforeach
-</tbody>
-<tfoot> 
-    <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
-    </tfood>
+
+        @endforeach
+    </tbody>
+    <tfoot> 
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        </tfood>
 </table>
 
 @stop
 
 @push('scripts')
 
-<!-- DataTables 
---><script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
 <script>
 $(document).ready(function () {
@@ -101,11 +101,11 @@ $(document).ready(function () {
 
 
 <script>
-$(document).ready(function($) {
-    $(".clickable-row").click(function() {
-        window.location = $(this).data("href");
-    });
-});</script>
+    $(document).ready(function ($) {
+        $(".clickable-row").click(function () {
+            window.location = $(this).data("href");
+        });
+    });</script>
 
 
 

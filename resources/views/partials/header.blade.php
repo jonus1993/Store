@@ -27,7 +27,10 @@
             <!--jeżeli użytkownik to admin -->
             @if(auth()->user()->isAdmin())
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('manage') }}">Manage</a>
+                <a class="nav-link" href="{{ route('manage') }}">Manage Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('manageOrders') }}">Manage Orders</a>
             </li>
             @endif
 

@@ -43,7 +43,7 @@ Add Colour
     </div>
     <div class="form-group">
     <label for="photo">Photo</label>
-    <input type="file" class="form-control-file" name="photo" id="photo">
+    <input type="file" class="form-control-file" name="photo_name" id="photo">
   </div>
     
     <button type="submit" class="btn btn-primary">Add</button>

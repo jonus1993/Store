@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Notifications\PriceDown;
 use App\NotifiPrice;
+use Illuminate\Support\Facades\Storage;
 
 class ModeratorController extends Controller {
 
@@ -48,7 +49,9 @@ class ModeratorController extends Controller {
         $this->doValidation($request);
         $input = $request->all();
         $item = new Items();
-        $item->photo_name = $this->addPhoto($request);
+        //dodawanie zdjęcia
+        if (Input::has('photo_name'))
+            $item->photo_name = $this->addPhoto($request);
         $item->fill($input)->save();
 
         //dodawanie tagów
@@ -73,8 +76,10 @@ class ModeratorController extends Controller {
 
         $item = Items::where('id', '=', $itemID)->first();
         $input = $request->all();
-
+//        dd($item->photo_name);
+        //zmienianie zdjęcia
         if (Input::has('photo_name'))
+//            Storage::delete('public/photos/' . $item->photo_name);
             $item->photo_name = $this->addPhoto($request);
 
         //wysłanie wiadomości dla subskryb <- jakoś tak antów 
@@ -109,19 +114,17 @@ class ModeratorController extends Controller {
 
     protected function addPhoto(Request $request) {
 
-        if (Input::has('photo_name')) {
+//            $request->photo_name->move(public_path('photos'), $photoName);
 
-            // get current time and append the upload file extension to it,
-            // then put that name to $photoName variable.
-            $photoName = time() . '.' . $request->photo_name->getClientOriginalExtension();
+        $file = $request->file('photo_name');
 
-            /*
-              talk the select file and move it public directory and make avatars
-              folder if doesn't exsit then give it that unique name.
-             */
-            $request->photo_name->move(public_path('photos'), $photoName);
-            return $photoName;
-        }
+        // generate a new filename. getClientOriginalExtension() for the file extension
+        $filename = time() . '.' . $file->getClientOriginalExtension();
+
+        // save to storage/app/photos as the new $filename
+        $file->storeAs('photos', $filename);
+
+        return $filename;
     }
 
     protected function doValidation(Request $request) {

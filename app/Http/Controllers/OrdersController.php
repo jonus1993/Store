@@ -68,12 +68,12 @@ class OrdersController extends Controller {
             $orderItems->qty = $totPrc['qty'];
             $orderItems->save();
         }
-//wysyłanie wiadomości dla klienta
-//        $orderM = Order_Items::where('order_id', $order->id)->with('item')->get();
-//
-//        Mail::to(auth()->user())
-//                ->cc('jszwarc@merinosoft.com.pl')
-//                ->send(new OrderPlaced($orderM));
+        //wysyłanie wiadomości dla klienta
+        $orderM = Order_Items::where('order_id', $order->id)->with('item')->get();
+
+        Mail::to(auth()->user())
+                ->cc('jszwarc@merinosoft.com.pl')
+                ->send(new OrderPlaced($orderM));
         //usuwanie przedmiotów z koszyka w bazie
         //usuwanie koszyka z bazy
         $Cart2->delCart($cartID);

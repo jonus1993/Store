@@ -19,7 +19,7 @@ Your order
         </tr>
     </thead>
     <tbody>
-        @php($i = 0)
+        @php($i = 1)
         @foreach($order as $item)
 
         <tr class='clickable-row' data-href=''> 

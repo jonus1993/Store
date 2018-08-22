@@ -13,7 +13,9 @@ All yourd orders
             <th>DATE</th>
             <th>ITEMS AMOUNT</th>
             <th>ORDER COST</th>
+             @if(auth()->user()->isAdmin())
             <th>WHO</th>
+            @endif
         </tr>
     </thead>
     <tbody>
@@ -24,8 +26,9 @@ All yourd orders
             <td>{{ $order->created_at }}</td>
             <td>{{ $order->total_items }}</td>
             <td>{{ $order->total_cost }}</td>
+             @if(auth()->user()->isAdmin())
             <td>{{ $order->new_column }}</td>
-
+            @endif
         </tr>
 
         @endforeach

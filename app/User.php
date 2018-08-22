@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Notifications\PriceDown;
+
+//$user->notify(new PriceDown($invoice));
 
 class User extends Authenticatable {
 
@@ -30,6 +33,10 @@ class User extends Authenticatable {
     public function roles() {
         return $this->belongsToMany(Roles::class, 'roles_has_users', 'users_id', 'roles_id')->withTimestamps();
     }
+    
+    public function items() {
+        return $this->belongsToMany(Items::class, 'notifi_prices', 'user_id', 'item_id')->withTimestamps();
+    }
 
     public function isAdmin() {
         if ($this->roles()->where('name', 'Admin')->exists())
@@ -46,5 +53,7 @@ class User extends Authenticatable {
     public function addresses() {
         return $this->hasMany(Address::class);
     }
+    
+    
 
 }

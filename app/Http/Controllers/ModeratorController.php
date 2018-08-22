@@ -11,6 +11,8 @@ use App\Categories;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Notifications\PriceDown;
+use App\NotifiPrice;
 
 class ModeratorController extends Controller {
 
@@ -37,61 +39,24 @@ class ModeratorController extends Controller {
 //    }
 
     public function createNewItem() {
-
-
         $tags = Tags::all();
         $categories = Categories::all();
         return view('items.add', compact('tags', 'categories'));
     }
 
-    public function getItem($itemid) {
-        $item = Items::where('id', $itemid)->with('category')->get();
-//       dd($item);
-        return view('items.show', compact('item'));
-    }
-
     public function saveNewItem(Request $request) {
-
-        $request->validate([
-            'name' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
-            'price' => 'required|regex:/^[0-9., ]+$/',
-            'photo_name' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'category_id' => 'required|numeric',
-            'tags' => 'nullable|array',
-            'tags.*' => 'integer'
-        ]);
-
-
-
+        $this->doValidation($request);
         $input = $request->all();
         $item = new Items();
-        if (Input::has('photo_name')) {
-
-            // get current time and append the upload file extension to it,
-            // then put that name to $photoName variable.
-            $photoName = time() . '.' . $request->photo_name->getClientOriginalExtension();
-
-            /*
-              talk the select file and move it public directory and make avatars
-              folder if doesn't exsit then give it that unique name.
-             */
-            $request->photo_name->move(public_path('photos'), $photoName);
-            $item->photo_name = $photoName;
-        }
-
+        $item->photo_name = $this->addPhoto($request);
         $item->fill($input)->save();
-        if (Input::has('tags')) {
-            $tags = $request->input('tags');
-            foreach ($tags as $tagid) {
-                $itemTag = new ItemTag();
-                $itemTag->item_id = $item->id;
-                $itemTag->tag_id = $tagid;
-                $itemTag->save();
-            }
-        }
+
+        //dodawanie tagów
+        if (Input::has('tags'))
+            $this->addTags($request, $item->id);
 
         //dodawnia wiadomości po wykonanej akcji
-        Session::flash('message', "Pomyślnie dodano");
+        Session::flash('message', "Pomyślnie dodano kolorek");
         return redirect()->route('item.create');
     }
 
@@ -104,8 +69,64 @@ class ModeratorController extends Controller {
     }
 
     public function updateItem(Request $request, $itemID) {
+        $this->doValidation($request);
 
-//        Validator::extend('numericarray', function($attribute, $value, $parameters) {
+        $item = Items::where('id', '=', $itemID)->first();
+        $input = $request->all();
+
+        if (Input::has('photo_name'))
+            $item->photo_name = $this->addPhoto($request);
+
+        //wysłanie wiadomości dla subskryb <- jakoś tak antów 
+        if ($input['price'] < $item->price) {
+            $item->fill($input)->save();
+            $users = NotifiPrice::where('item_id', $itemID)->with('item')->with('user')->get();
+            foreach ($users as $user)
+                $user->user->notify(new PriceDown($users[0]->item));
+        } else {
+            $item->fill($input)->save();
+        }
+
+        ItemTag::where('item_id', $itemID)->delete();
+        if (Input::has('tags'))
+            $this->addTags($request, $itemID);
+
+        //dodawnia wiadomości po wykonanej akcji
+        Session::flash('message', "Pomyślnie zedytowano kolorek");
+        return redirect()->back();
+    }
+
+    protected function addTags(Request $request, $itemID) {
+
+        $tags = $request->input('tags');
+        foreach ($tags as $tagid) {
+            $itemTag = new ItemTag();
+            $itemTag->item_id = $itemID;
+            $itemTag->tag_id = $tagid;
+            $itemTag->save();
+        }
+    }
+
+    protected function addPhoto(Request $request) {
+
+        if (Input::has('photo_name')) {
+
+            // get current time and append the upload file extension to it,
+            // then put that name to $photoName variable.
+            $photoName = time() . '.' . $request->photo_name->getClientOriginalExtension();
+
+            /*
+              talk the select file and move it public directory and make avatars
+              folder if doesn't exsit then give it that unique name.
+             */
+            $request->photo_name->move(public_path('photos'), $photoName);
+            return $photoName;
+        }
+    }
+
+    protected function doValidation(Request $request) {
+
+        //        Validator::extend('numericarray', function($attribute, $value, $parameters) {
 //            if (is_array($value)) {
 //                foreach ($value as $v) {
 //                    if (!is_int($v))
@@ -123,55 +144,20 @@ class ModeratorController extends Controller {
         ]);
 
 
-
-        if (Input::has('tags')) {
-
-            $tags = $request->input('tags');
-//            $rules = array('tags'=>'required|numericarray');
-//            dd($rules);
-        }
-
-
-
-        $item = Items::where('id', '=', $itemID)->first();
-        $input = $request->all();
-
-        if (Input::has('photo_name')) {
-
-            // get current time and append the upload file extension to it,
-            // then put that name to $photoName variable.
-            $photoName = time() . '.' . $request->photo_name->getClientOriginalExtension();
-
-            /*
-              talk the select file and move it public directory and make avatars
-              folder if doesn't exsit then give it that unique name.
-             */
-            $request->photo_name->move(public_path('photos'), $photoName);
-            $item->photo_name = $photoName;
-        }
-
-        $item->fill($input)->save();
-
-        ItemTag::where('item_id', $item->id)->delete();
-        if (Input::has('tags')) {
-
-            foreach ($tags as $tagID) {
-                $itemTag = new ItemTag();
-                $itemTag->item_id = $item->id;
-                $itemTag->tag_id = $tagID;
-                $itemTag->save();
-            }
-        }
-
-        //dodawnia wiadomości po wykonanej akcji
-        Session::flash('message', "Pomyślnie zedytowano");
-        return redirect()->back();
+//         $request->validate([
+//            'name' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
+//            'price' => 'required|regex:/^[0-9., ]+$/',
+//            'photo_name' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+//            'category_id' => 'required|numeric',
+//            'tags' => 'nullable|array',
+//            'tags.*' => 'integer'
+//        ]);
     }
 
-    public function deleteItem($itemid) {
+    public function deleteItem($itemID) {
 
-        ItemTag::where('item_id', $itemid)->delete();
-        Items::where('id', '=', $itemid)->delete();
+        ItemTag::where('item_id', $itemID)->delete();
+        Items::where('id', '=', $itemID)->delete();
         Session::flash('message', "Pomyślnie dodano");
         return redirect()->back();
     }

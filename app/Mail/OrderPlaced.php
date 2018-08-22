@@ -7,7 +7,6 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-
 class OrderPlaced extends Mailable
 {
     use Queueable, SerializesModels;
@@ -18,7 +17,8 @@ class OrderPlaced extends Mailable
      * @return void
      * 
      */
-    protected $order;
+    public $order;
+    
     public function __construct($order)
     {
         $this->order = $order;
@@ -33,6 +33,6 @@ class OrderPlaced extends Mailable
     {
         $order =  $this->order;
     
-        return $this->view('orders.mail', compact('order'))->subject("Order number: " . $order[0]->order_id . " placed!");
+        return $this->subject("Order number: " . $order[0]->order_id . " placed!")->markdown('orders.placed');
     }
 }

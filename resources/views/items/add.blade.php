@@ -30,7 +30,7 @@ Add Colour
     </div>
     <div class="form-group">
         <label for="category">category:</label>
-        <select class="form-control" name="category" id="category">
+        <select class="form-control" name="category_id" id="category_id">
             @foreach($categories as $cat)
             <option value="{{ $cat->id }}">{{ $cat->name }}</option>
             @endforeach

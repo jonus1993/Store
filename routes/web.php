@@ -16,9 +16,15 @@ Route::prefix('items')->group(function () {
 
 
 Route::get('/item/{id}', [
-    'uses' => 'ModeratorController@getItem',
+    'uses' => 'ItemsController@getItem',
     'as' => 'item.get'
 ]);
+
+Route::get('/saveNotifi/{id}', [
+    'uses' => 'RatingController@saveNotfication',
+    'as' => 'notifi.save'
+]);
+
 
 Route::group(['middleware' => 'can:moderator-allowed'], function () {
 
@@ -107,10 +113,9 @@ Route::prefix('manage')->group(function () {
     Route::get('/', 'ManageController@getUserslist')->name('manage');
     Route::get('/del/{id}', 'ManageController@deleteUser')->name('del.user');
     Route::get('/{id}/', 'ManageController@changeUser')->name('chg.user');
-   
 });
 
- Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');
+Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');
 
 
 Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');

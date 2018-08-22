@@ -48,6 +48,7 @@ class ItemsController extends Controller {
         return view('items.index', compact('items', 'tags', 'categories'));
     }
 
+    
     public function getAddToCart(Request $request, $id, $qty = 1) {
         $item = Items::find($id);
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
@@ -75,6 +76,12 @@ class ItemsController extends Controller {
         $cart = new Cart($oldCart);
         $total = $cart->totalPrice;
         return view('items.checkout', ['total' => $total]);
+    }
+    
+        public function getItem($itemid) {
+        $item = Items::where('id', $itemid)->with('category')->get();
+//       dd($item);
+        return view('items.show', compact('item'));
     }
 
 }

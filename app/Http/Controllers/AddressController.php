@@ -22,7 +22,7 @@ class AddressController extends Controller {
         $address = new Address();
         $address->store($request);
         Session::flash('message', "Pomyślnie dodano");
-        return redirect('/home');
+        return redirect($request->input('last_url', '/home'));
     }
 
     public function edit($addressID) {

@@ -16,6 +16,7 @@
 @endif
     <form action="{{route('address.add')}}" method="post">
         @csrf
+        <input type=hidden name="last_url" value="{{old('last_url', URL::previous())}}" >
         <div class="form-group">
             <label for="street">Street address:</label>
             <input type="text" class="form-control" name="street" id="street">
@@ -25,8 +26,8 @@
             <input type="text" class="form-control" name="city" id="city">
         </div>
         <div class="form-group">
-            <label for="zipcode">Zip-code:</label>
-            <input type="text" class="form-control" name="zip_code" id="zipcode">
+            <label for="zip_code">Zip-code:</label>
+            <input type="text" class="form-control" name="zip_code" id="zip_code">
         </div>
         <div class="form-group">
             <label for="phone">Phone:</label>

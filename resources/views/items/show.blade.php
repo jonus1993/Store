@@ -30,6 +30,8 @@ Colour
         <i class="fa fa-star" aria-hidden="true"></i>
     </a>
     @endfor
+    <br>
+    <a href="{{route('notifi.save', $item[0]->id)}}">Powiadom mnie kiedy cena spadnie</a>
 
 
 </div>

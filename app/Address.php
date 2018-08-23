@@ -7,16 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AddressController;
 
 class Address extends Model {
-
-    protected $fillable = [
-        'street', 'zip_code', 'city', 'phone'
-    ];
-    protected $hidden = [
-        'user_id',
-    ];
-    protected $table = 'addresses';
-
-    public function store(Request $request) {
+    
+    
+       public function store(Request $request) {
         $validation = new AddressController();
         $validation->addressValidation($request);
         $input = $request->all();
@@ -30,5 +23,15 @@ class Address extends Model {
         $userid = auth()->id();
         return Address::where('user_id', '=', $userid)->get();
     }
+
+    protected $fillable = [
+        'street', 'zip_code', 'city', 'phone'
+    ];
+    protected $hidden = [
+        'user_id',
+    ];
+    protected $table = 'addresses';
+
+ 
 
 }

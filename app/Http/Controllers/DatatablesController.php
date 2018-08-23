@@ -18,6 +18,7 @@ class DatatablesController extends Controller {
     protected $items;
 
     public function getIndex() {
+
         $tags = Tags::all();
         $categories = Categories::all();
         return view('items.index2', compact('tags', 'categories'));
@@ -25,12 +26,10 @@ class DatatablesController extends Controller {
 
     public function anyData(Request $request) {
 
-        $tagInput = $request->input('tags');
-        $catInput = request()->input('categories');
-
-        $tagInput = Tags::select('friend_name')->get();
         $catInput = Categories::select('id')->get();
         $catInput = Input::get('categories', $catInput);
+
+        $tagInput = Tags::select('friend_name')->get();
         $tagInput = Input::get('tags', $tagInput);
 
         $tagIds = Tags::select('id')->whereIn('friend_name', $tagInput)->get();
@@ -41,7 +40,6 @@ class DatatablesController extends Controller {
                 ->with('category')
                 ->with('tags');
 //        $items = Items::with('category')->with('tags');
-
 
         return Datatables::of($items)->make();
     }
@@ -180,10 +178,14 @@ class DatatablesController extends Controller {
         return view('cart.checkout', compact('addresses', 'cart'));
     }
 
-    public function getItems() {
-        $itemas = DB::table('items')->get();
+    public function getOrderInfo(Request $request) {
 
-        return view('items.index3', ['items' => $itemas]);
+        $itemID = $request->id;
+
+        $orders = DB::table('order__items')->where('item_id', $itemID);
+
+
+        return Datatables::of($item)->make();
     }
 
 }

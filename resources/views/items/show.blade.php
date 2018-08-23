@@ -10,10 +10,9 @@ Colour
 </div>
 <div>
     @if($item[0]->photo_name == null)
-
-    <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/storage/app/photos/421.png')}}" alt="No Image"/>
+    <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/421.png')}}" alt="No Image"/>
     @else
-    <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/storage/app/photos/'.$item[0]->photo_name)}}" alt="No Image"/>
+    <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/'.$item[0]->photo_name)}}" alt="No Image"/>
     @endif
 </div>
 <div class="form-group" id="rating-ability-wrapper">

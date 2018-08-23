@@ -15,10 +15,12 @@ class Items extends Migration {
         Schema::create('items', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->double('price');
+//            $table->double('price');
+            $table->decimal('price',8,2);
             $table->integer('category_id')->unsigned()->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
             $table->string('photo_name')->nullable();
+            $table->boolean('is_deleted')->nullable();
             $table->timestamps();
         });
     }

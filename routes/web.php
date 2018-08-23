@@ -63,10 +63,7 @@ Route::post('/checkout', [
     'as' => 'checkout'
 ]);
 
-Route::get('/checkout2', [
-    'uses' => 'DatatablesController@getCheckout',
-    'as' => 'checkout2'
-]);
+
 
 Route::post('/order', [
     'uses' => 'OrdersController@saveOrder',
@@ -120,11 +117,21 @@ Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');
 
 Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');
 Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');
+Route::get('/items2/order.info/', 'DatatablesController@getOrderInfo')->name('order.info');
 Route::get('/items2/{item}/{qty?}', [
     'uses' => 'DatatablesController@getAddToCart',
     'as' => 'item2.addToCart',
         ]
 );
+Route::get('/checkout2', [
+    'uses' => 'DatatablesController@getCheckout',
+    'as' => 'checkout2'
+]);
+
+Route::post('/cookies', [
+    'uses' => 'DatatablesController@setCookie',
+    'as' => 'cookies.set'
+]);
 
 Route::get('/cart2', 'DatatablesController@getCartView')->name('goToCart2');
 

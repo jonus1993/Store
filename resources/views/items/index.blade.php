@@ -47,12 +47,14 @@ Colours
                 <th>CATEGORY</th>
                 <th>PROMOS</th>
                 <th>TO CART</th>
+                @auth
                 @can('moderator-allowed', Auth::user())
                 <th>EDIT</th>
                 @endcan
                 @if(auth()->user()->isAdmin())
                 <th>DELETE</th>
                 @endif
+                @endauth
             </tr>
             @foreach($items as $item)
             <tr>

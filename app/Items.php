@@ -16,6 +16,14 @@ use Illuminate\Support\Facades\Input;
 class Items extends Model {
 
     use Rating;
+    
+     public function generateToken()
+    {
+        $this->api_token = str_random(60);
+        $this->save();
+
+        return $this->api_token;
+    }
 
     public function saveItem(Request $request, $itemID = null) {
         $this->doValidation($request);
@@ -101,7 +109,7 @@ class Items extends Model {
     }
 
     protected $fillable = [
-        'id', 'name', 'category_id', 'price'
+        'id', 'name', 'category_id', 'price', 'photo_name'
     ];
 
     public function tags() {

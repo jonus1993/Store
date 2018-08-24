@@ -28,6 +28,7 @@ class OrdersController extends Controller {
 
 
     public function saveOrder(Request $request) {
+        
         $this->userid = auth()->id();
         if ($request->has('address_id')) {
             $request->validate([
@@ -46,10 +47,10 @@ class OrdersController extends Controller {
         $cartID = $cartID->id;
 
         $totalQty = Cart_Items::where('cart_id', $cartID)->sum('qty');
-        $totalPrice = Cart_Items::where('cart_id', $cartID)->with('item')->get();
-//      dd($totalPrice);
+        $cartItems = Cart_Items::where('cart_id', $cartID)->with('item')->get();
+
         $totalPrc = 0;
-        foreach ($totalPrice as $totPrc)
+        foreach ($cartItems as $totPrc)
             $totalPrc += $totPrc['qty'] * $totPrc->item->price;
 
         //tworzenie nowego zamówienia 
@@ -59,15 +60,22 @@ class OrdersController extends Controller {
         $order->total_items = $totalQty;
         $order->total_cost = $totalPrc;
         $order->save();
-
+        
+   
+    
+        
+        $order->orderItem()->saveMany($cartItems);
+        
         //kopiowanie produktów z koszyka do zamówienia
-        foreach ($totalPrice as $totPrc) {
-            $orderItems = new Order_Items();
-            $orderItems->order_id = $order->id;
-            $orderItems->item_id = $totPrc->item->id;
-            $orderItems->qty = $totPrc['qty'];
-            $orderItems->save();
-        }
+//        foreach ($cartItems as $totPrc) {
+//            $orderItems = new Order_Items();
+//            $orderItems->order_id = $order->id;
+//            $orderItems->item_id = $totPrc->item->id;
+//            $orderItems->qty = $totPrc['qty'];
+//            $orderItems->save();
+//        }
+        
+        
         //wysyłanie wiadomości dla klienta
         $orderM = Order_Items::where('order_id', $order->id)->with('item')->get();
 

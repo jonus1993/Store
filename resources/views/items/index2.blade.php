@@ -103,6 +103,7 @@ $(".tagi").change(function() {
     console.log(Cookies.get('tags').split(','));
 });
 
+//tabela glowna
 
 var table = $('#items-table').DataTable({
         processing: true,
@@ -165,7 +166,7 @@ var table = $('#items-table').DataTable({
             
             var tr = $(this).closest('tr');
             var row = table.row( tr );
-            console.log(row);
+            
 
             if ( row.child.isShown() ) {
                 row.child.hide();
@@ -186,11 +187,13 @@ var table = $('#items-table').DataTable({
                 url: "http://127.0.0.1:8000/items2/order.info",
                 data: {
                     id: rowData.id
-                },
-                dataType: 'json',
-                success: function ( json ) {
+                },  
+                //dataType: 'json',
+                success: function (response) {
+        
+                    
                     div
-                        .html( json.html )
+                        .html(response )
                         .removeClass( 'loading' );
                 }
             } );

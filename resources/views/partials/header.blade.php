@@ -8,7 +8,9 @@
         <ul class="navbar-nav mr-auto">
 
 
-
+             <li class="nav-item">
+                <a class="nav-link" href="{{ url('/nbp') }}">NBP</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('/items') }}">Items</a>
             </li>

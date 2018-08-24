@@ -12,6 +12,9 @@ use App\Categories;
 use App\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use App\Order_Items;
+use App\GuestsOrders_Items;
+use Illuminate\Support\Facades\Response;
 
 class DatatablesController extends Controller {
 
@@ -180,12 +183,17 @@ class DatatablesController extends Controller {
 
     public function getOrderInfo(Request $request) {
 
-        $itemID = $request->id;
+        $itemID = $request->id;   
+        
+        $guests = GuestsOrders_Items::where('item_id', $itemID)
+                ->with('item');
 
-        $orders = DB::table('order__items')->where('item_id', $itemID);
+        $orders = Order_Items::where('item_id', $itemID)
+                ->with('item')
+                ->union($guests)->get();
 
 
-        return Datatables::of($item)->make();
+          return view('orders.table', compact('orders'));
     }
 
 }

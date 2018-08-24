@@ -4,6 +4,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/nbp', function () {
+    return view('nbp');
+});
+
 Route::prefix('items')->group(function () {
     Route::get('/', 'ItemsController@index');
     Route::post('/', 'ItemsController@postIndex')->name('filter.data');
@@ -128,10 +132,6 @@ Route::get('/checkout2', [
     'as' => 'checkout2'
 ]);
 
-Route::post('/cookies', [
-    'uses' => 'DatatablesController@setCookie',
-    'as' => 'cookies.set'
-]);
 
 Route::get('/cart2', 'DatatablesController@getCartView')->name('goToCart2');
 
@@ -144,7 +144,7 @@ Route::get('/cart2/{id}', [
 Route::auth();
 
 
-//z automatu przy authc sie tworzą
+//z automatu przy auth sie tworzą
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

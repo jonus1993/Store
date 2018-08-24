@@ -15,7 +15,6 @@ Your order
             <th>QUANTYTY</th>
             <th>COST</th>
 
-
         </tr>
     </thead>
     <tbody>

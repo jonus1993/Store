@@ -34,7 +34,7 @@ Colours
     </div>
     <div  class="col-10">
         <h1>Kolorki</h1>
-
+       
      
         
         <table class="table table-active table-bordered" id="items-table">

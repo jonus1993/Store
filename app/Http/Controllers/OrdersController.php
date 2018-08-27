@@ -47,7 +47,7 @@ class OrdersController extends Controller {
         $cartID = $cartID->id;
 
         $totalQty = Cart_Items::where('cart_id', $cartID)->sum('qty');
-        $cartItems = Cart_Items::where('cart_id', $cartID)->with('item')->get();
+        $cartItems = Cart_Items::where('cart_id', $cartID)->get();
 
         $totalPrc = 0;
         foreach ($cartItems as $totPrc)
@@ -62,26 +62,25 @@ class OrdersController extends Controller {
         $order->save();
         
    
-    
-        
-        $order->orderItem()->saveMany($cartItems);
-        
         //kopiowanie produktów z koszyka do zamówienia
-//        foreach ($cartItems as $totPrc) {
-//            $orderItems = new Order_Items();
-//            $orderItems->order_id = $order->id;
-//            $orderItems->item_id = $totPrc->item->id;
-//            $orderItems->qty = $totPrc['qty'];
-//            $orderItems->save();
-//        }
-        
-        
-        //wysyłanie wiadomości dla klienta
-        $orderM = Order_Items::where('order_id', $order->id)->with('item')->get();
+        foreach ($cartItems as $totPrc) {
+            $orderItems = new Order_Items();
+            $orderItems->order_id = $order->id;
+            $orderItems->item_id = $totPrc->item->id;
+            $orderItems->qty = $totPrc['qty'];
+            $orderItems->save();
+        }
 
-        Mail::to(auth()->user())
-                ->cc('jszwarc@merinosoft.com.pl')
-                ->send(new OrderPlaced($orderM));
+
+        //wysyłanie wiadomości dla klienta
+//        $orderM = Order_Items::where('order_id', $order->id)->with('item')->get();
+//
+//        Mail::to(auth()->user())
+//                ->cc('jszwarc@merinosoft.com.pl')
+//                ->send(new OrderPlaced($orderM));
+        
+        
+        
         //usuwanie przedmiotów z koszyka w bazie
         //usuwanie koszyka z bazy
         $Cart2->delCart($cartID);

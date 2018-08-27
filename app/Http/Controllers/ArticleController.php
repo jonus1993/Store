@@ -3,48 +3,83 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Items;
 use SoapBox\Formatter\Formatter;
 
 class ArticleController extends Controller {
 
+    public function __construct() {
+        $this->middleware('api_token');
+    }
+
+//    public function callAction($method, $parameters) {
+//        
+//        $response = parent::callAction($method, $parameters);
+//        
+//        if ($request->has('format') && $request->format == 'xml') {
+//            header('Content-type: text/xml; charset=utf8');
+//            
+//            $formatter = Formatter::make($response, Formatter::XML);
+//            return $formatter->toXml();
+//        }        
+//        
+//    }
+
     public function index(Request $request) {
 
-        $articles = Items::all()->toArray();
+        $articles = Items::all();
+
         if ($request->has('format') && $request->format == 'xml') {
-            $formatter = Formatter::make($articles, Formatter::XML);
-            $articles = $formatter->toXml();
-        } else
-            $articles = json_encode($articles);
+            $articles = $this->asXML($articles);
+            return (new Response($articles))->header('Content-Type', 'text/xml; charset=utf8');
+        }
+
         return $articles;
     }
 
     public function show(Items $article, Request $request) {
 
-        if ($request->has('format') && $request->format == 'xml') {
-            $formatter = Formatter::make($article, Formatter::XML);
-            $article = $formatter->toXml();
-        } else
-            $article = json_encode($article);
-        return $article;
+        if ($request->has('format')) {
+            if ($request->format == 'xml') {
+                $article = $this->asXML($article);
+                return (new Response($article))->header('Content-Type', 'text/xml; charset=utf8');
+            } else if ($request->format == 'csv') {
+                $article = $this->asCSV($article);
+                return $article;
+            }
+        }
+
+
+        return response($article, 200);
+    }
+
+    protected function asXML($article) {
+        $formatter = Formatter::make($article->toArray(), Formatter::XML);
+        return $article = $formatter->toXml();
+    }
+
+    protected function asCSV($article) {
+        $formatter = Formatter::make($article->toJson(), Formatter::CSV);
+        return $article = $formatter->toCsv();
     }
 
     public function store(Request $request) {
-        
+
         $article = Items::create($request->all());
 
         return response()->json($article, 201);
     }
 
     public function update(Request $request, Items $article) {
-        
+
         $article->update($request->all());
 
         return response()->json($article, 200);
     }
 
     public function delete(Items $article) {
-        
+
         $article->delete();
 
         return response()->json(null, 204);

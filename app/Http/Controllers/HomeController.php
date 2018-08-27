@@ -25,7 +25,6 @@ class HomeController extends Controller {
 
         $addresses = new Address();
         $addresses = $addresses->getAddresses();
-//        dd($addresses);
         return view('home', compact('addresses'));
     }
 

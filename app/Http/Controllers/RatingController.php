@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\NotifiPrice;
+use App\Items;
 
 class RatingController extends Controller {
 
@@ -15,6 +16,18 @@ class RatingController extends Controller {
             $notification->item_id = $itemID;
             $notification->save();
         }
+        return redirect()->back();
+    }
+
+    public function addRate(Items $item,$rate) {
+        
+        $user = auth()->user();
+//        dd($star);
+        $rating = $item->ratingUnique([
+            'rating' => $rate
+                ], $user);
+
+//        dd($rating);
         return redirect()->back();
     }
 

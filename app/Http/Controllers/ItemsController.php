@@ -12,15 +12,15 @@ use Illuminate\Support\Facades\Session;
 class ItemsController extends Controller {
 
     public function index() {
+
         $items = Items::paginate(11);
         $tags = Tags::all();
         $categories = Categories::all();
         return view('items.index', compact('items', 'tags', 'categories'));
     }
-    
-    
 
     public function postIndex(Request $request) {
+
         $tags = Tags::all();
         $categories = Categories::all();
 
@@ -48,40 +48,49 @@ class ItemsController extends Controller {
         return view('items.index', compact('items', 'tags', 'categories'));
     }
 
-    
     public function getAddToCart(Request $request, $id, $qty = 1) {
+
         $item = Items::find($id);
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
         $cart->add($item, $item->id, $qty);
-
         $request->session()->put('cart', $cart);
+
         return redirect()->back();
     }
 
     public function getCart() {
+
         if (!Session::has('cart')) {
             return view("cart.index");
         }
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
+
         return view('cart.index', ['items' => $cart->items, 'totalPrice' => $cart->totalPrice]);
     }
 
     public function getCheckout() {
+
         if (!Session::has('cart')) {
             return view("cart.index");
         }
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
         $total = $cart->totalPrice;
+
         return view('items.checkout', ['total' => $total]);
     }
-    
-        public function getItem($itemid) {
-        $item = Items::where('id', $itemid)->with('category')->get();
-//       dd($item);
-        return view('items.show', compact('item'));
+
+    public function getItem(Items $itemID) {
+        $item = $itemID;
+
+        $avgrate = number_format($item->avgRating,1);
+        $allrates = $item->countPositive;
+        
+
+
+        return view('items.show', compact('item', 'avgrate','allrates'));
     }
 
 }

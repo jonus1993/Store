@@ -23,8 +23,10 @@ Colours
             <h4 class="w3-bar-item">Kategorie</h4>
             @foreach($categories as $cat)
             <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="categories[]" value="{{ $cat->id }}">
-                <label class="form-check-label" for="exampleCheck1">{{ $cat->name }}</label>
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="categories[]" value="{{ $cat->id }}"
+
+
+                       <label class="form-check-label" for="exampleCheck1">{{ $cat->name }}</label>
             </div>
             @endforeach
             <br>
@@ -37,6 +39,10 @@ Colours
 
 
         <h1>Kolorki</h1>
+        <!--wyświetlnia wiadomości-->
+        @if (Session::has('message'))
+        <div class="alert alert-info">{{ Session::get('message') }}</div>
+        @endif
 
         <table class="table table-hover">
             <tr>

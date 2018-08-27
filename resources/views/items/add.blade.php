@@ -22,17 +22,20 @@ Add Colour
     @csrf
     <div class="form-group">
         <label for="name">colour name:</label>
-        <input type="text" class="form-control" name="name" id="name">
+        <input type="text" class="form-control" name="name" id="name" value="{{old('name')}}">
     </div>
     <div class="form-group">
         <label for="price">price:</label>
-        <input type="number" min="0.00" max="10000.00" step="0.01" class="form-control" name="price" id="price">
+        <input type="number" min="0.00" max="10000.00" step="0.01" class="form-control" name="price" id="price" value="{{old('price')}}">
     </div>
     <div class="form-group">
         <label for="category">category:</label>
         <select class="form-control" name="category_id" id="category_id">
-            @foreach($categories as $cat)
-            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+             @foreach($categories as $cat)
+            <option value="{{ $cat->id }}" @if ($cat->id == old('category_id'))) 
+                    selected="selected"
+                    @endif 
+                    >{{ $cat->name }}</option>
             @endforeach
         </select>
     </div>

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Input;
 use App\Order_Items;
 use App\GuestsOrders_Items;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
 
 class DatatablesController extends Controller {
 
@@ -27,6 +28,7 @@ class DatatablesController extends Controller {
         return view('items.index2', compact('tags', 'categories'));
     }
 
+    //funkcja dla DataTables, pobiera dane ajaxem
     public function anyData(Request $request) {
 
         $catInput = Categories::select('id')->get();
@@ -64,7 +66,7 @@ class DatatablesController extends Controller {
 //        $item = Items::find($id);
 
         $userid = auth()->id();
-        //patrzymy czy user już koszyk ma w bazie
+        //patrzymy czy user ma już koszyk w bazie
         $cart = $this->checkCartExist($userid);
         // jak nie ma to tworzymy go
         if ($cart === null) {
@@ -75,17 +77,18 @@ class DatatablesController extends Controller {
 
         //a teraz sprawdzamy czy juz mamy w koszyku przedmiot
         $cart_item = Cart_Items::where('item_id', '=', $item->id)->first();
+
         //jak nie ma to zaraz będzie
         if ($cart_item === null) {
             $cart_item = new Cart_Items;
             $cart_item->cart_id = $cart->id;
             $cart_item->item_id = $item->id;
-//            $cart_item->qty=$qty;
         }
         //jak jest to tylko zwiekszamy jego ilosc i zapisujemy w bazie
         $cart_item->qty += $qty;
         $cart_item->save();
-
+        
+        Session::flash('message', trans('messages.item2cart'));    
         return redirect()->back();
     }
 
@@ -116,22 +119,10 @@ class DatatablesController extends Controller {
 
         return compact('cart_items', 'totalQty', 'totalPrice');
 
-//        dd($cart_items);
-//        $itemIds = array();        
-//        foreach ($cart_items as $cart_item) {
-//            $itemIds[] = $cart_item->item_id;
-//        }        
-//        $itemsdt = Items::whereIn('id', $itemIds)->get();
-//        
-//        przykład odowołania do atrybutu po relacji
-//        $cart_items[0]->item->price
-        //$itemsdt = Items::whereIn('id', $cart_items->get('item_id'))->get();
-//        return view('cart.cart', ['items' => $itemsdt]);
-//         return view('cart.cart')->with('items', $itemsdt);
     }
 
     public function getCartView() {
-//        dd($this->getCart());
+
         $cart = $this->getCart();
         if (!is_array($cart)) {
             return $cart;
@@ -142,6 +133,7 @@ class DatatablesController extends Controller {
 
     //usuwanie przedmiotów z koszyka/koszyka
     public function delFromCart($id) {
+
         $userid = auth()->id();
         $cartid = Cart2::where('user_id', '=', $userid)->first();
 
@@ -183,17 +175,17 @@ class DatatablesController extends Controller {
 
     public function getOrderInfo(Request $request) {
 
-        $itemID = $request->id;   
-        
+        $itemID = $request->id;
+
         $guests = GuestsOrders_Items::where('item_id', $itemID)
                 ->with('item');
 
         $orders = Order_Items::where('item_id', $itemID)
-                ->with('item')
-                ->union($guests)->get();
+                        ->with('item')
+                        ->union($guests)->get();
 
 
-          return view('orders.table', compact('orders'));
+        return view('orders.table', compact('orders'));
     }
 
 }

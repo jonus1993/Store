@@ -19,15 +19,23 @@ Route::prefix('items')->group(function () {
 });
 
 
-Route::get('/item/{id}', [
+Route::get('/item/{itemID}', [
     'uses' => 'ItemsController@getItem',
     'as' => 'item.get'
 ]);
 
-Route::get('/saveNotifi/{id}', [
+
+
+Route::get('/save_notifi/{id}', [
     'uses' => 'RatingController@saveNotfication',
     'as' => 'notifi.save'
 ]);
+
+Route::get('/add_rate/{item}/{rate}', [
+    'uses' => 'RatingController@addRate',
+    'as' => 'add.rate'
+]);
+
 
 
 Route::group(['middleware' => 'can:moderator-allowed'], function () {

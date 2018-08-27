@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-
-
 class ManageController extends Controller {
 
     public function __construct() {
@@ -40,7 +38,9 @@ class ManageController extends Controller {
         ]);
 
         RolesHasUsers::where('users_id', $userid)->delete();
-        $roles = $request->input('roles');
+        $roles = $request->get('roles');
+
+
         foreach ($roles as $roleID) {
             $user = new RolesHasUsers();
             $user->users_id = $userid;
@@ -57,10 +57,9 @@ class ManageController extends Controller {
         $guests = DB::table('guests_orders')->select('id', 'total_cost', 'total_items', 'created_at', DB::raw('"guest" AS new_column'));
 
         $orders = DB::table('orders')
-                ->select('id', 'total_cost', 'total_items', 'created_at', DB::raw('"user" AS new_column'))
-                ->union($guests)->get();
-                
-//        dd($orders);
+                        ->select('id', 'total_cost', 'total_items', 'created_at', DB::raw('"user" AS new_column'))
+                        ->union($guests)->get();
+
 
         return view('orders.allOrders', compact('orders'));
     }

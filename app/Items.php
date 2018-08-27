@@ -35,13 +35,18 @@ class Items extends Model {
             $item = Items::where('id', '=', $itemID)->first();
 
             //wysłanie wiadomości dla subskryb <- jakoś tak antów 
-//            if ($input['price'] < $item->price) {
-//                $item->fill($input)->save();             
-//                $users = NotifiPrice::where('item_id', $itemID)->with('item')->with('user')->get();
-//                foreach ($users as $user)
-//                    $user->user->notify(new PriceDown($users[0]->item));
-//            }
+            
+            //opóźnienie wiadomości należy dodać  ->delay($when));
+            $when = now()->addMinutes(10);
+                    
+            if ($input['price'] < $item->price) {
+                $item->fill($input)->save();             
+                $users = NotifiPrice::where('item_id', $itemID)->with('item')->with('user')->get();
+                foreach ($users as $user)
+                    $user->user->notify((new PriceDown($users[0]->item))->delay($when));
+            }
         }
+        
         //dodawanie/zmienianie zdjęcia
         if (Input::has('photo_name')) {
             File::delete('photos/' . $item->photo_name);
@@ -119,5 +124,7 @@ class Items extends Model {
     public function category() {
         return $this->belongsTo(Categories::class, 'category_id');
     }
+    
+    
 
 }

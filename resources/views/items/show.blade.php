@@ -6,13 +6,13 @@ Colour
 @section('content')
 
 <div class="w3-container w3-teal">
-    <h1>Kolorek {{ $item[0]->name  }}</h1>
+    <h1>Kolorek {{ $item->name  }}</h1>
 </div>
 <div>
-    @if($item[0]->photo_name == null)
+    @if($item->photo_name == null)
     <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/421.png')}}" alt="No Image"/>
     @else
-    <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/'.$item[0]->photo_name)}}" alt="No Image"/>
+    <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/'.$item->photo_name)}}" alt="No Image"/>
     @endif
 </div>
 <div class="form-group" id="rating-ability-wrapper">
@@ -22,15 +22,16 @@ Colour
         <input type="hidden" id="selected_rating" name="selected_rating" value="" required="required">
     </label>
     <h2 class="bold rating-header" style="">
-        <span class="selected-rating">0</span><small> / 5</small>
+        <span class="selected-rating">{{$avgrate}}</span><small> / 5</small>
     </h2>
+    <span class="glyphicon glyphicon-user">Wszystkich ocen: {{$allrates}}</span><br>
     @for ($i = 1; $i <= 5; $i++)
-    <a href="" type="button" class="btnrating btn btn-default btn-lg" data-attr="{{$i}}" id="rating-star-{{$i}}">
+    <a href="{{route('add.rate', ['item' => $item, 'star' => $i ])}}" type="button" class="btnrating btn btn-default btn-lg" data-attr="{{$i}}" id="rating-star-{{$i}}">
         <i class="fa fa-star" aria-hidden="true"></i>
     </a>
     @endfor
     <br>
-    <a href="{{route('notifi.save', $item[0]->id)}}">Powiadom mnie kiedy cena spadnie</a>
+    <a href="{{route('notifi.save', $item->id)}}">Powiadom mnie kiedy cena spadnie</a>
 
 
 </div>
@@ -44,13 +45,13 @@ Colour
         <th>Dodaj</th>
     </tr>
     <tr>
-        <td>{{ $item[0]->id }}</td>
-        <td>{{ $item[0]->price }}</td>
-        <td>{{ $item[0]->category->name}}</td>
-        <td>@foreach($item[0]->tags as $tag){{ 
+        <td>{{ $item->id }}</td>
+        <td>{{ $item->price }}</td>
+        <td>{{ $item->category->name}}</td>
+        <td>@foreach($item->tags as $tag){{ 
                 $tag->name }} <br>
             @endforeach</td>
-        <td><a class="btn btn-info" href="{{route('item2.addToCart', ['id' => $item[0]->id])}}">ADD</a></td>
+        <td><a class="btn btn-info" href="{{route('item2.addToCart', ['id' => $item->id])}}">ADD</a></td>
     </tr>
 </table>
 
@@ -58,7 +59,8 @@ Colour
 @endsection
 
 @section('scripts')
-<script>	jQuery(document).ready(function ($) {
+<script>
+    jQuery(document).ready(function ($) {
 
         $(".btnrating").on('click', (function (e) {
 
@@ -83,5 +85,6 @@ Colour
         }));
 
 
-    });</script>
+    });
+</script>
 @endsection

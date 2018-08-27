@@ -39,7 +39,8 @@ Add Colour
         <label for="category">category:</label>
         <select class="form-control" name="category_id" id="category">
             @foreach($categories as $cat)
-            <option value="{{ $cat->id }}" @if ($cat->id == old('category_id', $item->category_id))) 
+            <option value="{{ $cat->id }}" 
+                    @if ($cat->id == old('category_id', $item->category_id))) 
                     selected="selected"
                     @endif 
                     >{{ $cat->name }}</option>
@@ -58,7 +59,8 @@ Add Colour
         @foreach($tags as $tag)
 
         <label class="checkbox-inline"><input name="tags[]" type="checkbox" value="{{ $tag->id }}" 
-                                              {{ (in_array($tag->id, $itemTags) ? 'checked' : '' ) }}>{{ $tag->name }}</label>
+                                              {{ (in_array($tag->id, $itemTags) ? 'checked' : '' ) }}
+            >{{ $tag->name }}</label>
         @endforeach
     </div>
     <div class="form-group">

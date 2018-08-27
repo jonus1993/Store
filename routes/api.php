@@ -26,17 +26,18 @@ Route::put('articles/{article}', 'ArticleController@update');
 Route::delete('articles/{article}', 'ArticleController@delete');
 
 
-Route::get('items', function(){
-    
-    return new ItemCol(Items::all());
-});
-
 Route::get('itemsC', function(){
     
-    return ItemRes::collection(Items::all());
+    return new ItemCol(Items::all());
 });
 
 Route::get('items/{id}', function($id){
     
     return new ItemRes(Items::where('id',$id)->first());
 });
+
+Route::get('items', function(){
+    
+    return ItemRes::collection(Items::all());
+});
+

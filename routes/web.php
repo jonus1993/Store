@@ -58,11 +58,8 @@ Route::group(['middleware' => 'can:moderator-allowed'], function () {
         'as' => 'item.edit'
     ]);
 });
-
-Route::get('item/del/{id}', 'ModeratorController@deleteItem')->middleware('can:delete,App\User')->name('item.del');
-
-
-
+//->middleware('can:delete, App\User')
+Route::get('item/del/{item}', 'ModeratorController@deleteItem')->name('item.del');
 
 
 Route::get('/checkout', [
@@ -121,7 +118,7 @@ Route::prefix('manage')->group(function () {
 
     Route::get('/', 'ManageController@getUserslist')->name('manage');
     Route::get('/del/{id}', 'ManageController@deleteUser')->name('del.user');
-    Route::get('/{id}/', 'ManageController@changeUser')->name('chg.user');
+    Route::get('/cng', 'ManageController@changeUser')->name('chg.user');
 });
 
 Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');

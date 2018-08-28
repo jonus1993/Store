@@ -30,34 +30,37 @@ Manage Users
         <th>DELETE</th>
 
     </tr>
-    @foreach($users as $user)
-    <tr>
-        <td>{{ $user->id }}</td>
-        <td>{{ $user->name  }}</td>
-        <td>{{ $user->email }}</td>
-        <td>
+   
+        @foreach($users as $user)
+        <tr>
+            <td>{{ $user->id }}</td>
+            <td>{{ $user->name  }}</td>
+            <td>{{ $user->email }}</td>
+            <td>
+                <form id="form-control" action="{{route('chg.user')}}" method="get">
+                    <input type="hidden" name="users_id" value="{{ $user->id }}">
+                    @foreach($roles as $role)
 
-            <form id="form-control" action="{{route('chg.user', $user->id)}}" method="get">
-                @foreach($roles as $role)
+                    <label class="checkbox-inline"><input name="roles_id[]" type="checkbox" value="{{ $role->id }}"
+                                                          @foreach($user->roles as $userRole)
+                                                          @if ($role->id == old('form-control', $userRole->id))
+                                                          checked="checked"
+                                                          @endif
+                                                          @endforeach
+                                                          >{{ $role->name }}</label>
 
-                <label class="checkbox-inline"><input name="roles[]" type="checkbox" value="{{ $role->id }}"
-                                                      @foreach($user->roles as $userRole)
-                                                      @if ($role->id == old('form-control', $userRole->id))
-                                                      checked="checked"
-                                                      @endif
-                                                      @endforeach
-                                                      >{{ $role->name }}</label>
+                    @endforeach
+                    <button type="submit">MAKE</button>
+                </form>
+            </td>
+            <td><a href="{{ route ('del.user',$user->id)}}">DELETE</a> </td>
 
+        </tr>
+        @endforeach
+       
 
-
-                @endforeach
-                <button type="submit">MAKE</button>
-            </form>
-        </td>
-        <td><a href="{{ route ('del.user',$user->id)}}">DELETE</a> </td>
-
-    </tr>
-    @endforeach
+    
 </table>
+
 
 @endsection

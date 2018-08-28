@@ -64,6 +64,8 @@ class DatatablesController extends Controller {
     public function getAddToCart(Items $item, $qty = 1) {
         // ściagamy cały obiek item dzięki odebranemu id
 //        $item = Items::find($id);
+        if($item->is_delted ==1)
+            abort(403, 'Unauthorized action.');
 
         $userID = auth()->id();
         //patrzymy czy user ma już koszyk w bazie

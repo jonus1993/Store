@@ -31,26 +31,29 @@ class ManageController extends Controller {
         $this->getUserslist();
     }
 
-    public function changeUser(Request $request, $userid) {
+    public function changeUser(Request $request) {
 
         $request->validate([
-            'roles' => 'bail|required',
+            'users_id' => 'bail|required',
+            'roles_id' => 'required'
         ]);
-
-        RolesHasUsers::where('users_id', $userid)->delete();
-        $roles = $request->get('roles');
-
+        
+        $userID = $request->users_id;
+        $roles = $request->get('roles_id');
+        RolesHasUsers::where('users_id',$userID )->delete();
 
         foreach ($roles as $roleID) {
             $user = new RolesHasUsers();
-            $user->users_id = $userid;
+            $user->users_id = $userID;
             $user->roles_id = $roleID;
             $user->save();
         }
 
-        Session::flash('message', "Pomyślnie zmieniono uprawnienia");
+        Session::flash('message', trans('messages.userRoleChanged'));
         return redirect(route('manage'));
     }
+    
+    
 
     public function showAllorders() {
 

@@ -69,11 +69,12 @@ class ModeratorController extends Controller {
         return redirect()->back();
     }
 
-    public function deleteItem($itemID) {
+    public function deleteItem(Items $item) {
         
-        ItemTag::where('item_id', $itemID)->delete();
-        Items::where('id', '=', $itemID)->delete();
-        Session::flash('message', "Pomyślnie dodano");
+        ItemTag::where('item_id', $item->id)->delete();              
+        $item->is_deleted = 1;
+        $item->save();
+        Session::flash('message', trans("Pomyślnie usunięto"));
         return redirect()->back();
     }
 

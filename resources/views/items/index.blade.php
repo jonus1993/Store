@@ -72,7 +72,14 @@ Colours
                 <td>@foreach($item->tags as $tag){{ 
                 $tag->name }} <br>
                     @endforeach</td>
-                <td><a class="btn btn-info" href="{{route('item'.(auth()->id() ? '2' : '').'.addToCart', ['id' => $item->id])}}">ADD</a></td>
+                
+                <td>
+                    @if(!$item->is_deleted)
+                    <a class="btn btn-info" href="{{route('item'.(auth()->id() ? '2' : '').'.addToCart', ['id' => $item->id])}}">ADD</a>
+                    @else
+                    <button type="button" class="btn btn-dark" disabled>Out of stock</button>
+                    @endif
+                </td>
                 @auth
 
 
@@ -82,7 +89,7 @@ Colours
                 @endcan
                 @if(auth()->user()->isAdmin())
 
-                <td><a class="btn btn-info" href="{{route('item.del', ['id' => $item->id])}}">DEL</a></td>
+                <td><a class="btn btn-info" href="{{route('item.del',  $item)}}">DEL</a></td>
 
 
                 @endif

@@ -150,6 +150,7 @@ return [
         'App\Providers\ValidatorServiceProvider',
         Ghanem\Rating\RatingServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        'App\Providers\ComposerServiceProvider',
         
 
         /*

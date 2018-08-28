@@ -61,7 +61,7 @@ Route::group(['middleware' => 'can:moderator-allowed'], function () {
 
 Route::get('item/del/{id}', 'ModeratorController@deleteItem')->middleware('can:delete,App\User')->name('item.del');
 
-Route::get('/cart', 'ItemsController@getCart');
+
 
 
 
@@ -142,6 +142,7 @@ Route::get('/checkout2', [
 
 
 Route::get('/cart2', 'DatatablesController@getCartView')->name('goToCart2');
+Route::get('/cart', 'ItemsController@getCart')->name('goToCart');
 
 Route::get('/cart2/{id}', [
     'uses' => 'DatatablesController@delFromCart',

@@ -7,7 +7,6 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
 
-
              <li class="nav-item">
                 <a class="nav-link" href="{{ url('/nbp') }}">NBP</a>
             </li>
@@ -37,10 +36,10 @@
             @endif
 
 
-
-
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('goToCart2') }}">Shopping Cart</a>
+                <a class="nav-link" href="{{ route('goToCart2') }}">Shopping Cart
+                   <span id="cartQty" class="badge">{{ $cartQty }}</span>
+                </a>
             </li>
 
             <li class="nav-item dropdown">
@@ -67,10 +66,11 @@
             <!--jeżeli użytkownik nieautoryzowany-->
             @else
             <li class="nav-item"> 
-                <a class="nav-link" href="{{ url('/cart') }}"> Shopping Cart
+                <a class="nav-link" href="{{ route('goToCart') }}"> Shopping Cart
                     <span class="badge">{{ Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span>
                 </a>
             </li>
+            
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('login') }}">Login</a>
             </li>

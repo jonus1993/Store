@@ -22,7 +22,7 @@ class DatatablesController extends Controller {
     protected $items;
 
     public function getIndex() {
-
+        
         $tags = Tags::all();
         $categories = Categories::all();
         return view('items.index2', compact('tags', 'categories'));
@@ -65,18 +65,18 @@ class DatatablesController extends Controller {
         // ściagamy cały obiek item dzięki odebranemu id
 //        $item = Items::find($id);
 
-        $userid = auth()->id();
+        $userID = auth()->id();
         //patrzymy czy user ma już koszyk w bazie
-        $cart = $this->checkCartExist($userid);
+        $cart = $this->checkCartExist($userID);
         // jak nie ma to tworzymy go
         if ($cart === null) {
             $cart = new Cart2;
-            $cart->user_id = $userid;
+            $cart->user_id = $userID;
             $cart->save();
         }
 
         //a teraz sprawdzamy czy juz mamy w koszyku przedmiot
-        $cart_item = Cart_Items::where('item_id', '=', $item->id)->first();
+        $cart_item = Cart_Items::where('cart_id',$cart->id)->where('item_id', '=', $item->id)->first();
 
         //jak nie ma to zaraz będzie
         if ($cart_item === null) {
@@ -87,6 +87,8 @@ class DatatablesController extends Controller {
         //jak jest to tylko zwiekszamy jego ilosc i zapisujemy w bazie
         $cart_item->qty += $qty;
         $cart_item->save();
+        
+             
         
         Session::flash('message', trans('messages.item2cart'));    
         return redirect()->back();

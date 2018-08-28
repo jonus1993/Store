@@ -35,7 +35,9 @@ Colours
     <div  class="col-10">
         <h1>Kolorki</h1>
        
-     
+        <div id="cartnfo" class="alert alert-info" style="display: none;">
+            <span>{{ Lang::get('messages.item2cart') }}</span>
+        </div>
         
         <table class="table table-active table-bordered" id="items-table">
             <thead> 
@@ -152,10 +154,11 @@ var table = $('#items-table').DataTable({
                                 }},
                 ],
                         "columnDefs": [
-                        {"orderable": false, "targets": 4}
+                        {"orderable": false, "targets": 5}
                         ]
 
                 });
+                
         $('.kateg, .tagi').click(function (e) {
         table.draw();
         });
@@ -189,9 +192,7 @@ var table = $('#items-table').DataTable({
                     id: rowData.id
                 },  
                 //dataType: 'json',
-                success: function (response) {
-        
-                    
+                success: function (response) {                           
                     div
                         .html(response )
                         .removeClass( 'loading' );
@@ -218,32 +219,37 @@ var table = $('#items-table').DataTable({
         </script>
         
 
-        
-
-
 
 <!--dodawanie do koszyk-->
 <script>
             $('#items-table').on('click', 'a.add2cart', function (e) {
             //         If this method is called, the default action of the event will not be triggered.
-            //        e.preventDefault();
-
-            //        var cd = this.href.match(/^http(s)?:\/\/(www\.)?127.0.0.1:8000\/items2\/[0-9]+/)[0];
-            //        var id = cd.substring(29);
+                     e.preventDefault();
 
             var id = this.href.match(/\d+$/)[0];
-            //        console.log(id);
-
-            var url = this.href + '/' + getInputValue(id);
-            //        console.log(url);
+            var qty =  getInputValue(id);
+            if(!qty)
+                qty=1;
+            
+            var url = this.href + '/' + qty;
+           
+            
+            qty = parseInt(qty)
+            var cartQty = $("#cartQty").html();
+            qty += parseInt(cartQty);
+       
             //przekierowanie
-            //        window.location = url;
-            $.get(url, function (data) {
-            //            $(".result").html(data);
-            //            alert("Successfully added to Your Own Cart");
-            //            autoClose: 'cancelAction|8000',
-            });
-            return false;
+            //window.location = url;
+        
+            $.get(url)
+                    .done(function() {             
+                             $("#cartnfo").show().delay( 2000 ).hide(2000);                                     
+                      $("#cartQty").html(qty);
+                    })
+                    .fail(function() {
+                      alert( "error" );
+                    })
+               
             });
         </script>
         
@@ -257,6 +263,9 @@ var table = $('#items-table').DataTable({
             return value;
             }
 </script>
+
+
+
    <img id="myImage"  class="img-fluid rounded-circle mx-auto d-block" src="" alt="No Image"/>
 @endpush
 

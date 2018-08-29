@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Policies;
+
 use App\RolesHasUsers;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ModeratorPolicy {
-
+class ModeratorPolicy
+{
     use HandlesAuthorization;
 
     /**
@@ -14,19 +15,20 @@ class ModeratorPolicy {
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         //
     }
 
     //polityka mówi, że tylko admin może usuwać przedmioty
-    public function delete(User $user) {
-        
+    public function delete(User $user)
+    {
         $userR = RolesHasUsers::where('users_id', $user->id)->get()->toArray();
 
-        if (in_array(1, array_column($userR, 'roles_id')))
+        if (in_array(1, array_column($userR, 'roles_id'))) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
-
 }

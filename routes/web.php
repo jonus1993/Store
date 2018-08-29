@@ -39,7 +39,6 @@ Route::get('/add_rate/{item}/{rate}', [
 
 
 Route::group(['middleware' => 'can:moderator-allowed'], function () {
-
     Route::get('/new/', [
         'uses' => 'ModeratorController@createNewItem',
         'as' => 'item.create'
@@ -115,7 +114,6 @@ Route::prefix('address')->group(function () {
 });
 
 Route::prefix('manage')->group(function () {
-
     Route::get('/', 'ManageController@getUserslist')->name('manage');
     Route::get('/del/{id}', 'ManageController@deleteUser')->name('del.user');
     Route::get('/cng', 'ManageController@changeUser')->name('chg.user');
@@ -127,11 +125,14 @@ Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');
 Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');
 Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');
 Route::get('/items2/order.info/', 'DatatablesController@getOrderInfo')->name('order.info');
-Route::get('/items2/{item}/{qty?}', [
+Route::get(
+    '/items2/{item}/{qty?}',
+    [
     'uses' => 'DatatablesController@getAddToCart',
     'as' => 'item2.addToCart',
         ]
 );
+
 Route::get('/checkout2', [
     'uses' => 'DatatablesController@getCheckout',
     'as' => 'checkout2'

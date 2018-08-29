@@ -8,7 +8,8 @@ use App\Policies\ModeratorPolicy;
 use App\RolesHasUsers;
 use App\User;
 
-class AuthServiceProvider extends ServiceProvider {
+class AuthServiceProvider extends ServiceProvider
+{
 
     /**
      * The policy mappings for the application.
@@ -27,19 +28,20 @@ class AuthServiceProvider extends ServiceProvider {
      * @return void
      */
     
-    public function boot() {
+    public function boot()
+    {
         $this->registerPolicies();
         
-           Gate::define('delete', 'App\Policies\ModeratorPolicy@delete');
-        //gate - decyduje czy użytkownik może się dostać do sekcji dla moderatorów 
+        Gate::define('delete', 'App\Policies\ModeratorPolicy@delete');
+        //gate - decyduje czy użytkownik może się dostać do sekcji dla moderatorów
         Gate::define('moderator-allowed', function ($user) {
             $user = RolesHasUsers::where('users_id', $user->id)->get()->toArray();
 
-            if (!!array_intersect([1, 2], array_column($user, 'roles_id')))
+            if (!!array_intersect([1, 2], array_column($user, 'roles_id'))) {
                 return true;
-            else
+            } else {
                 return false;
+            }
         });
     }
-
 }

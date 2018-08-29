@@ -17,34 +17,33 @@ use App\GuestsOrders_Items;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 
-class DatatablesController extends Controller {
-
+class DatatablesController extends Controller
+{
     protected $items;
 
-    public function getIndex() {
-
+    public function getIndex()
+    {
         $tags = Tags::all();
         $categories = Categories::all();
         return view('items.index2', compact('tags', 'categories'));
     }
 
     //funkcja dla DataTables, pobiera dane ajaxem
-    public function anyData() {
-
+    public function anyData()
+    {
         $catInput = Input::get('categories');
         $tagInput = Input::get('tags');
 
-        $items = Items::where('is_deleted', '<>', 1)
-                ->with('category')
+        $items = Items::with('category')
                 ->with('tags');
 
-        if ($catInput != null)
+        if ($catInput != null) {
             $items->whereIn('category_id', $catInput);
+        }
 
         if ($tagInput != null) {
-            
             $tagIds = Tags::select('id')->whereIn('friend_name', $tagInput)->get();
-            $items->whereHas('tags', function ($q) use($tagIds) {
+            $items->whereHas('tags', function ($q) use ($tagIds) {
                 $q->whereIn('tag_id', $tagIds);
             });
         }
@@ -54,69 +53,59 @@ class DatatablesController extends Controller {
     }
 
     //prywatna funkcja sprawdza czy user ma koszyk w bazie
-    protected function checkCartExist($userid) {
-
+    protected function checkCartExist($userid)
+    {
         return Cart2::where('user_id', '=', $userid)->first();
     }
 
     //prywatna funkcja sprawdza czy koszyk jest pusty
-    protected function checkCartEmpty($cartid) {
-
+    protected function checkCartEmpty($cartid)
+    {
         return Cart_Items::where('cart_id', '=', $cartid)->with('item')->get();
     }
 
-    public function getAddToCart(Items $item, $qty = 1) {
+    public function getAddToCart(Items $item, $qty = 1)
+    {
         // ściagamy cały obiek item dzięki odebranemu id
 //        $item = Items::find($id);
-        if ($item->is_delted == 1)
+        if ($item->is_delted == 1) {
             abort(403, 'Unauthorized action.');
+        }
 
         $userID = auth()->id();
+        
         //patrzymy czy user ma już koszyk w bazie
-        $cart = $this->checkCartExist($userID);
         // jak nie ma to tworzymy go
-        if ($cart === null) {
-            $cart = new Cart2;
-            $cart->user_id = $userID;
-            $cart->save();
-        }
+        $cart = Cart2::firstOrCreate(['user_id' => $userID]);
 
         //a teraz sprawdzamy czy juz mamy w koszyku przedmiot
-        $cart_item = Cart_Items::where('cart_id', $cart->id)->where('item_id', '=', $item->id)->first();
-
         //jak nie ma to zaraz będzie
-        if ($cart_item === null) {
-            $cart_item = new Cart_Items;
-            $cart_item->cart_id = $cart->id;
-            $cart_item->item_id = $item->id;
-        }
-        //jak jest to tylko zwiekszamy jego ilosc i zapisujemy w bazie
+        $cart_item = Cart_Items::firstOrNew(['item_id' => $item->id, 'cart_id' => $cart->id]);
         $cart_item->qty += $qty;
         $cart_item->save();
-
-
 
         Session::flash('message', trans('messages.item2cart'));
         return redirect()->back();
     }
 
-    public function getCart() {
+    public function getCart()
+    {
         // id usera tak jakby z sesji
-        $userid = auth()->id();
+        $userID = auth()->id();
         //patrzymy czy user już koszyk ma w bazie
-        $cart = $this->checkCartExist($userid);
+        $cart = Cart2::where('user_id', $userID)->first();
 
         // jak nie ma to pustke zwracamy
-        if ($cart === null)
+        if ($cart === null) {
             return view('cart.emptycart');
+        }
         $cart_items = $this->checkCartEmpty($cart->id);
         /* @var $cart_items \Illuminate\Database\Eloquent\Collection      */
-        if ($cart_items->isEmpty())
+        if ($cart_items->isEmpty()) {
             return view('cart.emptycart');
-
+        }
 
         $totalQty = 0;
-
         $totalPrice = 0;
 
         foreach ($cart_items as $cart_item) {
@@ -128,8 +117,8 @@ class DatatablesController extends Controller {
         return compact('cart_items', 'totalQty', 'totalPrice');
     }
 
-    public function getCartView() {
-
+    public function getCartView()
+    {
         $cart = $this->getCart();
         if (!is_array($cart)) {
             return $cart;
@@ -139,8 +128,8 @@ class DatatablesController extends Controller {
     }
 
     //usuwanie przedmiotów z koszyka/koszyka
-    public function delFromCart($id) {
-
+    public function delFromCart($id)
+    {
         $userid = auth()->id();
         $cartid = Cart2::where('user_id', '=', $userid)->first();
 
@@ -157,17 +146,18 @@ class DatatablesController extends Controller {
             Cart_Items::where([['item_id', $id], ['cart_id', $cartid]])->delete();
             $cartEmpty = Cart_Items::where('cart_id', $cartid)->first();
 
-            if (!$cartEmpty)
+            if (!$cartEmpty) {
 //                Cart2::where('id', $cartid)->delete();
                 $Cart2->delCart($cartid);
+            }
         }
 
 
         return redirect()->route('goToCart2');
     }
 
-    public function getCheckout() {
-
+    public function getCheckout()
+    {
         $addresses = new Address();
         $addresses = $addresses->getAddresses();
 //        $addresses = auth()->user()->addresses(); //?
@@ -180,8 +170,8 @@ class DatatablesController extends Controller {
         return view('cart.checkout', compact('addresses', 'cart'));
     }
 
-    public function getOrderInfo(Request $request) {
-
+    public function getOrderInfo(Request $request)
+    {
         $itemID = $request->id;
 
         $guests = GuestsOrders_Items::where('item_id', $itemID)
@@ -194,5 +184,4 @@ class DatatablesController extends Controller {
 
         return view('orders.table', compact('orders'));
     }
-
 }

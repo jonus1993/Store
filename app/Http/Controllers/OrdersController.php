@@ -12,11 +12,12 @@ use App\Order_Items;
 use App\Address;
 use App\GuestsOrders_Items;
 
-class OrdersController extends Controller {
-
+class OrdersController extends Controller
+{
     protected $userid;
 
-    public function __construct() {
+    public function __construct()
+    {
         //parent::__construct();
         $this->middleware('auth');
 //        $this->userid = auth()->id();
@@ -27,8 +28,8 @@ class OrdersController extends Controller {
 //    }
 
 
-    public function saveOrder(Request $request) {
-        
+    public function saveOrder(Request $request)
+    {
         $this->userid = auth()->id();
         if ($request->has('address_id')) {
             $request->validate([
@@ -36,7 +37,6 @@ class OrdersController extends Controller {
             ]);
             $addressID = $request->input('address_id');
         } else {
-
             $address = new Address();
             $addressID = $address->store($request);
         }
@@ -50,10 +50,11 @@ class OrdersController extends Controller {
         $cartItems = Cart_Items::where('cart_id', $cartID)->get();
 
         $totalPrc = 0;
-        foreach ($cartItems as $totPrc)
+        foreach ($cartItems as $totPrc) {
             $totalPrc += $totPrc['qty'] * $totPrc->item->price;
+        }
 
-        //tworzenie nowego zamówienia 
+        //tworzenie nowego zamówienia
         $order = new Orders();
         $order->user_id = $this->userid;
         $order->address_id = $addressID;
@@ -87,29 +88,30 @@ class OrdersController extends Controller {
         return view('orders.finished', ['orderid' => $order->id]);
     }
 
-    public function showOrders() {
+    public function showOrders()
+    {
         $this->userid = auth()->id();
         $orders = Orders::where('user_id', $this->userid)->get();
         return view('orders.allOrders', compact('orders'));
     }
 
-    public function showOrder($orderId, $state = 1) {
-
-
+    public function showOrder($orderId, $state = 1)
+    {
         if ($state == 1) {
             $order = Orders::where('id', $orderId)->first();
-            if ($order->user_id == auth()->id() || auth()->user()->isAdmin())
+            if ($order->user_id == auth()->id() || auth()->user()->isAdmin()) {
                 $order = Order_Items::where('order_id', $orderId)->with('item')->get();
-            else
+            } else {
                 return abort(403, 'Unauthorized action.');
+            }
         } else {
-            if (auth()->user()->isAdmin())
+            if (auth()->user()->isAdmin()) {
                 $order = GuestsOrders_Items::where('order_id', $orderId)->with('item')->get();
-            else
+            } else {
                 return abort(403, 'Unauthorized action.');
+            }
         }
 
         return view('orders.Order', compact('order'));
     }
-
 }

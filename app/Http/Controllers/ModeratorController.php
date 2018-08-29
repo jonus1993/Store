@@ -8,6 +8,7 @@ use App\ItemTag;
 use App\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Http\Requests\ItemAddPost;
 
 class ModeratorController extends Controller {
 
@@ -40,7 +41,7 @@ class ModeratorController extends Controller {
         return view('items.add', compact('tags', 'categories'));
     }
 
-    public function saveNewItem(Request $request) {
+    public function saveNewItem(ItemAddPost $request) {
         
         $item = new Items();
         $item->saveItem($request);
@@ -59,7 +60,7 @@ class ModeratorController extends Controller {
         return view('items.edit', compact('tags', 'categories', 'item'));
     }
 
-    public function updateItem(Request $request, $itemID) {
+    public function updateItem(ItemAddPost $request, $itemID) {
         
         $item = new Items();
         $item->saveItem($request, $itemID);

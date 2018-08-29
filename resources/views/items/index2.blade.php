@@ -205,17 +205,18 @@ var table = $('#items-table').DataTable({
               
         
         //pokazywanie zdjęcia
-        $('#items-table').on( 'click', 'tr', function () {           
+//        $('#items-table').on( 'click', 'tr', function () {           
             var id = table.row( this ).id();
             if (!id || id == 'null'){
                 id = "421.png";
             }
             
             $('#myImage').attr('src', '/photos/'+id);
+            
         } );
         
         
-        });
+        
         </script>
         
 

@@ -22,29 +22,33 @@ class DatatablesController extends Controller {
     protected $items;
 
     public function getIndex() {
-        
+
         $tags = Tags::all();
         $categories = Categories::all();
         return view('items.index2', compact('tags', 'categories'));
     }
 
     //funkcja dla DataTables, pobiera dane ajaxem
-    public function anyData(Request $request) {
+    public function anyData() {
 
-        $catInput = Categories::select('id')->get();
-        $catInput = Input::get('categories', $catInput);
+        $catInput = Input::get('categories');
+        $tagInput = Input::get('tags');
 
-        $tagInput = Tags::select('friend_name')->get();
-        $tagInput = Input::get('tags', $tagInput);
-
-        $tagIds = Tags::select('id')->whereIn('friend_name', $tagInput)->get();
-        $items = Items::whereIn('category_id', $catInput)
-                ->whereHas('tags', function ($q) use($tagIds) {
-                    $q->whereIn('tag_id', $tagIds);
-                })
+        $items = Items::where('is_deleted', '<>', 1)
                 ->with('category')
                 ->with('tags');
-//        $items = Items::with('category')->with('tags');
+
+        if ($catInput != null)
+            $items->whereIn('category_id', $catInput);
+
+        if ($tagInput != null) {
+            
+            $tagIds = Tags::select('id')->whereIn('friend_name', $tagInput)->get();
+            $items->whereHas('tags', function ($q) use($tagIds) {
+                $q->whereIn('tag_id', $tagIds);
+            });
+        }
+
 
         return Datatables::of($items)->make();
     }
@@ -64,7 +68,7 @@ class DatatablesController extends Controller {
     public function getAddToCart(Items $item, $qty = 1) {
         // ściagamy cały obiek item dzięki odebranemu id
 //        $item = Items::find($id);
-        if($item->is_delted ==1)
+        if ($item->is_delted == 1)
             abort(403, 'Unauthorized action.');
 
         $userID = auth()->id();
@@ -78,7 +82,7 @@ class DatatablesController extends Controller {
         }
 
         //a teraz sprawdzamy czy juz mamy w koszyku przedmiot
-        $cart_item = Cart_Items::where('cart_id',$cart->id)->where('item_id', '=', $item->id)->first();
+        $cart_item = Cart_Items::where('cart_id', $cart->id)->where('item_id', '=', $item->id)->first();
 
         //jak nie ma to zaraz będzie
         if ($cart_item === null) {
@@ -89,10 +93,10 @@ class DatatablesController extends Controller {
         //jak jest to tylko zwiekszamy jego ilosc i zapisujemy w bazie
         $cart_item->qty += $qty;
         $cart_item->save();
-        
-             
-        
-        Session::flash('message', trans('messages.item2cart'));    
+
+
+
+        Session::flash('message', trans('messages.item2cart'));
         return redirect()->back();
     }
 
@@ -122,7 +126,6 @@ class DatatablesController extends Controller {
         }
 
         return compact('cart_items', 'totalQty', 'totalPrice');
-
     }
 
     public function getCartView() {

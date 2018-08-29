@@ -12,7 +12,7 @@ Colours
     <div class="col-2" > 
         <h3 class="w3-bar-item">Filtry</h3>
         <h4 class="w3-bar-item">Tagi</h4>
-        <form id="frm" >
+        <form id="frm" action="{{route('datatables.data')}}" method="get">
             @csrf
             @foreach($tags as $tag)
             <div class="form-check">
@@ -140,7 +140,7 @@ var table = $('#items-table').DataTable({
             },
         {data: 'id',
                 render: function (data, type, row) {
-                return '<a href="{{ route('item.get', ':data')}}"> click!</a>'.replace(':data', data);
+                return '<a href="{{ route('item.get', ':data')}}">click!</a>'.replace(':data', data);
                 }},
         {data: 'name'},
         {data: 'price'},
@@ -266,7 +266,7 @@ var table = $('#items-table').DataTable({
 
 
 
-   <img id="myImage"  class="img-fluid rounded-circle mx-auto d-block" src="" alt="No Image"/>
+   <img id="myImage"  class="img-fluid rounded-circle mx-auto d-block" src="" />
 @endpush
 
 

@@ -22,12 +22,11 @@ class RatingController extends Controller {
     public function addRate(Items $item,$rate) {
         
         $user = auth()->user();
-//        dd($star);
+
         $rating = $item->ratingUnique([
             'rating' => $rate
                 ], $user);
 
-//        dd($rating);
         return redirect()->back();
     }
 

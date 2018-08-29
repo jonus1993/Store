@@ -51,7 +51,14 @@ Colour
         <td>@foreach($item->tags as $tag){{ 
                 $tag->name }} <br>
             @endforeach</td>
-        <td><a class="btn btn-info" href="{{route('item2.addToCart', ['id' => $item->id])}}">ADD</a></td>
+        <td>
+            @if(!$item->is_deleted)
+            <a class="btn btn-info" href="{{route('item2.addToCart', ['id' => $item->id])}}">ADD</a>
+            @else
+            <button type="button" class="btn btn-dark" disabled>Out of stock</button>
+            @endif
+
+        </td>
     </tr>
 </table>
 

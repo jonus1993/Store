@@ -15,18 +15,27 @@ Colours
             @csrf
             @foreach($tags as $tag)
             <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="tags[]" value="{{ $tag->friend_name }}">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="tags[]" value="{{ $tag->friend_name }}"
+                       @if(isset($_POST['tags']))
+                       {{  in_array($tag->friend_name, $_POST['tags']) ? 'checked' : ''  }}
+                       @endif
+                       >
                 <label class="form-check-label" for="exampleCheck1">{{ $tag->name }}</label>
             </div>
             @endforeach
 
             <h4 class="w3-bar-item">Kategorie</h4>
+            <?php
+            $category = old('categories');
+            ?>
             @foreach($categories as $cat)
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="exampleCheck1" name="categories[]" value="{{ $cat->id }}"
-
-
-                       <label class="form-check-label" for="exampleCheck1">{{ $cat->name }}</label>
+                       @if(isset($_POST['categories']))
+                       {{  in_array($cat->id, $_POST['categories']) ? 'checked' : ''  }}
+                       @endif
+                       >
+                <label class="form-check-label" for="exampleCheck1">{{ $cat->name }}</label>
             </div>
             @endforeach
             <br>
@@ -72,7 +81,7 @@ Colours
                 <td>@foreach($item->tags as $tag){{ 
                 $tag->name }} <br>
                     @endforeach</td>
-                
+
                 <td>
                     @if(!$item->is_deleted)
                     <a class="btn btn-info" href="{{route('item'.(auth()->id() ? '2' : '').'.addToCart', ['id' => $item->id])}}">ADD</a>

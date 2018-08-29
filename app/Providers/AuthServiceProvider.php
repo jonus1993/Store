@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Policies\ModeratorPolicy;
 use App\RolesHasUsers;
+use App\User;
 
 class AuthServiceProvider extends ServiceProvider {
 
@@ -16,7 +17,8 @@ class AuthServiceProvider extends ServiceProvider {
      */
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
-        'App\User' => ModeratorPolicy::class,
+//        'App\User' => ModeratorPolicy::class,
+          User::class => ModeratorPolicy::class,
     ];
 
     /**
@@ -24,10 +26,11 @@ class AuthServiceProvider extends ServiceProvider {
      *
      * @return void
      */
+    
     public function boot() {
         $this->registerPolicies();
         
-        
+           Gate::define('delete', 'App\Policies\ModeratorPolicy@delete');
         //gate - decyduje czy użytkownik może się dostać do sekcji dla moderatorów 
         Gate::define('moderator-allowed', function ($user) {
             $user = RolesHasUsers::where('users_id', $user->id)->get()->toArray();

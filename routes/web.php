@@ -59,7 +59,7 @@ Route::group(['middleware' => 'can:moderator-allowed'], function () {
     ]);
 });
 //->middleware('can:delete, App\User')
-Route::get('item/del/{item}', 'ModeratorController@deleteItem')->name('item.del');
+Route::get('item/del/{item}', 'ModeratorController@deleteItem')->middleware('can:delete, App\User')->name('item.del');
 
 
 Route::get('/checkout', [

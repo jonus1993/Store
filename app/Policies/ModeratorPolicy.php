@@ -20,6 +20,7 @@ class ModeratorPolicy {
 
     //polityka mówi, że tylko admin może usuwać przedmioty
     public function delete(User $user) {
+        
         $userR = RolesHasUsers::where('users_id', $user->id)->get()->toArray();
 
         if (in_array(1, array_column($userR, 'roles_id')))

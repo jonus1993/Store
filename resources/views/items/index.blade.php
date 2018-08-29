@@ -100,11 +100,8 @@ Colours
 
                 <td><a class="btn btn-info" href="{{route('item.del',  $item)}}">DEL</a></td>
 
-
                 @endif
                 @endauth
-
-
 
 
             </tr>

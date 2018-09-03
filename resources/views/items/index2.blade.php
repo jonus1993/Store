@@ -29,16 +29,16 @@ Colours
             </div>
             @endforeach
             <br>
-            <!--<input class="btn btn-dark" type="submit" value="Filtruj" />-->
+            <input class="btn btn-dark" type="submit" value="Filtruj" />
         </form>
     </div>
     <div  class="col-10">
         <h1>Kolorki</h1>
-       
+
         <div id="cartnfo" class="alert alert-info" style="display: none;">
             <span>{{ Lang::get('messages.item2cart') }}</span>
         </div>
-        
+
         <table class="table table-active table-bordered" id="items-table">
             <thead> 
                 <tr>
@@ -69,205 +69,237 @@ Colours
 
 
 $(document).ready(function () {
-    
+
 //czy sa ciasteczka i zaznaczyć checkboxy
 
-if(Cookies.get('categories')) 
-    $.each(Cookies.get('categories').split(','), function(i, val) {
-           $("#kateg"+val).prop("checked", true);       
-});
-else
-    Cookies.remove('categories');
 
-$(".kateg").change(function() {
-    categories = [];
-    $('.kateg:checked').each(function () {
-        categories.push(this.value);           
-    });
-    
-    Cookies.set('categories', categories.join(','));
-});
+//zaznaczanie checkboxów z kategoriami
+    if (Cookies.get('categories'))
+        $.each(Cookies.get('categories').split(','), function (i, val) {
+            $("#kateg" + val).prop("checked", true);
+        });
+    else
+        Cookies.remove('categories');
 
-if(Cookies.get('tags'))
-    $.each(Cookies.get('tags').split(','), function(i, val) {
-           $("#"+val).prop("checked", true);       
-    });
-else
-    Cookies.remove('tags');
+//$(".kateg").change(function() {
+//    categories = [];
+//    $('.kateg:checked').each(function () {
+//        categories.push(this.value);           
+//    });
+//    
+//    Cookies.set('categories', categories.join(','));
+//});
 
-$(".tagi").change(function() {
-    tags = [];
-    $('.tagi:checked').each(function () {
-        tags.push(this.id);           
+
+
+//zaznaczanie checkboxów z tagami
+    if (Cookies.get('tags'))
+        $.each(Cookies.get('tags').split(','), function (i, val) {
+            $("#" + val).prop("checked", true);
+        });
+    else
+        Cookies.remove('tags');
+
+
+    $(".tagi").change(function () {
+        tags = [];
+        $('.tagi:checked').each(function () {
+            tags.push(this.id);
+        });
+
+        Cookies.set('tags', tags.join(','));
+        console.log(Cookies.get('tags').split(','));
     });
-    
-    Cookies.set('tags', tags.join(','));
-    console.log(Cookies.get('tags').split(','));
-});
 
 //tabela glowna
 
-var table = $('#items-table').DataTable({
+    var table = $('#items-table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
         "ajax": {
-        "url": "http://127.0.0.1:8000/items2/datatables.data",
-        "data": function (d) {
+            "url": "{{route('datatables.data')}}",
+            "data": function (d) {
                 d.categories = [];
                 $('.kateg:checked').each(function () {
-                   d.categories.push(this.value);
+                    d.categories.push(this.value);
                 });
                 d.tags = [];
                 $('.tagi:checked').each(function () {
-                d.tags.push(this.value);
+                    d.tags.push(this.value);
                 });
                 console.log(d.categories);
-                
+
                 //zpais do ciasteczek
                 //Cookies.set('categories', d.categories.join(','));
 
-                
-                }
+
+            }
         },
         rowId: 'photo_name',
         columns: [
-             {
-                "className":      'details-control',
-                "orderable":      false,
-                "data":           'null',
+            {
+                "className": 'details-control',
+                "orderable": false,
+                "data": 'null',
                 "defaultContent": 'more'
             },
-        {data: 'id',
+            {data: 'id',
                 render: function (data, type, row) {
-                return '<a href="{{ route('item.get', ':data')}}">click!</a>'.replace(':data', data);
+                    return '<a href="{{ route('item.get', ':data')}}">click!</a>'.replace(':data', data);
                 }},
-        {data: 'name'},
-        {data: 'price'},
-        {data: 'category.name'},
-        {data: 'tags[].name'},
-                //              {defaultContent: "<button>ADD</button>"}
-                        //              {defaultContent: "<a class='btn btn-info' href="{{ route('item2.addToCart', 'id' ) }}">ADD</a>"}
-                        {data: 'id',
-                                render: function (data, type, row) {
-                                return '<input id="input' + data + '" type="number"><a class=add2cart href="{{ route('item'.(auth()->id() ? '2' : '').'.addToCart', ':data')}}"><br> add to cart</a>'.replace(':data', data);
-                                }},
-                ],
-                        "columnDefs": [
-                        {"orderable": false, "targets": 5}
-                        ]
+            {data: 'name'},
+            {data: 'price'},
+            {data: 'category.name'},
+            {data: 'tags[].name'},
+            //              {defaultContent: "<button>ADD</button>"}
+            //              {defaultContent: "<a class='btn btn-info' href="{{ route('item2.addToCart', 'id' ) }}">ADD</a>"}
+            {data: 'id',
+                render: function (data, type, row) {
+                    getButton('btn'+data);
+                    return '<div id=btn' + data + ' class="inputButton"></div>';
+                    
+                }}
+        ],
+        "columnDefs": [
+            {"orderable": false, "targets": 5}
+        ]
 
-                });
-                
-        $('.kateg, .tagi').click(function (e) {
+    });
+
+    $('.kateg, .tagi').click(function (e) {
         table.draw();
-        });
-        
-        
-        //informacje o zamówieniach
-        $('#items-table tbody').on('click', 'td.details-control', function () {
-            
-            var tr = $(this).closest('tr');
-            var row = table.row( tr );
-            
+    });
 
-            if ( row.child.isShown() ) {
-                row.child.hide();
-                tr.removeClass('shown');
-            }
-            else {
-                row.child( format(row.data()) ).show();
-                tr.addClass('shown');
-            }
-        } );
 
-        function format ( rowData ) {
-            var div = $('<div/>')
-                .addClass( 'loading' )
-                .text( 'Loading...' );
+    //informacje o zamówieniach
+    $('#items-table tbody').on('click', 'td.details-control', function () {
 
-            $.ajax( {
-                url: "http://127.0.0.1:8000/items2/order.info",
-                data: {
-                    id: rowData.id
-                },  
-                //dataType: 'json',
-                success: function (response) {                           
-                    div
-                        .html(response )
-                        .removeClass( 'loading' );
-                }
-            } );
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
 
-            return div;
+
+        if (row.child.isShown()) {
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            row.child(format(row.data())).show();
+            tr.addClass('shown');
         }
-        
-              
-        
-        //pokazywanie zdjęcia
-//        $('#items-table').on( 'click', 'tr', function () {           
-            var id = table.row( this ).id();
-            if (!id || id == 'null'){
-                id = "421.png";
+    });
+
+    function format(rowData) {
+        var div = $('<div/>')
+                .addClass('loading')
+                .text('Loading...');
+
+        $.ajax({
+            url: "{{route('order.info')}}",
+            data: {
+                id: rowData.id
+            },
+            //dataType: 'json',
+            success: function (response) {
+                div
+                        .html(response)
+                        .removeClass('loading');
             }
-            
-            $('#myImage').attr('src', '/photos/'+id);
-            
-        } );
-        
-        
-        
-        </script>
-        
+        });
+
+        return div;
+    }
 
 
-<!--dodawanie do koszyk-->
-<script>
-            $('#items-table').on('click', 'a.add2cart', function (e) {
-            //         If this method is called, the default action of the event will not be triggered.
-                     e.preventDefault();
 
-            var id = this.href.match(/\d+$/)[0];
-            var qty =  getInputValue(id);
-            if(!qty)
-                qty=1;
-            
-            var url = this.href + '/' + qty;
-           
-            
-            qty = parseInt(qty)
-            var cartQty = $("#cartQty").html();
-            qty += parseInt(cartQty);
-       
-            //przekierowanie
-            //window.location = url;
-        
-            $.get(url)
-                    .done(function() {             
-                             $("#cartnfo").show().delay( 2000 ).hide(2000);                                     
-                      $("#cartQty").html(qty);
-                    })
-                    .fail(function() {
-                      alert( "error" );
-                    })
-               
-            });
-        </script>
-        
-        
+    //pokazywanie zdjęcia
+    $('#items-table').on('click', 'tr', function () {
+        var id = table.row(this).id();
+        if (!id || id == 'null') {
+            id = "421.png";
+        }
 
-<!--pobieranie wartości inputa-->
-<script>
-            function getInputValue(numb) {
-            return $('#input' + numb).val();
-            var value = document.getElementById('input' + numb).value;
-            return value;
-            }
+        $('#myImage').attr('src', '{{ asset("photos")}}' + '/' + id);
+    });
+});
+
+
+
 </script>
 
 
 
-   <img id="myImage"  class="img-fluid rounded-circle mx-auto d-block" src="" />
+<!--dodawanie do koszyk-->
+<script>
+    $('#items-table').on('click', 'a.add2cart', function (e) {
+        //         If this method is called, the default action of the event will not be triggered.
+        e.preventDefault();
+
+        var id = this.href.match(/\d+$/)[0];
+        var qty = getInputValue(id);
+        if (!qty)
+            qty = 1;
+
+        var url = this.href + '/' + qty;
+
+
+        qty = parseInt(qty);
+        var cartQty = $("#cartQty").html();
+        qty += parseInt(cartQty);
+
+        //przekierowanie
+        //window.location = url;
+
+        $.get(url)
+                .done(function () {
+                    $("#cartnfo").show().delay(2000).hide(2000);
+                    $("#cartQty").html(qty);
+                })
+                .fail(function () {
+                    alert("error");
+                });
+
+    });
+</script>
+
+
+
+<!--pobieranie wartości inputa-->
+<script>
+    function getInputValue(numb) {
+        return $('#input' + numb).val();
+        var value = document.getElementById('input' + numb).value;
+        return value;
+    }
+    
+    function getButton(buttonid){
+            $.get("{{route('button')}}", function (data) {
+                $('#'+buttonid).html(data);
+            });
+    }
+    
+</script>
+
+<!--pobieranie wartości inputa-->
+<script>
+
+//    $(document).ready(function () {
+//       $.each($('.inputButton'), function() {
+//            console.log(this.id);
+//
+////            $.get("{{route('button')}}", function (data) {
+////                $('.inputButton').html(data);
+////            });
+//        });
+//    });
+</script>
+
+
+
+
+
+
+
+<img id="myImage"  class="img-fluid rounded-circle mx-auto d-block" src="" />
 @endpush
 
 

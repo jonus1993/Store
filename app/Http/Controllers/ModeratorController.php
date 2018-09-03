@@ -14,6 +14,7 @@ class ModeratorController extends Controller {
 
     public function __construct() {
         $this->middleware('auth');
+        $this->middleware('can:delete, App\User')->only('deleteItem');
     }
 
     /**

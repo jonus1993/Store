@@ -53,7 +53,7 @@ Colour
             @endforeach</td>
         <td>
             @if(!$item->is_deleted)
-            <a class="btn btn-info" href="{{route('item2.addToCart', ['id' => $item->id])}}">ADD</a>
+            <a class="btn btn-info" href="{{route('item2.addToCart', $item)}}">ADD</a>
             @else
             <button type="button" class="btn btn-dark" disabled>Out of stock</button>
             @endif

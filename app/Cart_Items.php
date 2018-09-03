@@ -17,4 +17,9 @@ class Cart_Items extends Model
    function item() {
         return $this->belongsTo(Items::class);
     }
+    
+    function cart() {
+        return $this->belongsTo(Cart2::class);
+    }
+    
 }

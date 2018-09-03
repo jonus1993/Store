@@ -94,9 +94,9 @@ Colour Store
  <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{{url('/js/jquery-1.9.1.min.js')}}" ></script>
+<!--    <script src="{{url('/js/jquery-1.9.1.min.js')}}" ></script>
     <script src="{{url('bootstrap.min.js')}}" ></script>
-    <script src="{{url('docs.min.js')}}" ></script>
+    <script src="{{url('docs.min.js')}}" ></script>-->
 
 
     <!-- jssor slider scripts-->

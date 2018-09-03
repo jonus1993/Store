@@ -19,7 +19,7 @@ DB Store Cart
         <td>{{ $item->item->name }}</td>
         <td>{{ $item['qty'] }}</td>
         <td>{{ $item->item->price*$item['qty'] }}</td>
-        <td><a class="btn btn-info" href="{{route('item2.delFromCart', ['id' => $item->item->id])}}">DELETE</a></td>
+        <td><a class="btn btn-info" href="{{route('item2.delFromCart', $item)}}">DELETE</a></td>
 
     </tr>
     @endforeach
@@ -47,7 +47,7 @@ $(document).ready(function () {
     $("#del").click(function () {
         var isGood = confirm('Are You Sure?');
         if (isGood) {
-            $.get(" {{route('item2.delFromCart', ['id' => 0])}} ", function (data) {
+            $.get(" {{route('delete.cart')}} ", function (data) {
             });
         }
     });

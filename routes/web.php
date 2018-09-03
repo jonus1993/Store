@@ -1,5 +1,8 @@
 <?php
 
+use App\Tags;
+use App\Categories;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -19,7 +22,7 @@ Route::prefix('items')->group(function () {
 });
 
 
-Route::get('/item/{itemID}', [
+Route::get('/show/{itemID}', [
     'uses' => 'ItemsController@getItem',
     'as' => 'item.get'
 ]);
@@ -38,7 +41,7 @@ Route::get('/add_rate/{item}/{rate}', [
 
 
 
-Route::group(['middleware' => 'can:moderator-allowed'], function () {
+Route::prefix('item')->middleware('can:moderator-allowed')->group(function () {
     Route::get('/new/', [
         'uses' => 'ModeratorController@createNewItem',
         'as' => 'item.create'
@@ -56,9 +59,10 @@ Route::group(['middleware' => 'can:moderator-allowed'], function () {
         'uses' => 'ModeratorController@updateItem',
         'as' => 'item.edit'
     ]);
+    Route::get('/del/{item}', 'ModeratorController@deleteItem')->name('item.del');
 });
-//->middleware('can:delete, App\User')
-Route::get('item/del/{item}', 'ModeratorController@deleteItem')->middleware('can:delete, App\User')->name('item.del');
+
+
 
 
 Route::get('/checkout', [
@@ -122,12 +126,17 @@ Route::prefix('manage')->group(function () {
 Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');
 
 
-Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');
+//Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');
+Route::get('/items2', function() {
+    $tags = Tags::all();
+    $categories = Categories::all();
+    return view('items.index2', compact('tags', 'categories'));
+})->name('datatables');
+
 Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');
 Route::get('/items2/order.info/', 'DatatablesController@getOrderInfo')->name('order.info');
 Route::get(
-    '/items2/{item}/{qty?}',
-    [
+        '/items2/{item}/{qty?}', [
     'uses' => 'DatatablesController@getAddToCart',
     'as' => 'item2.addToCart',
         ]
@@ -138,20 +147,48 @@ Route::get('/checkout2', [
     'as' => 'checkout2'
 ]);
 
-
-Route::get('/cart2', 'DatatablesController@getCartView')->name('goToCart2');
 Route::get('/cart', 'ItemsController@getCart')->name('goToCart');
+Route::get('/cart2', 'DatatablesController@getCartView')->name('goToCart2');
 
-Route::get('/cart2/{id}', [
+
+Route::get('/cart2/del/{item}', [
     'uses' => 'DatatablesController@delFromCart',
     'as' => 'item2.delFromCart'
+]);
+
+Route::get('/cart2/delete', [
+    'uses' => 'DatatablesController@delCart',
+    'as' => 'delete.cart'
 ]);
 
 
 Route::auth();
 
+Route::fallback(function () {
+    return "no chyba nie...";
+});
 
 //z automatu przy auth sie tworzą
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController')->name('home');
+
+Route::prefix('/home2')->group(function() {
+    Route::get('/', function() {
+        return view('home2');
+    })->name('home2');
+
+    Route::get('/data', 'AddressController@getAddresses')->name('home2.data');
+    Route::get('/form', 'AddressController@getAddressForm')->name('home2.form');
+    Route::post('/add', [
+        'uses' => 'AddressController@store2',
+        'as' => 'address2.add'
+    ]);
+    
+      Route::get('/errors/{errors}', 'AddressController@getErrors')->name('home2.errors');
+});
+
+Route::get('/button', function(){
+    return view('items.button');
+}
+        )->name('button');

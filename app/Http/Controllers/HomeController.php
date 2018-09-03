@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+
 use App\Address;
 
 class HomeController extends Controller {
@@ -21,7 +21,7 @@ class HomeController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function __invoke() {
 
         $addresses = new Address();
         $addresses = $addresses->getAddresses();

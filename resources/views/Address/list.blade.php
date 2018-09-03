@@ -1,14 +1,4 @@
-@extends('layouts.master')
-@section('title')
-Home
-@endsection
-@section('content')
 
-
-<!--wyświetlnia wiadomości-->
-@if (Session::has('message'))
-<div id="message" class="alert alert-info">{{ Session::get('message') }}</div>
-@endif
 <div id="addresses" class="row">
     @foreach($addresses as $address)
     <address class="col-md-3">
@@ -18,7 +8,7 @@ Home
         Zip Code: {{$address['zip_code']}} <br>
         Phone: {{$address['phone']}} <br>
 
-
+        <!--<button id="delbtn" value="{{$address['id']}}"  class="btn btn-danger btn-sm" >DELETE</button>-->
         {{ Form::open(['route' => ['address.del', $address->id], 'method' => 'delete']) }}
         <button class="btn btn-danger btn-sm" type="submit">DELETE</button>
         {{ Form::close() }}
@@ -26,8 +16,3 @@ Home
     </address>
     @endforeach
 </div>
-
-
-<a class="btn btn-primary" href="{{ url('/address') }}" >Add Address</a>
-
-@endsection

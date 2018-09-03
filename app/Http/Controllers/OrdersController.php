@@ -40,11 +40,12 @@ class OrdersController extends Controller
             $address = new Address();
             $addressID = $address->store($request);
         }
+        
+        $cart = new Cart2();
+        $cart = $cart->getCartIns($this->userid);
 
-        $Cart2 = new Cart2();
-        $cartID = $Cart2->getCartId($this->userid);
 
-        $cartID = $cartID->id;
+        $cartID = $cart->id;
 
         $totalQty = Cart_Items::where('cart_id', $cartID)->sum('qty');
         $cartItems = Cart_Items::where('cart_id', $cartID)->get();
@@ -81,10 +82,9 @@ class OrdersController extends Controller
 //                ->send(new OrderPlaced($orderM));
         
         
+
+        $cart->delete();
         
-        //usuwanie przedmiotów z koszyka w bazie
-        //usuwanie koszyka z bazy
-        $Cart2->delCart($cartID);
         return view('orders.finished', ['orderid' => $order->id]);
     }
 

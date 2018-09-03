@@ -20,12 +20,11 @@ use Illuminate\Support\Facades\Session;
 class DatatablesController extends Controller
 {
     protected $items;
+    protected $cart;
 
-    public function getIndex()
+    public function __construct()
     {
-        $tags = Tags::all();
-        $categories = Categories::all();
-        return view('items.index2', compact('tags', 'categories'));
+        $this->cart = new Cart2();
     }
 
     //funkcja dla DataTables, pobiera dane ajaxem
@@ -39,8 +38,15 @@ class DatatablesController extends Controller
 
         if ($catInput != null) {
             $items->whereIn('category_id', $catInput);
+            
+            //tworzenie ciasteczka dla kategorii, żeby pozaznaczać autmatycznie wybrane checkboxy
+            setcookie('categories', "");
+            $cookieCat = "";
+            foreach ($catInput as $catIndex) {
+                $cookieCat = $cookieCat.$catIndex . ',';
+            }
+            setcookie('categories', $cookieCat);
         }
-
         if ($tagInput != null) {
             $tagIds = Tags::select('id')->whereIn('friend_name', $tagInput)->get();
             $items->whereHas('tags', function ($q) use ($tagIds) {
@@ -53,15 +59,15 @@ class DatatablesController extends Controller
     }
 
     //prywatna funkcja sprawdza czy user ma koszyk w bazie
-    protected function checkCartExist($userid)
+    protected function checkCartExist($userID)
     {
-        return Cart2::where('user_id', '=', $userid)->first();
+        return Cart2::where('user_id', $userID)->first();
     }
 
     //prywatna funkcja sprawdza czy koszyk jest pusty
-    protected function checkCartEmpty($cartid)
+    protected function checkCartEmpty($cartID)
     {
-        return Cart_Items::where('cart_id', '=', $cartid)->with('item')->get();
+        return Cart_Items::where('cart_id', $cartID)->with('item')->get();
     }
 
     public function getAddToCart(Items $item, $qty = 1)
@@ -73,7 +79,7 @@ class DatatablesController extends Controller
         }
 
         $userID = auth()->id();
-        
+
         //patrzymy czy user ma już koszyk w bazie
         // jak nie ma to tworzymy go
         $cart = Cart2::firstOrCreate(['user_id' => $userID]);
@@ -93,7 +99,7 @@ class DatatablesController extends Controller
         // id usera tak jakby z sesji
         $userID = auth()->id();
         //patrzymy czy user już koszyk ma w bazie
-        $cart = Cart2::where('user_id', $userID)->first();
+        $cart = $this->cart->getCartIns($userID);
 
         // jak nie ma to pustke zwracamy
         if ($cart === null) {
@@ -120,38 +126,30 @@ class DatatablesController extends Controller
     public function getCartView()
     {
         $cart = $this->getCart();
-        if (!is_array($cart)) {
-            return $cart;
-        }
-
         return view('cart.cart', $cart);
     }
 
     //usuwanie przedmiotów z koszyka/koszyka
-    public function delFromCart($id)
+    public function delFromCart(Cart_Items $item)
     {
-        $userid = auth()->id();
-        $cartid = Cart2::where('user_id', '=', $userid)->first();
+        $userID = auth()->id();
+        $cart = $this->checkCartExist($userID);
 
-        $cartid = $cartid->id;
-        $Cart2 = new Cart2();
-        //usuwanie całego koszyka
-        if ($id == 0) {
+        Cart_Items::where('cart_id', $cart->id)->where('id', $item->id)->delete();
 
-//            Cart_Items::where('cart_id', $cartid)->delete();
-//            Cart2::where('id', $cartid)->delete();
-
-            $Cart2->delCart($cartid);
-        } else {
-            Cart_Items::where([['item_id', $id], ['cart_id', $cartid]])->delete();
-            $cartEmpty = Cart_Items::where('cart_id', $cartid)->first();
-
-            if (!$cartEmpty) {
-//                Cart2::where('id', $cartid)->delete();
-                $Cart2->delCart($cartid);
-            }
+        if (!Cart_Items::where('cart_id', $cart->id)->exists()) {
+            $cart->delete();
         }
 
+
+        return redirect()->route('goToCart2');
+    }
+
+    public function delCart()
+    {
+        $userID = auth()->id();
+        $cart = $this->checkCartExist($userID);
+        $cart->delete();
 
         return redirect()->route('goToCart2');
     }
@@ -160,13 +158,10 @@ class DatatablesController extends Controller
     {
         $addresses = new Address();
         $addresses = $addresses->getAddresses();
-//        $addresses = auth()->user()->addresses(); //?
-//        dd($addresses);
-        $cart = $this->getCart();
-        if (!is_array($cart)) {
-            return $cart;
-        }
 
+//        $addresses = auth()->user()->addresses(); //?
+
+        $cart = $this->getCart();
         return view('cart.checkout', compact('addresses', 'cart'));
     }
 

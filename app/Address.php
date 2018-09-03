@@ -21,7 +21,7 @@ class Address extends Model {
     
       public function getAddresses() {
         $userid = auth()->id();
-        return Address::where('user_id', '=', $userid)->get();
+        return Address::where('user_id',  $userid)->get();
     }
 
     protected $fillable = [

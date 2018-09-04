@@ -9,7 +9,6 @@ DB Store Cart
         <th>NAME</th>
         <th>QUANTATY</th>
         <th>PRICE</th>
-
         <th>DELETE</th>
     </tr>
 

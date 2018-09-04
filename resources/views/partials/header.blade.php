@@ -14,7 +14,7 @@
                 <a class="nav-link" href="{{ url('/items') }}">Items</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url('/items2') }}">ItemsDT</a>
+                <a class="nav-link" href="{{ url('/items3') }}">ItemsDT</a>
             </li>
             @if(Route::has('login'))
             <!--jeżeli użytkownik autoryzowany-->
@@ -68,7 +68,7 @@
             @else
             <li class="nav-item"> 
                 <a class="nav-link" href="{{ route('goToCart') }}"> Shopping Cart
-                    <span class="badge">{{ Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span>
+                    <span id="cartQty" class="badge">{{ Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span>
                 </a>
             </li>
             

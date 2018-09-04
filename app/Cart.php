@@ -2,9 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Cart extends Model
+class Cart
 {
     public $items = null;
     public $totalQty = 0;
@@ -19,18 +17,32 @@ class Cart extends Model
         }
     }
 
-    public function add($item, $id, $qty) {
+    public function add($item, $id, $qty = 1)
+    {
         $storedItem = ['qty' => 0, 'price' => $item->price, 'item' => $item];
         if ($this->items) {
-            if (array_key_exists($id, $this->items)){
-                $storedItem= $this->items[$id];
+            if (array_key_exists($id, $this->items)) {
+                $storedItem = $this->items[$id];
             }
         }
-        $storedItem['qty']+=$qty;
+        $storedItem['qty'] += $qty;
         $storedItem['price'] = $item->price * $storedItem['qty'];
         $this->items[$id] = $storedItem;
-        $this->totalQty+=$qty;
-        $this->totalPrice += $item->price;
+        $this->totalQty += $qty;
+        $this->totalPrice += $item->price * $qty;
     }
-    
+
+    public function del(Items $item)
+    {
+        $id = $item->id;
+        if ($this->items) {
+            if (array_key_exists($id, $this->items)) {
+                $storedItem = $this->items[$id];
+            }
+            $this->totalPrice -= $item->price * $storedItem['qty'];
+            $this->totalQty -= $storedItem['qty'];
+
+            unset($this->items[$id]);
+        }
+    }
 }

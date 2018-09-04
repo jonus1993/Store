@@ -14,13 +14,25 @@ Route::get('/nbp', function () {
 Route::prefix('items')->group(function () {
     Route::get('/', 'ItemsController@index');
     Route::post('/', 'ItemsController@postIndex')->name('filter.data');
-
-    Route::get('/{id}/{qty?}', [
+    Route::get('/{item}/{qty?}', [
         'uses' => 'ItemsController@getAddToCart',
         'as' => 'item.addToCart'
     ]);
 });
 
+Route::get('/dist/{item}', [
+    'uses' => 'ItemsController@delFromCart',
+    'as' => 'item.sesdelete'
+]);
+
+Route::get('/distAll', function() {
+
+    if (Session::has('cart')) {
+        Session::forget('cart');
+    }
+    return view("cart.index");
+}
+)->name('forgetCart');
 
 Route::get('/show/{itemID}', [
     'uses' => 'ItemsController@getItem',
@@ -133,6 +145,12 @@ Route::get('/items2', function() {
     return view('items.index2', compact('tags', 'categories'));
 })->name('datatables');
 
+Route::get('/items3', function() {
+    $tags = Tags::all();
+    $categories = Categories::all();
+    return view('items.index3', compact('tags', 'categories'));
+})->name('datatables2');
+
 Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');
 Route::get('/items2/order.info/', 'DatatablesController@getOrderInfo')->name('order.info');
 Route::get(
@@ -184,11 +202,9 @@ Route::prefix('/home2')->group(function() {
         'uses' => 'AddressController@store2',
         'as' => 'address2.add'
     ]);
-    
-      Route::get('/errors/{errors}', 'AddressController@getErrors')->name('home2.errors');
 });
 
-Route::get('/button', function(){
+Route::get('/button', function() {
     return view('items.button');
 }
-        )->name('button');
+)->name('button');

@@ -8,42 +8,35 @@ Colours
 @section('content')
 <div class="row">
 
-    <div class="col-2" > 
+    <div class="col-2">
         <h3 class="w3-bar-item">Filtry</h3>
         <h4 class="w3-bar-item">Tagi</h4>
         <form action="{{route('filter.data')}}" method="post">
             @csrf
+
             @foreach($tags as $tag)
             <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="tags[]" value="{{ $tag->friend_name }}"
-                       @if(isset($_POST['tags']))
-                       {{  in_array($tag->friend_name, $_POST['tags']) ? 'checked' : ''  }}
-                       @endif
-                       >
-                <label class="form-check-label" for="exampleCheck1">{{ $tag->name }}</label>
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" name="tags[]" value="{{ $tag->friend_name }}" @if(isset($_POST['tags'])) {{ in_array($tag->friend_name, $_POST['tags']) ? 'checked' : '' }} @endif>{{ $tag->name }}</label>
             </div>
             @endforeach
 
             <h4 class="w3-bar-item">Kategorie</h4>
-            <?php
-            $category = old('categories');
-            ?>
+            <?php $category = old('categories'); ?>
+
             @foreach($categories as $cat)
             <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="categories[]" value="{{ $cat->id }}"
-                       @if(isset($_POST['categories']))
-                       {{  in_array($cat->id, $_POST['categories']) ? 'checked' : ''  }}
-                       @endif
-                       >
-                <label class="form-check-label" for="exampleCheck1">{{ $cat->name }}</label>
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" name="categories[]" value="{{ $cat->id }}" @if(isset($_POST['categories'])) {{  in_array($cat->id, $_POST['categories']) ? 'checked' : ''  }} @endif>{{ $cat->name }}</label>
             </div>
             @endforeach
+
             <br>
-            <input class="btn btn-dark" type="submit" value="Filtruj" />
+            <input class="btn btn-dark" type="submit" value="Filtruj">
         </form>
     </div>
 
-    <div  class="col-10">
+    <div class="col-10">
 
 
 
@@ -74,17 +67,17 @@ Colours
             @foreach($items as $item)
             <tr>
                 <td>{{ $item->id }}</td>
-                <td>{{ $item->name  }}</td>
+                <td>{{ $item->name }}</td>
                 <td></td>
                 <td>{{ $item->price }}</td>
                 <td>{{ $item->category->name }}</td>
-                <td>@foreach($item->tags as $tag){{ 
-                $tag->name }} <br>
+                <td>@foreach($item->tags as $tag){{
+                    $tag->name }} <br>
                     @endforeach</td>
 
                 <td>
                     @if(!$item->is_deleted)
-                    <a class="btn btn-info" href="{{route('item'.(auth()->id() ? '2' : '').'.addToCart', ['id' => $item->id])}}">ADD</a>
+                    <a class="btn btn-info" href="{{route('item'.(auth()->id() ? '2' : '').'.addToCart', ['item' => $item])}}">ADD</a>
                     @else
                     <button type="button" class="btn btn-dark" disabled>Out of stock</button>
                     @endif

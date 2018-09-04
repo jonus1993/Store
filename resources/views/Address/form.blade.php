@@ -3,17 +3,14 @@
 <div id="message" class="alert alert-info">{{ Session::get('message') }}</div>
 @endif
 <h1>Add Your New Address</h1>
-<div id="errors">
-
-</div>
+<div id="errors">  </div>
 
 
 <form id="addressForm" action="{{route('address2.add')}}" method="post">
 
     <div class="form-group">
         <label for="street">Street address:</label>
-        <input type="text" class="form-control{{ $errors->has('street') ? ' invalid-feedback' : ''}}" name="street" id="street">
-
+        <input type="text" class="form-control" name="street" id="street">
     </div>
 
     <div class="form-group">
@@ -45,24 +42,16 @@
             },
 
             error: function (data) {
-                $('.invalid-feedback').removeClass('invalid-feedback');
+                $('.alert alert-danger').removeClass('alert alert-danger');
                 var errors = data.responseJSON.errors;
-                console.log(errors);
-                
+
                 var html = '';
                 for (var e in errors) {
-                    console.log(e);
-                    $('input[name='+e+']').addClass('invalid-feedback');
-                    
-                    console.log($('input[name='+e+']'));
-                    html += errors[e][0];
+                    $("input[name='" + e + "']").addClass("alert alert-danger");
+                    html += errors[e][0] + '<br>';
                 }
-                
-                $('#errors').html(html);
-                
-//                $.get('{{url("home2/errors")}}' + '/', function (data2) {
-//                    $('#errors').html(data2);
-//                });
+
+                $('#errors').html(html).addClass("alert alert-danger");
 
             }
 

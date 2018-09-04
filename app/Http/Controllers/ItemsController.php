@@ -48,13 +48,27 @@ class ItemsController extends Controller {
         return view('items.index', compact('items', 'tags', 'categories'));
     }
 
-    public function getAddToCart(Request $request, $id, $qty = 1) {
+    public function getAddToCart(Request $request, Items $item, $qty = 1) {
 
-        $item = Items::find($id);
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
         $cart->add($item, $item->id, $qty);
         $request->session()->put('cart', $cart);
+
+        return redirect()->back();
+    }
+
+    public function delFromCart(Request $request, Items $item) {
+
+        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+        $cart = new Cart($oldCart);
+        $cart->del($item);
+
+        if ($cart->totalQty == 0)
+            Session::forget('cart');
+        else {
+            $request->session()->put('cart', $cart);
+        }
 
         return redirect()->back();
     }
@@ -67,7 +81,7 @@ class ItemsController extends Controller {
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
 
-        return view('cart.index', ['items' => $cart->items, 'totalPrice' => $cart->totalPrice]);
+        return view('cart.index', ['items' => $cart->items, 'totalQty' => $cart->totalQty, 'totalPrice' => $cart->totalPrice]);
     }
 
     public function getCheckout() {
@@ -85,12 +99,12 @@ class ItemsController extends Controller {
     public function getItem(Items $itemID) {
         $item = $itemID;
 
-        $avgrate = number_format($item->avgRating,1);
+        $avgrate = number_format($item->avgRating, 1);
         $allrates = $item->countPositive;
-        
 
 
-        return view('items.show', compact('item', 'avgrate','allrates'));
+
+        return view('items.show', compact('item', 'avgrate', 'allrates'));
     }
 
 }

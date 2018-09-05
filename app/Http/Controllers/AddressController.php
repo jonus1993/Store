@@ -74,14 +74,14 @@ class AddressController extends Controller {
         $address = $this->addressM;
         $input = $request->all();
         $address->fill($input)->save();
-        return redirect('/home');
+        return redirect('/home2');
     }
 
     public function delete($addressID) {
 
         $this->authorization($addressID);
         $this->addressM->delete();
-        return redirect('/home');
+        return redirect('/home2');
     }
 
     public function authorization($addressID) {

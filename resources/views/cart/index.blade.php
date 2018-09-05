@@ -5,8 +5,6 @@ Store Cart
 @section('content')
 
 
-
-
 @if(Session::has('cart'))
 <table class="table table-hover">
     <tr>
@@ -38,6 +36,26 @@ Store Cart
 
 
 @else
-<h1>nic</h1>
+<h1>Your Cart is empty, go back...</h1>
 @endif
+@endsection
+
+@section('scripts')
+<script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+crossorigin="anonymous"></script>
+
+<!--//usuwanie przez jquery-->
+<script>
+$(document).ready(function () {
+    $("#del").click(function () {
+        var isGood = confirm('Are You Sure?');
+        if (isGood) {
+            $.get(" {{route('forgetCart')}} ", function (data) {
+            });
+        }
+    });
+});
+</script>
 @endsection

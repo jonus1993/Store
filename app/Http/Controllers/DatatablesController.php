@@ -105,6 +105,7 @@ class DatatablesController extends Controller
         if ($cart === null) {
             return view('cart.emptycart');
         }
+      
         $cart_items = $this->checkCartEmpty($cart->id);
         /* @var $cart_items \Illuminate\Database\Eloquent\Collection      */
         if ($cart_items->isEmpty()) {
@@ -126,6 +127,10 @@ class DatatablesController extends Controller
     public function getCartView()
     {
         $cart = $this->getCart();
+        if (!is_array($cart)) {
+            return $cart;
+        }
+
         return view('cart.cart', $cart);
     }
 

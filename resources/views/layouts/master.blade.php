@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
+        @yield('meta')
         <meta charset="UTF-8">
         <title>Colours - @yield('title')</title>
 

@@ -22,6 +22,7 @@ Home
         {{ Form::open(['route' => ['address.del', $address->id], 'method' => 'delete']) }}
         <button class="btn btn-danger btn-sm" type="submit">DELETE</button>
         {{ Form::close() }}
+        <br>
         <a class="btn btn-success btn-sm" href="{{ url('/address/edit', $address['id']) }}">EDIT</a>
     </address>
     @endforeach

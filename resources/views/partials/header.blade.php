@@ -47,8 +47,7 @@
                     {{Auth::user()->name}}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{{ url('/home') }}">MyAccount</a>
-                           <a class="dropdown-item" href="{{ url('/home2') }}">MyAJAX</a>
+                    <a class="dropdown-item" href="{{ url('/home2') }}">MyAccount</a>
                     <a class="dropdown-item" href="{{ url('/allorders') }}">MyOrders</a>
                     <a class="dropdown-item" href="{{ route('logout') }}"
                        onclick="event.preventDefault();

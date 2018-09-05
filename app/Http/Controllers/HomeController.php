@@ -22,7 +22,7 @@ class HomeController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function __invoke() {
-
+        return redirect('/home2');
         $addresses = new Address();
         $addresses = $addresses->getAddresses();
         return view('home', compact('addresses'));

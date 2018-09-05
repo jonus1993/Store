@@ -123,7 +123,7 @@ Route::prefix('address')->group(function () {
         'as' => 'address.edit'
     ]);
 
-    Route::delete('del/{id}', [
+    Route::delete('/del/{id}', [
         'uses' => 'AddressController@delete',
         'as' => 'address.del'
     ]);

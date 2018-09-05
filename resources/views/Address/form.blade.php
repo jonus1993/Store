@@ -54,11 +54,12 @@
 
         var options = {
             success: function(data) {
-//                   getAllAddresses();
-                  $(this).parents('address:first').append();
-            
+
+               
+                $('div#addresses').append(data);
+
                 $("#ajaxaddressbtn").attr("disabled", false);
-                $("#addressnfo").show().delay(125).hide(1000).children("span").text(data);
+                //                $("#addressnfo").show().delay(125).hide(1000).children("span").text(data);
                 $("#addressDiv").delay(125).hide(1000);
             },
 

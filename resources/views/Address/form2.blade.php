@@ -9,6 +9,7 @@
 
     <form id="addressForm" action="{{route('address.edit',$address->id)}}" method="post">
         @csrf
+        <input name="addressID" type="hidden" class="form-control" value="address{{$address->id}}">
         <div class="form-group">
             <label for="street">Street address:</label>
             <input type="text" class="form-control" name="street" id="street" value="{{$address->street}}">
@@ -25,7 +26,7 @@
             <label for="phone">Phone:</label>
             <input type="text" class="form-control" name="phone" id="phone" value="{{$address->phone}}">
         </div>
-        <!--{{ csrf_field() }}-->
+
         <button id="submitbtn" type="submit" class="btn btn-primary" disabled>Edit Address</button>
 
     </form>
@@ -35,6 +36,9 @@
 
 <script>
     $(document).ready(function() {
+        
+        var address=  $("input[name='addressID']").val();
+
 
         $('#addressForm input').on('change', function() {
 
@@ -50,12 +54,15 @@
                 $("#submitbtn").attr("disabled", false);
 
         });
+        
+
 
         var options = {
             success: function(data) {
-              getAllAddresses();
-                          $("#ajaxaddressbtn").attr("disabled", false);
-                $("#addressnfo").show().delay(125).hide(1000).children("span").text(data);
+                $('#'+address).replaceWith(data);
+
+                $("#ajaxaddressbtn").attr("disabled", false);
+                //                $("#addressnfo").show().delay(125).hide(1000).children("span").text(data);
                 $("#addressDiv").delay(125).hide(1000);
             },
 

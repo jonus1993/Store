@@ -39,7 +39,7 @@ class AddressController extends Controller {
     public function store2(Request $request) {
 
         $address = new Address();
-        $address->store($request);
+       $address = $address->store($request);
 
 //        try {
 //            $address->store($request);
@@ -49,7 +49,8 @@ class AddressController extends Controller {
 //        }
         
            if (request()->expectsJson()) {
-            return response('Address Added!');
+             return view('Address.list_item', ['address' => $address]);
+//            return response('Address Added!');
         }
 
         Session::flash('message', "Pomyślnie dodano");
@@ -79,11 +80,9 @@ class AddressController extends Controller {
     }
     
       public function getAddress($addressID) {
-
-        $this->authorization($addressID);
+          $this->authorization($addressID);
         $address = $this->addressM;
         
-  
         
         return view('address.form2', compact('address'));
     }
@@ -96,7 +95,7 @@ class AddressController extends Controller {
         $input = $request->all();
         $address->fill($input)->save();
          if (request()->expectsJson()) {
-            return response('Changes made succesfully!');
+            return view('Address.list_item', ['address' => $address]);
         }
         return redirect('/home2');
     }

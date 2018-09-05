@@ -10,13 +10,9 @@
     <br><br>
 </div>
 
-<div id="addressDivForm">
+<div id="addressDivForm"></div>
 
-</div>
-
-<div id="allAddresses">
-
-</div>
+<div id="addresses" class="row"></div>
 
 
 
@@ -36,7 +32,7 @@
 
     function getAllAddresses() {
         $.get("{{route('home2.data')}}", function(data) {
-            $('#allAddresses').html(data);
+            $('#addresses').html(data);
         });
     }
 
@@ -76,17 +72,12 @@
 
 
     $(document).on('click', 'button.editAddresses', function() {
-        var $this = $(this);
-        var addressID = $this.attr('data-field');
 
+        var addressID = $(this).attr('data-field');
         $.get("{{url('address/getOne')}}" + '/' + addressID, function(data) {
             $('#addressDivForm').html(data);
-                 
+
         });
-
-
-
-
     });
 
 </script>

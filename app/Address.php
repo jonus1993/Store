@@ -16,7 +16,7 @@ class Address extends Model {
         $address = new Address();
         $address->user_id = auth()->id();
         $address->fill($input)->save();
-        return $address->id;
+        return $address;
     }
     
       public function getAddresses() {

@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
     <head>
-        @yield('meta')
         <meta charset="UTF-8">
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">

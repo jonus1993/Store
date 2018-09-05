@@ -114,6 +114,8 @@ Route::prefix('address')->group(function () {
         'uses' => 'AddressController@store',
         'as' => 'address.add'
     ]);
+    Route::get('/getOne/{id}', 'AddressController@getAddress');
+
     Route::get('/edit/{id}', [
         'uses' => 'AddressController@edit',
         'as' => 'address.edit'

@@ -1,24 +1,24 @@
 @extends('layouts.master')
-@section('meta')
-<meta name="csrf-token" content="{{ csrf_token() }}">
-@endsection
-@section('title')
-Home
-@endsection
+@section('title', 'hone')
 
 @section('content')
+<div id="addressnfo" class="alert alert-info" style="display: none;">
+    <span></span>
+</div>
+<div> <br>
+    <button id="ajaxaddressbtn" class="btn btn-primary">Add AJAX Address</button>
+    <br><br>
+</div>
 
+<div id="addressDivForm">
+
+</div>
 
 <div id="allAddresses">
 
 </div>
 
-<button id="ajaxaddressbtn" class="btn btn-primary">Add AJAX Address</button>
 
-
-<div id="addressDivForm">
-
-</div>
 
 
 @stop
@@ -37,38 +37,7 @@ Home
     function getAllAddresses() {
         $.get("{{route('home2.data')}}", function(data) {
             $('#allAddresses').html(data);
-            putDelBtn();
-
-
         });
-
-
-    }
-
-
-
-    function putDelBtn() {
-
-        $(".delAddresses").on('click', function() {
-
-            var addressID = $(this).attr('data-field');
-            console.log(addressID);
-            $.ajax({
-                headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                url: "{{url('address/del')}}" + '/' + addressID,
-                type: 'DELETE',
-                success: function() {
-                    getAllAddresses();
-                }
-
-
-            });
-
-        });
-        
-
     }
 
 </script>
@@ -82,6 +51,41 @@ Home
         $("#ajaxaddressbtn").click(function() {
             getForm();
         });
+
+    });
+
+
+    $(document).on('click', 'button.delAddresses', function() {
+        var $this = $(this);
+        var addressID = $this.attr('data-field');
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "{{ url('address/del') }}" + '/' + addressID,
+            type: 'DELETE',
+            success: function(data) {
+                $("#addressnfo").show().delay(125).hide(1000).children("span").text(data);
+
+                $this.parents('address:first').remove();
+            }
+        });
+
+    });
+
+
+    $(document).on('click', 'button.editAddresses', function() {
+        var $this = $(this);
+        var addressID = $this.attr('data-field');
+
+        $.get("{{url('address/getOne')}}" + '/' + addressID, function(data) {
+            $('#addressDivForm').html(data);
+                 
+        });
+
+
+
 
     });
 

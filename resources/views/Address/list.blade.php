@@ -11,9 +11,10 @@
             <button data-field="{{$address['id']}}" class="delAddresses btn btn-danger btn-sm">
                 <img src="{{url('/open-iconic/svg/trash.svg')}}" alt="icon name">
             </button>
+            <button data-field="{{$address['id']}}" class="editAddresses btn btn-success btn-sm">
+                <img src="{{url('/open-iconic/svg/brush.svg')}}" alt="icon name">
 
-            <a class="btn btn-success btn-sm" href="{{ url('/address/edit', $address['id']) }}"> <img src="{{url('/open-iconic/svg/brush.svg')}}" alt="icon name">
-            </a>
+            </button>
         </div>
     </address>
     @endforeach

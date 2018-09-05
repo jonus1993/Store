@@ -47,6 +47,10 @@ class AddressController extends Controller {
 //            return response(view('home2')
 //                ->with('errors', $ex->validator->errors()), 422);
 //        }
+        
+           if (request()->expectsJson()) {
+            return response('Address Added!');
+        }
 
         Session::flash('message', "Pomyślnie dodano");
     }
@@ -55,6 +59,10 @@ class AddressController extends Controller {
 
         $address = new Address();
         $address->store($request);
+        
+        if (request()->expectsJson()) {
+            return response('Address Added!');
+        }
 
         Session::flash('message', "Pomyślnie dodano");
         return redirect($request->input('last_url', '/home'));
@@ -64,7 +72,20 @@ class AddressController extends Controller {
 
         $this->authorization($addressID);
         $address = $this->addressM;
+        
+  
+        
         return view('address.edit', compact('address'));
+    }
+    
+      public function getAddress($addressID) {
+
+        $this->authorization($addressID);
+        $address = $this->addressM;
+        
+  
+        
+        return view('address.form2', compact('address'));
     }
 
     public function update(Request $request, $addressID) {
@@ -74,6 +95,9 @@ class AddressController extends Controller {
         $address = $this->addressM;
         $input = $request->all();
         $address->fill($input)->save();
+         if (request()->expectsJson()) {
+            return response('Changes made succesfully!');
+        }
         return redirect('/home2');
     }
 
@@ -81,6 +105,9 @@ class AddressController extends Controller {
 
         $this->authorization($addressID);
         $this->addressM->delete();
+        if (request()->expectsJson()) {
+            return response('Address Deleted!');
+        }
         return redirect('/home2');
     }
 

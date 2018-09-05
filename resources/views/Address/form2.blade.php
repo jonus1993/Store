@@ -7,27 +7,26 @@
     <h1>Add Your New Address</h1>
     <div id="errors"> </div>
 
-    <form id="addressForm" action="{{route('address2.add')}}" method="post">
-
+    <form id="addressForm" action="{{route('address.edit',$address->id)}}" method="post">
+        @csrf
         <div class="form-group">
             <label for="street">Street address:</label>
-            <input type="text" class="form-control" name="street" id="street">
+            <input type="text" class="form-control" name="street" id="street" value="{{$address->street}}">
         </div>
-
         <div class="form-group">
             <label for="city">City:</label>
-            <input type="text" class="form-control" name="city" id="city">
+            <input type="text" class="form-control" name="city" id="city" value="{{$address->city}}">
         </div>
         <div class="form-group">
             <label for="zip_code">Zip-code:</label>
-            <input type="text" class="form-control" name="zip_code" id="zip_code">
+            <input type="text" class="form-control" name="zip_code" id="zip_code" value="{{$address->zip_code}}">
         </div>
         <div class="form-group">
             <label for="phone">Phone:</label>
-            <input type="text" class="form-control" name="phone" id="phone">
+            <input type="text" class="form-control" name="phone" id="phone" value="{{$address->phone}}">
         </div>
-        {{ csrf_field() }}
-        <button id="submitbtn" type="submit" class="btn btn-primary" disabled>Add Address</button>
+        <!--{{ csrf_field() }}-->
+        <button id="submitbtn" type="submit" class="btn btn-primary" disabled>Edit Address</button>
 
     </form>
     <br>
@@ -54,10 +53,8 @@
 
         var options = {
             success: function(data) {
-//                   getAllAddresses();
-                  $(this).parents('address:first').append();
-            
-                $("#ajaxaddressbtn").attr("disabled", false);
+              getAllAddresses();
+                          $("#ajaxaddressbtn").attr("disabled", false);
                 $("#addressnfo").show().delay(125).hide(1000).children("span").text(data);
                 $("#addressDiv").delay(125).hide(1000);
             },

@@ -25,13 +25,14 @@ Route::get('/dist/{item}', [
     'as' => 'item.sesdelete'
 ]);
 
-Route::get('/distAll', function() {
-
-    if (Session::has('cart')) {
-        Session::forget('cart');
+Route::get(
+    '/distAll',
+    function () {
+        if (Session::has('cart')) {
+            Session::forget('cart');
+        }
+        return view("cart.index");
     }
-    return view("cart.index");
-}
 )->name('forgetCart');
 
 Route::get('/show/{itemID}', [
@@ -114,18 +115,17 @@ Route::prefix('address')->group(function () {
         'uses' => 'AddressController@store',
         'as' => 'address.add'
     ]);
-    Route::get('/getOne/{id}', 'AddressController@getAddress');
-
-    Route::get('/edit/{id}', [
+   
+    Route::get('/edit/{address}', [
         'uses' => 'AddressController@edit',
         'as' => 'address.edit'
     ]);
-    Route::post('/edit/{id}', [
+    Route::post('/edit/{address}', [
         'uses' => 'AddressController@update',
         'as' => 'address.edit'
     ]);
 
-    Route::delete('/del/{id}', [
+    Route::delete('/del/{address}', [
         'uses' => 'AddressController@delete',
         'as' => 'address.del'
     ]);
@@ -141,13 +141,13 @@ Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');
 
 
 //Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');
-Route::get('/items2', function() {
+Route::get('/items2', function () {
     $tags = Tags::all();
     $categories = Categories::all();
     return view('items.index2', compact('tags', 'categories'));
 })->name('datatables');
 
-Route::get('/items3', function() {
+Route::get('/items3', function () {
     $tags = Tags::all();
     $categories = Categories::all();
     return view('items.index3', compact('tags', 'categories'));
@@ -156,7 +156,8 @@ Route::get('/items3', function() {
 Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');
 Route::get('/items2/order.info/', 'DatatablesController@getOrderInfo')->name('order.info');
 Route::get(
-        '/items2/{item}/{qty?}', [
+        '/items2/{item}/{qty?}',
+    [
     'uses' => 'DatatablesController@getAddToCart',
     'as' => 'item2.addToCart',
         ]
@@ -193,20 +194,18 @@ Auth::routes();
 
 Route::get('/home', 'HomeController')->name('home');
 
-Route::prefix('/home2')->group(function() {
-    Route::get('/', function() {
+Route::prefix('/home2')->group(function () {
+    Route::get('/', function () {
         return view('home2');
     })->name('home2');
 
     Route::get('/data', 'AddressController@getAddresses')->name('home2.data');
-    Route::get('/form', 'AddressController@getAddressForm')->name('home2.form');
-    Route::post('/add', [
+    Route::get('/form', function () {
+        return view('address.form');
+    })->name('home2.form');
+            
+    Route::post('/ajax/', [
         'uses' => 'AddressController@store2',
-        'as' => 'address2.add'
+        'as' => 'address.add2'
     ]);
 });
-
-Route::get('/button', function() {
-    return view('items.button');
-}
-)->name('button');

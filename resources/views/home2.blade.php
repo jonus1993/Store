@@ -74,7 +74,7 @@
     $(document).on('click', 'button.editAddresses', function() {
 
         var addressID = $(this).attr('data-field');
-        $.get("{{url('address/getOne')}}" + '/' + addressID, function(data) {
+        $.get("{{url('address/edit')}}" + '/' + addressID, function(data) {
             $('#addressDivForm').html(data);
 
         });

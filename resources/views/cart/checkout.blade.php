@@ -55,6 +55,7 @@ Checkout
     </div>
     <a class="btn btn-info" href="{{route('address.add')}}">Add the new address</a>
     <br>
+    <br>
     <table class="table table-hover">
         <tr>
             <th>NAME</th>

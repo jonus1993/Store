@@ -36,9 +36,8 @@
 
 <script>
     $(document).ready(function() {
-        
-        var address=  $("input[name='addressID']").val();
 
+        var address = $("input[name='addressID']").val();
 
         $('#addressForm input').on('change', function() {
 
@@ -54,12 +53,12 @@
                 $("#submitbtn").attr("disabled", false);
 
         });
-        
+
 
 
         var options = {
             success: function(data) {
-                $('#'+address).replaceWith(data);
+                $('#' + address).replaceWith(data);
 
                 $("#ajaxaddressbtn").attr("disabled", false);
                 //                $("#addressnfo").show().delay(125).hide(1000).children("span").text(data);

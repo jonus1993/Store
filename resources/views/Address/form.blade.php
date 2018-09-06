@@ -7,7 +7,7 @@
     <h1>Add Your New Address</h1>
     <div id="errors"> </div>
 
-    <form id="addressForm" action="{{route('address2.add')}}" method="post">
+    <form id="addressForm" action="{{route('address.add2')}}" method="post">
 
         <div class="form-group">
             <label for="street">Street address:</label>

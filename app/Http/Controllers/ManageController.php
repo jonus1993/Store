@@ -18,17 +18,18 @@ class ManageController extends Controller {
     }
 
     public function getUserslist() {
-//        return Auth::user()->id;
+
         $roles = Roles::all();
         $users = User::with('roles')->get();
-//        dd($users);
+
         return view('manage', compact('users', 'roles'));
     }
 
-    public function deleteUser($userid) {
+    public function deleteUser(User $user) {
 
-        User::where('id', '$userid')->delete();
-        $this->getUserslist();
+        $user->delete();
+        return $this->getUserslist();
+        
     }
 
     public function changeUser(Request $request) {
@@ -47,6 +48,10 @@ class ManageController extends Controller {
             $user->users_id = $userID;
             $user->roles_id = $roleID;
             $user->save();
+        }
+        
+          if (request()->expectsJson()) {
+            return response("Change was made");
         }
 
         Session::flash('message', trans('messages.userRoleChanged'));

@@ -64,7 +64,7 @@ Route::prefix('item')->middleware('can:moderator-allowed')->group(function () {
         'as' => 'item.create'
     ]);
 
-    Route::get('/edit/{id}', [
+    Route::get('/edit/{item}', [
         'uses' => 'ModeratorController@editItem',
         'as' => 'item.edit'
     ]);
@@ -133,14 +133,14 @@ Route::prefix('address')->group(function () {
 
 Route::prefix('manage')->group(function () {
     Route::get('/', 'ManageController@getUserslist')->name('manage');
-    Route::get('/del/{id}', 'ManageController@deleteUser')->name('del.user');
-    Route::get('/cng', 'ManageController@changeUser')->name('chg.user');
+    Route::get('/del/{user}', 'ManageController@deleteUser')->name('del.user');
+    Route::post('/cng', 'ManageController@changeUser')->name('chg.user');
 });
 
 Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');
 
 
-//Route::get('/items2', 'DatatablesController@getIndex')->name('datatables');
+
 Route::get('/items2', function () {
     $tags = Tags::all();
     $categories = Categories::all();

@@ -18,8 +18,8 @@ Checkout order
 @endif
 <form action="{{route('checkout')}}" method="post">
     <div class="form-group">
-        <label for="who">Name:</label>
-        <input type="text" class="form-control" name="who" id="who" required="">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" name="name" id="who" required="">
     </div>
     <div class="form-group">
         <label for="street">Street address:</label>
@@ -31,7 +31,7 @@ Checkout order
     </div>
     <div class="form-group">
         <label for="zipcode">Zip-code:</label>
-        <input type="text" class="form-control" name="zipcode" id="zipcode" required="">
+        <input type="text" class="form-control" name="zip_code" id="zipcode" required="">
     </div>
     <div class="form-group">
         <label for="phone">Phone:</label>

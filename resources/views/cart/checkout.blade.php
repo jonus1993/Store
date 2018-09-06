@@ -1,61 +1,35 @@
 @extends('layouts.master')
-@section('title')
-Checkout
+@section('title', 'Checkout')
+@section('styles')
+<style>
+body {background-color: powderblue;}
+h1   {color: blue;}
+</style>
 @endsection
 @section('content')
 <h1>Finish your order!</h1>
-<!--wyświetlnia wiadomości-->
-@if (Session::has('message'))
-<div class="alert alert-info">{{ Session::get('message') }}</div>
-@endif
 @if ($errors->any())
-<h4 style="color: red">Something wents wrong... check it!</h4>
-<div class="alert alert-danger">
-    <ul>
-        @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-        @endforeach
-    </ul>
+
+    <div class="alert alert-danger">
+       <h4 style="color: red">Need to put an address.</h4>
 </div>
 @endif
+
+
+<div id="addressnfo" class="alert alert-info" style="display: none;">
+    <span></span>
+</div>
+<div> <br>
+    <button id="ajaxaddressbtn" class="btn btn-primary">Add AJAX Address</button>
+    <br><br>
+</div>
+
+<div id="addressDivForm"></div>
+
 <form action="{{route('finishOrder')}}" method="post">
     @csrf
-    <div class="row">
-        @if($addresses->isEmpty())        
-        <div class="form-group">
-            <label for="street">Street address:</label>
-            <input type="text" class="form-control" name="street" id="street">
-        </div>
-        <div class="form-group">
-            <label for="city">City:</label>
-            <input type="text" class="form-control" name="city" id="city">
-        </div>
-        <div class="form-group">
-            <label for="zipcode">Zip-code:</label>
-            <input type="text" class="form-control" name="zip_code" id="zipcode">
-        </div>
-        <div class="form-group">
-            <label for="phone">Phone:</label>
-            <input type="text" class="form-control" name="phone" id="phone">
-        </div>
-        @else
-        @foreach($addresses as $address)
-        <address class="rounded border border-primary col-md-3">
-            <input checked="checked" type="radio" name="address_id" value="{{$address['id']}}">
-            <strong>Address {{$address['id']}}</strong><br>
-            Street: {{$address['street']}} <br>
-            City: {{$address['city']}} <br>
-            Zip Code: {{$address['zip_code']}} <br>
-            Phone: {{$address['phone']}} <br>
-        </address>
-
-        @endforeach
-
-        @endif
-    </div>
-    <a class="btn btn-info" href="{{route('address.add')}}">Add the new address</a>
-    <br>
-    <br>
+    <div id="addresses" class="row"></div>
+    <p></p>
     <table class="table table-hover">
         <tr>
             <th>NAME</th>
@@ -81,4 +55,73 @@ Checkout
         <button class="btn btn-success" type="submit">MAKE ORDER</button></div>
 
 </form>
-@endsection
+
+@stop
+
+@push('scripts')
+<script src="http://malsup.github.com/jquery.form.js"></script>
+
+<script>
+    function getForm() {
+        $.get("{{route('home2.form')}}", function(data) {
+            $('#addressDivForm').html(data);
+            $("#ajaxaddressbtn").attr("disabled", true);
+        });
+    }
+
+    function getAllAddresses() {
+        $.get("{{route('home2.data')}}", function(data) {
+            $('#addresses').html(data);
+        });
+    }
+
+</script>
+
+
+
+<script>
+    $(document).ready(function() {
+        getAllAddresses();
+
+        $("#ajaxaddressbtn").click(function() {
+            getForm();
+        });
+
+    });
+
+
+    $(document).on('click', 'button.delAddresses', function() {
+        var $this = $(this);
+        var addressID = $this.attr('data-field');
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "{{ url('address/del') }}" + '/' + addressID,
+            type: 'DELETE',
+            success: function(data) {
+                $("#addressnfo").show().delay(125).hide(1000).children("span").text(data);
+
+                $this.parents('address:first').remove();
+            }
+        });
+        return false;
+    });
+
+
+    $(document).on('click', 'button.editAddresses', function() {
+
+        var addressID = $(this).attr('data-field');
+        $.get("{{url('address/edit')}}" + '/' + addressID, function(data) {
+            $('#addressDivForm').html(data);
+
+        });
+        return false;
+    });
+
+</script>
+
+
+
+@endpush

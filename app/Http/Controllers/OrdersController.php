@@ -40,7 +40,7 @@ class OrdersController extends Controller
             $address = new Address();
             $addressID = $address->store($request);
         }
-        
+
         $cart = new Cart2();
         $cart = $cart->getCartIns($this->userid);
 
@@ -62,8 +62,8 @@ class OrdersController extends Controller
         $order->total_items = $totalQty;
         $order->total_cost = $totalPrc;
         $order->save();
-        
-   
+
+
         //kopiowanie produktów z koszyka do zamówienia
         foreach ($cartItems as $totPrc) {
             $orderItems = new Order_Items();
@@ -80,11 +80,11 @@ class OrdersController extends Controller
 //        Mail::to(auth()->user())
 //                ->cc('jszwarc@merinosoft.com.pl')
 //                ->send(new OrderPlaced($orderM));
-        
-        
+
+
 
         $cart->delete();
-        
+
         return view('orders.finished', ['orderid' => $order->id]);
     }
 

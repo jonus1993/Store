@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'hone')
+@section('title', 'home')
 
 @section('content')
 <div id="addressnfo" class="alert alert-info" style="display: none;">

@@ -14,26 +14,20 @@ use Illuminate\Database\Eloquent\Builder;
 //use Illuminate\Support\Facades\Validator;
 //use App\Providers\ValidatorServiceProvider;
 
-class Items extends Model
-{
+class Items extends Model {
+
     use Rating;
 
-    public function generateToken()
-    {
+    public function generateToken() {
         $this->api_token = str_random(60);
         $this->save();
 
         return $this->api_token;
     }
 
-    public function saveItem($request, $itemID = null)
-    {
-
-
+    public function saveItem($request, $itemID = null) {
 //        $this->doValidation($request);
         $request->validated();
-
-
         $input = $request->all();
 
         if ($itemID == null) {
@@ -69,8 +63,7 @@ class Items extends Model
         }
     }
 
-    protected function addPhoto($request)
-    {
+    protected function addPhoto($request) {
 //        $file = $request->file('photo_name');
 //
 //        // generate a new filename. getClientOriginalExtension() for the file extension
@@ -93,8 +86,7 @@ class Items extends Model
         return $photoName;
     }
 
-    protected function doValidation(Request $request)
-    {
+    protected function doValidation(Request $request) {
 
         //        Validator::extend('numericarray', function($attribute, $value, $parameters) {
 //            if (is_array($value)) {
@@ -107,7 +99,6 @@ class Items extends Model
 
         $request->validate([
             'name' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
-//      'price' => 'required|regex:/^[0-9.,]+$/',
             'price' => "required|regex:/^\d*(\.\d{1,2})?$/",
             'photo_name' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'category_id' => 'required|numeric',
@@ -121,22 +112,20 @@ class Items extends Model
         'id', 'name', 'category_id', 'price', 'photo_name'
     ];
 
-    public function tags()
-    {
+    public function tags() {
         return $this->belongsToMany(Tags::class, 'item_tags', 'item_id', 'tag_id')->withTimestamps();
     }
 
-    public function category()
-    {
+    public function category() {
         return $this->belongsTo(Categories::class, 'category_id');
     }
 
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
 
         static::addGlobalScope('not_deleted', function ($builder) {
             $builder->where('is_deleted', '<>', 1);
         });
     }
+
 }

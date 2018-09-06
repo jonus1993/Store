@@ -39,10 +39,10 @@ class AddressController extends Controller
         $address->store($request);
 
         Session::flash('message', "Pomyślnie dodano");
-        return redirect($request->input('last_url', '/home2'));
+        return redirect($request->input('last_url', '/home'));
     }
     
-    public function storeAJAX(Request $request)
+    public function store2(Request $request)
     {
         $address = new Address();
         $address = $address->store($request);
@@ -82,7 +82,7 @@ class AddressController extends Controller
         if (request()->expectsJson()) {
             return view('Address.list_item', ['address' => $address]);
         }
-        return redirect('/home2');
+        return redirect('/home');
     }
 
     public function delete(Address $address)
@@ -92,7 +92,7 @@ class AddressController extends Controller
         if (request()->expectsJson()) {
             return response('Address Deleted!');
         }
-        return redirect('/home2');
+        return redirect('/home');
     }
 
     public function authorization(Address $address)

@@ -19,21 +19,19 @@ class GuestsOrdersController extends Controller {
 //        return response(print_r(session()->all(), true), 200, [ 'Content-type' => 'text/plain' ]);
         $oldCart = Session::get('cart');
         $cart = new Cart($oldCart);
-//        dd($cart);
+
         $request->validate([
-            'who' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę., ]+$/',
+            'name' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę., ]+$/',
             'street' => 'required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
             'city' => 'required|min:2|max:128|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9.]+$/',
-            'zipcode' => 'required|size:6|regex:[[0-9][0-9]-[0-9][0-9][0-9]]',
+            'zip_code' => 'required|size:6|regex:[[0-9][0-9]-[0-9][0-9][0-9]]',
             'phone' => 'required|numeric',
         ]);
+        
+ 
 
         $order = new GuestsOrders();
-        $order->name = $request->input('who');
-        $order->street = $request->input('street');
-        $order->city = $request->input('city');
-        $order->zip_code = $request->input('zipcode');
-        $order->phone = $request->input('phone');
+        $order->fill($request->all());
         $order->total_items = $cart->totalQty;
         $order->total_cost = $cart->totalPrice;
         $order->save();

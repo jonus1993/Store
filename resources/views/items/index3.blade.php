@@ -47,7 +47,7 @@ height: auto;
             </div>
             @endforeach
             <br>
-            <input class="btn btn-dark" type="submit" value="Filtruj" />
+<!--            <input class="btn btn-dark" type="submit" value="Filtruj" />-->
         </form>
     </div>
     <div  class="col-10">

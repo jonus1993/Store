@@ -59,7 +59,7 @@
                 $('div#addresses').append(data);
 
                 $("#ajaxaddressbtn").attr("disabled", false);
-                //                $("#addressnfo").show().delay(125).hide(1000).children("span").text(data);
+                                $("#addressnfo").show().delay(125).hide(1000).children("span").text("New address added!");
                 $("#addressDiv").delay(125).hide(1000);
             },
 

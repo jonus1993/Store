@@ -161,13 +161,8 @@ class DatatablesController extends Controller
 
     public function getCheckout()
     {
-        $addresses = new Address();
-        $addresses = $addresses->getAddresses();
-
-//        $addresses = auth()->user()->addresses(); //?
-
         $cart = $this->getCart();
-        return view('cart.checkout', compact('addresses', 'cart'));
+        return view('cart.checkout', compact('cart'));
     }
 
     public function getOrderInfo(Request $request)

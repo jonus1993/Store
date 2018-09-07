@@ -32,6 +32,7 @@ class Items extends Model {
 
         if ($itemID == null) {
             $item = new Items();
+            $item->fill($input)->save();
         } else {
             $item = Items::where('id', '=', $itemID)->first();
 
@@ -54,8 +55,9 @@ class Items extends Model {
         if (Input::has('photo_name')) {
             File::delete('photos/' . $item->photo_name);
             $item->photo_name = $this->addPhoto($request);
+            $item->save();
         }
-        $item->save();
+
 
         //dodawanie tagów
         if (Input::has('tags')) {
@@ -100,7 +102,7 @@ class Items extends Model {
         $request->validate([
             'name' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
             'price' => "required|regex:/^\d*(\.\d{1,2})?$/",
-            'photo_name' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'photo_name' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable',
             'category_id' => 'required|numeric',
             array('tags' => 'nullable|numericarray'),
                 //            'tags' => 'nullable|array',

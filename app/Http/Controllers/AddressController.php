@@ -14,16 +14,24 @@ class AddressController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
-    {
-        return view('address.index');
-    }
+  
 
-    public function getAddresses()
+    public function index()
     {
         $addresses = new Address();
 
         return view('address.list')->with('addresses', $addresses->getAddresses());
+    }
+    
+    public function show($id)
+    {
+        return redirect('/home');
+    }
+    
+    
+      public function create()
+    {
+        return view('address.index');
     }
 
 
@@ -85,7 +93,7 @@ class AddressController extends Controller
         return redirect('/home');
     }
 
-    public function delete(Address $address)
+    public function destroy(Address $address)
     {
         $this->authorization($address);
         $address->delete();

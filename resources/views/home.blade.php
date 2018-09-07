@@ -18,17 +18,17 @@ Home
         Zip Code: {{$address['zip_code']}} <br>
         Phone: {{$address['phone']}} <br>
 
-
-        {{ Form::open(['route' => ['address.del', $address->id], 'method' => 'delete']) }}
-        <button class="btn btn-danger btn-sm" type="submit">DELETE</button>
-        {{ Form::close() }}
-        <br>
-        <a class="btn btn-success btn-sm" href="{{ url('/address/edit', $address['id']) }}">EDIT</a>
+        <div class="row">
+            &emsp;
+            {{ Form::open(['route' => ['address.destroy', $address->id], 'method' => 'delete']) }}
+            <button class="btn btn-danger btn-sm" type="submit">DELETE</button>
+            {{ Form::close() }}
+            &emsp;
+            <a class="btn btn-success btn-sm" href="{{route('address.edit', $address['id']) }}">EDIT</a>
+        </div>
     </address>
     @endforeach
 </div>
-
-
-<a class="btn btn-primary" href="{{ url('/address') }}" >Add Address</a>
+<a class="btn btn-primary" href="{{ route('address.create') }}">Add Address</a>
 
 @endsection

@@ -14,7 +14,7 @@
         </ul>
     </div>
 @endif
-    <form action="{{route('address.add')}}" method="post">
+    <form action="{{route('address.store')}}" method="post">
         @csrf
         <input type=hidden name="last_url" value="{{old('last_url', URL::previous())}}" >
         <div class="form-group">
@@ -33,7 +33,7 @@
             <label for="phone">Phone:</label>
             <input type="text" class="form-control" name="phone" id="phone">
         </div>
-        <!--{{ csrf_field() }}-->
+
         <button type="submit" class="btn btn-primary">Add</button>
         
     </form>

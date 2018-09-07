@@ -33,13 +33,17 @@ class ModeratorController extends Controller
     {
         $tags = Tags::all();
         $categories = Categories::all();
-        return view('items.add', compact('tags', 'categories'));
+        return view('items.add2', compact('tags', 'categories'));
     }
 
     public function saveNewItem(ItemAddPost $request)
     {
         $item = new Items();
         $item->saveItem($request);
+        
+          if (request()->expectsJson()) {
+            return null;
+        }
 
         //dodawnia wiadomości po wykonanej akcji
         Session::flash('message', trans('messages.itemCreated'));

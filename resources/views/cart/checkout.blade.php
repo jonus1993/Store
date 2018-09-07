@@ -70,7 +70,7 @@ h1   {color: blue;}
     }
 
     function getAllAddresses() {
-        $.get("{{route('home2.data')}}", function(data) {
+        $.get("{{route('address.index')}}", function(data) {
             $('#addresses').html(data);
         });
     }
@@ -98,7 +98,7 @@ h1   {color: blue;}
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: "{{ url('address/del') }}" + '/' + addressID,
+            url: "{{ url('address') }}" + '/' + addressID,
             type: 'DELETE',
             success: function(data) {
                 $("#addressnfo").show().delay(125).hide(1000).children("span").text(data);
@@ -113,7 +113,10 @@ h1   {color: blue;}
     $(document).on('click', 'button.editAddresses', function() {
 
         var addressID = $(this).attr('data-field');
-        $.get("{{url('address/edit')}}" + '/' + addressID, function(data) {
+        var url = "{{route('address.edit',':id')}}";
+        url = url.replace(':id',addressID);
+
+        $.get(url, function(data) {
             $('#addressDivForm').html(data);
 
         });

@@ -14,8 +14,10 @@ Edit Address
     </ul>
 </div>
 @endif
-<form action="{{route('address.edit',$address->id)}}" method="post">
+<form action="{{route('address.update',$address->id)}}" method="post">
     @csrf
+    <input name="_method" type="hidden" value="PUT">
+
     <div class="form-group">
         <label for="street">Street address:</label>
         <input type="text" class="form-control" name="street" id="street" value="{{$address->street}}">
@@ -32,8 +34,8 @@ Edit Address
         <label for="phone">Phone:</label>
         <input type="text" class="form-control" name="phone" id="phone" value="{{$address->phone}}">
     </div>
-    <!--{{ csrf_field() }}-->
+
     <button type="submit" class="btn btn-primary">Edit</button>
-    
+
 </form>
 @endsection

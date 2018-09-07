@@ -35,7 +35,7 @@ Route::get(
     }
 )->name('forgetCart');
 
-Route::get('/show/{itemID}', [
+Route::get('/show/{item}', [
     'uses' => 'ItemsController@getItem',
     'as' => 'item.get'
 ]);
@@ -55,6 +55,7 @@ Route::get('/add_rate/{item}/{rate}', [
 
 
 Route::prefix('item')->middleware('can:moderator-allowed')->group(function () {
+    
     Route::get('/new/', [
         'uses' => 'ModeratorController@createNewItem',
         'as' => 'item.create'
@@ -106,30 +107,7 @@ Route::get('/order/{orderid}/{flag?}', [
 
 
 //grupa routingów z prefixem /address/
-Route::prefix('address')->group(function () {
-    Route::get('/', [
-        'uses' => 'AddressController@index',
-        'as' => 'address.add'
-    ]);
-    Route::post('/', [
-        'uses' => 'AddressController@store',
-        'as' => 'address.add'
-    ]);
-   
-    Route::get('/edit/{address}', [
-        'uses' => 'AddressController@edit',
-        'as' => 'address.edit'
-    ]);
-    Route::post('/edit/{address}', [
-        'uses' => 'AddressController@update',
-        'as' => 'address.edit'
-    ]);
-
-    Route::delete('/del/{address}', [
-        'uses' => 'AddressController@delete',
-        'as' => 'address.del'
-    ]);
-});
+Route::resource('address', 'AddressController');
 
 Route::prefix('manage')->group(function () {
     Route::get('/', 'ManageController@getUserslist')->name('manage');
@@ -199,7 +177,7 @@ Route::prefix('/home2')->group(function () {
         return view('home2');
     })->name('home2');
 
-    Route::get('/data', 'AddressController@getAddresses')->name('home2.data');
+//    Route::get('/data', 'AddressController@getAddresses')->name('home2.data');
     Route::get('/form', function () {
         return view('address.form');
     })->name('home2.form');

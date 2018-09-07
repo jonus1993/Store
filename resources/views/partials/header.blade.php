@@ -1,4 +1,8 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+
+   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="{{url('/')}}">Home</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -7,7 +11,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
 
-             <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link" href="{{ url('/nbp') }}">NBP</a>
             </li>
             <li class="nav-item">
@@ -21,8 +25,9 @@
             @if(Auth::check())
 
             @can('moderator-allowed', Auth::user())
+            <script src="http://malsup.github.com/jquery.form.js"></script>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('item.create') }}">ADD item</a>
+                <a href="{{route('item.create')}}" rel="modal:open" class="nav-link">ADD item</a>
             </li>
             @endcan
             <!--jeżeli użytkownik to admin -->
@@ -38,7 +43,7 @@
 
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('goToCart2') }}">Shopping Cart
-                   <span id="cartQty" class="badge">{{ $cartQty }}</span>
+                    <span id="cartQty" class="badge">{{ $cartQty }}</span>
                 </a>
             </li>
 
@@ -49,8 +54,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="{{ url('/home') }}">MyAccount</a>
                     <a class="dropdown-item" href="{{ url('/allorders') }}">MyOrders</a>
-                    <a class="dropdown-item" href="{{ route('logout') }}"
-                       onclick="event.preventDefault();
+                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                document.getElementById('logout-form').submit();">
                         {{ __('Logout') }}
                     </a>
@@ -60,17 +64,17 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#">Something else here</a>
                 </div>
-            </li> 
+            </li>
 
 
             <!--jeżeli użytkownik nieautoryzowany-->
             @else
-            <li class="nav-item"> 
+            <li class="nav-item">
                 <a class="nav-link" href="{{ route('goToCart') }}"> Shopping Cart
                     <span id="cartQty" class="badge">{{ Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span>
                 </a>
             </li>
-            
+
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('login') }}">Login</a>
             </li>
@@ -86,4 +90,3 @@
 
     </div>
 </nav>
-

@@ -1,8 +1,3 @@
-<!--wyświetlnia wiadomości-->
-@if (Session::has('message'))
-<div id="message" class="alert alert-info">{{ Session::get('message') }}</div>
-@endif
-
 <div id="addressDiv">
     <h1>Add Your New Address</h1>
     <div id="errors"> </div>
@@ -36,12 +31,13 @@
 
 <script>
     $(document).ready(function() {
-
+ 
+        
         $('#addressForm input').on('change', function() {
 
-            var formInvalid = true;
+           var formInvalid = true;
 
-            $('input').each(function() {
+            $(this).each(function() {
                 if ($(this).val() === '') {
                     formInvalid = false;
                 }

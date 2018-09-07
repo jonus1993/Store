@@ -7,8 +7,10 @@
     <h1>Add Your New Address</h1>
     <div id="errors"> </div>
 
-    <form id="addressForm" action="{{route('address.edit',$address->id)}}" method="post">
+    <form id="addressForm" action="{{route('address.update',$address->id)}}" method="post">
         @csrf
+            <input name="_method" type="hidden" value="PUT">
+
         <input name="addressID" type="hidden" class="form-control" value="address{{$address->id}}">
         <div class="form-group">
             <label for="street">Street address:</label>
@@ -43,7 +45,7 @@
 
             var formInvalid = true;
 
-            $('input').each(function() {
+            $(this).each(function() {
                 if ($(this).val() === '') {
                     formInvalid = false;
                 }

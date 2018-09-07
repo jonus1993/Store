@@ -24,7 +24,7 @@ class ItemAddPost extends FormRequest {
         return [
             'name' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
             'price' => "required|regex:/^\d*(\.\d{1,2})?$/",
-            'photo_name' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'photo_name' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable',
             'category_id' => 'required|numeric',
             array('tags' => 'nullable|numericarray'),
         ];

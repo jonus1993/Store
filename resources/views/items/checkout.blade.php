@@ -39,8 +39,6 @@ Checkout order
     </div>
     {{ csrf_field() }}
     <button type="submit" class="btn btn-primary">Make an Order</button>
-
-
 </form>
 
 @endsection

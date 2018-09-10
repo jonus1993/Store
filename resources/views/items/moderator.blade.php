@@ -5,6 +5,7 @@ Colours
 @section('styles')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <script src="http://malsup.github.com/jquery.form.js"></script>
 <style>
     td.details-control {
     background: url("{{url('/open-iconic/svg/plus.svg')}}") no-repeat center center;
@@ -56,8 +57,13 @@ height: auto;
         <div id="cartnfo" class="alert alert-info" style="display: none;">
             <span>{{ Lang::get('messages.item2cart') }}</span>
         </div>
-          <a class="editor_create">Create new record</a>
+
+                <h4>   <a href="{{route('item.create')}}" rel="modal:open" class="editor_create">Create new record</a></h4> 
+
+       
+       
         <table class="table table-active table-bordered" id="items-table">
+        
             <thead> 
                 <tr>
                     <th>MORE</th>
@@ -78,7 +84,7 @@ height: auto;
                     <th>PRICE</th>
                     <th>CATEGORY</th>
                     <th>PROMOS</th>
-                <th>EDIT/DEL</th>
+                    <th>EDIT/DEL</th>
                     
                 </tr>
             </tfoot>
@@ -100,47 +106,6 @@ height: auto;
 
 $(document).ready(function () {
     
-    
-//     var ditor = new $.fn.dataTable.Editor( {
-////        "ajax": "../php/staff.php",
-//        "table": "#items-table",
-//        "fields": [ {
-//                "label": "First name:",
-//                "name": "first_name"
-//            }, {
-//                "label": "Last name:",
-//                "name": "last_name"
-//            }, {
-//                "label": "Position:",
-//                "name": "position"
-//            }, {
-//                "label": "Office:",
-//                "name": "office"
-//            }, {
-//                "label": "Extension:",
-//                "name": "extn"
-//            }, {
-//                "label": "Start date:",
-//                "name": "start_date",
-//                "type": "datetime"
-//            }, {
-//                "label": "Salary:",
-//                "name": "salary"
-//            }
-//        ]
-//    } );
-    
-    
-           // New record
-    $('a.editor_create').on('click', function (e) {
-        e.preventDefault();
- 
-        editor.create( {
-            title: 'Create new record',
-            buttons: 'Add'
-        } );
-    } );
- 
     // Edit record
     $('#items-table').on('click', 'a.editor_edit', function (e) {
         e.preventDefault();
@@ -180,9 +145,7 @@ var table = $('#items-table').DataTable({
                 $('.tagi:checked').each(function () {
                 d.tags.push(this.value);
                 });
-                
-                //zpais do ciasteczek
-                //Cookies.set('categories', d.categories.join(','));
+
 
                 
                 }
@@ -191,7 +154,7 @@ var table = $('#items-table').DataTable({
         columns: [
              {
                 "className":      'details-control',
-//                "width":           "15%",
+
                 "orderable":      false,
               "data":           null,
                 "defaultContent": ''
@@ -230,11 +193,11 @@ var table = $('#items-table').DataTable({
     }
         },
                            {
-                data: null,
+                data: 'id',
                                "orderable": false,
-                className: "center",
-                defaultContent: '<a href="" class="editor_edit">Edit</a> / <a href="" class="editor_remove">Delete</a>'
-            }
+            
+                 render: function (data, type, row) { return '<div class="row">&emsp;<a class="btn btn-info" href="{{route('item.edit', ['id' => ':data'])}}">Edit</a>&emsp; {{Form::open(array('method' => 'DELETE', 'url' => 'item/'.':data')) }}  {{ Form::submit('DEL', ['class' => 'btn btn-danger']) }}          {{ Form::close() }}</div>'.replace(':data', data).replace(':data2', data);
+                                                    }}
             
                 ],
                         "columnDefs": [
@@ -250,8 +213,7 @@ var table = $('#items-table').DataTable({
                 
         $('.kateg, .tagi').click(function (e) {
         table.draw();
-        });
-        
+        });   
         
         
          
@@ -294,20 +256,8 @@ var table = $('#items-table').DataTable({
         
               
 
-             
- 
              } );   
         </script>
-        
-   
-        
-
-
-
-
 
 
 @endpush
-
-
-

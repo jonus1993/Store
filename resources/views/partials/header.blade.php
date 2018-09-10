@@ -25,10 +25,7 @@
             @if(Auth::check())
 
             @can('moderator-allowed', Auth::user())
-            <script src="http://malsup.github.com/jquery.form.js"></script>
-            <li class="nav-item">
-                <a href="{{route('item.create')}}" rel="modal:open" class="nav-link">ADD item</a>
-            </li>
+           
             <li class="nav-item">
                 <a href="{{route('moderator.panel')}}" class="nav-link">Manage Items</a>
             </li>

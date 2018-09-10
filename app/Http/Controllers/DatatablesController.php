@@ -61,13 +61,13 @@ class DatatablesController extends Controller
     //prywatna funkcja sprawdza czy user ma koszyk w bazie
     protected function checkCartExist($userID)
     {
-        return Cart2::where('user_id', $userID)->first();
+        return Cart2::whereUser_id($userID)->first();
     }
 
     //prywatna funkcja sprawdza czy koszyk jest pusty
     protected function checkCartEmpty($cartID)
     {
-        return Cart_Items::where('cart_id', $cartID)->with('item')->get();
+        return Cart_Items::whereCart_id($cartID)->with('item')->get();
     }
 
     public function getAddToCart(Items $item, $qty = 1)
@@ -140,7 +140,7 @@ class DatatablesController extends Controller
         $userID = auth()->id();
         $cart = $this->checkCartExist($userID);
 
-        Cart_Items::where('cart_id', $cart->id)->where('id', $item->id)->delete();
+        Cart_Items::whereCart_id($cart->id)->whereId($item->id)->delete();
 
         if (!Cart_Items::where('cart_id', $cart->id)->exists()) {
             $cart->delete();

@@ -30,7 +30,7 @@ class ModeratorController extends Controller
 //        return parent::callAction($method, $parameters);
 //    }
     
-      public function index()
+      public function index(Request $request)
     {
         $items = Items::paginate(11);
         $tags = Tags::all();

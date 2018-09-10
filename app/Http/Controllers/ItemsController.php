@@ -11,14 +11,6 @@ use Illuminate\Support\Facades\Session;
 
 class ItemsController extends Controller
 {
-    public function index()
-    {
-        $items = Items::paginate(11);
-        $tags = Tags::all();
-        $categories = Categories::all();
-        return view('items.index', compact('items', 'tags', 'categories'));
-    }
-
     public function postIndex(Request $request)
     {
         $tags = Tags::all();
@@ -95,13 +87,5 @@ class ItemsController extends Controller
         $total = $cart->totalPrice;
 
         return view('items.checkout', ['total' => $total]);
-    }
-
-    public function getItem(Items $item)
-    {
-        $avgrate = number_format($item->avgRating, 1);
-        $allrates = $item->countPositive;
-
-        return view('items.show', compact('item', 'avgrate', 'allrates'));
     }
 }

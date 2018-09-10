@@ -4,7 +4,7 @@
     <span></span>
 </div>
 <div id="errors"> </div>
-<form id="itemForm" action="{{route('item.create')}}" method="post" enctype="multipart/form-data">
+<form id="itemForm" action="{{route('item.store')}}" method="post" enctype="multipart/form-data">
     @csrf
     <div class="form-group">
         <label for="name">colour name:</label>

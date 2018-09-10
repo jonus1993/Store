@@ -1,0 +1,313 @@
+@extends('layouts.master')
+@section('title')
+Colours
+@endsection
+@section('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+    td.details-control {
+    background: url("{{url('/open-iconic/svg/plus.svg')}}") no-repeat center center;
+    cursor: pointer;
+}
+tr.details td.details-control {
+    background: url("{{url('/open-iconic/svg/minus.svg')}}") no-repeat center center;
+}
+ 	
+th.dt-center, td.dt-center { text-align: center; }   
+
+img.images {
+    max-width:100%;
+max-height:100%;
+height: auto;
+}
+
+</style>
+@endsection
+@section('content')
+<div class="row">
+
+    <div class="col-2" > 
+        <h3 class="w3-bar-item">Filtry</h3>
+        <h4 class="w3-bar-item">Tagi</h4>
+        <form id="frm" action="{{route('datatables.data')}}" method="get">
+            @csrf
+            @foreach($tags as $tag)
+            <div class="form-check">
+                <input type="checkbox" class="tagi" id="tagi{{ $tag->id }}" name="tags[]" value="{{ $tag->friend_name }}">
+                <label class="form-check-label" for="exampleCheck1">{{ $tag->name }}</label>
+            </div>
+            @endforeach
+
+            <h4 class="w3-bar-item">Kategorie</h4>
+            @foreach($categories as $cat)
+            <div class="form-check">
+                <input type="checkbox" class="kateg" id="kateg{{ $cat->id }}" name="categories[]" value="{{ $cat->id }}">
+                <label class="form-check-label" for="exampleCheck1">{{ $cat->name }}</label>
+            </div>
+            @endforeach
+            <br>
+
+        </form>
+    </div>
+    <div  class="col-10">
+        <h1>Kolorki</h1>
+       
+        <div id="cartnfo" class="alert alert-info" style="display: none;">
+            <span>{{ Lang::get('messages.item2cart') }}</span>
+        </div>
+          <a class="editor_create">Create new record</a>
+        <table class="table table-active table-bordered" id="items-table">
+            <thead> 
+                <tr>
+                    <th>MORE</th>
+                    <th>GO2</th>
+                    <th>NAME</th>
+                    <th>PRICE</th>
+                    <th>CATEGORY</th>
+                    <th>PROMOS</th>
+                    <th>EDIT/DEL</th>
+                    
+                </tr>
+            </thead>
+             <tfoot> 
+                <tr>
+                    <th>MORE</th>
+                    <th>GO2</th>
+                    <th>NAME</th>
+                    <th>PRICE</th>
+                    <th>CATEGORY</th>
+                    <th>PROMOS</th>
+                <th>EDIT/DEL</th>
+                    
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+   
+</div>
+@stop
+
+@push('scripts')
+
+<!-- DataTables -->
+<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+
+<script>
+
+
+$(document).ready(function () {
+    
+    
+//     var ditor = new $.fn.dataTable.Editor( {
+////        "ajax": "../php/staff.php",
+//        "table": "#items-table",
+//        "fields": [ {
+//                "label": "First name:",
+//                "name": "first_name"
+//            }, {
+//                "label": "Last name:",
+//                "name": "last_name"
+//            }, {
+//                "label": "Position:",
+//                "name": "position"
+//            }, {
+//                "label": "Office:",
+//                "name": "office"
+//            }, {
+//                "label": "Extension:",
+//                "name": "extn"
+//            }, {
+//                "label": "Start date:",
+//                "name": "start_date",
+//                "type": "datetime"
+//            }, {
+//                "label": "Salary:",
+//                "name": "salary"
+//            }
+//        ]
+//    } );
+    
+    
+           // New record
+    $('a.editor_create').on('click', function (e) {
+        e.preventDefault();
+ 
+        editor.create( {
+            title: 'Create new record',
+            buttons: 'Add'
+        } );
+    } );
+ 
+    // Edit record
+    $('#items-table').on('click', 'a.editor_edit', function (e) {
+        e.preventDefault();
+ 
+        editor.edit( $(this).closest('tr'), {
+            title: 'Edit record',
+            buttons: 'Update'
+        } );
+    } );
+ 
+    // Delete a record
+    $('#items-table').on('click', 'a.editor_remove', function (e) {
+        e.preventDefault();
+ 
+        editor.remove( $(this).closest('tr'), {
+            title: 'Delete record',
+            message: 'Are you sure you wish to remove this record?',
+            buttons: 'Delete'
+        } );
+    } );
+
+
+//tabela glowna
+
+var table = $('#items-table').DataTable({
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        "ajax": {
+        "url": "{{route('datatables.data')}}",
+        "data": function (d) {
+                d.categories = [];
+                $('.kateg:checked').each(function () {
+                   d.categories.push(this.value);
+                });
+                d.tags = [];
+                $('.tagi:checked').each(function () {
+                d.tags.push(this.value);
+                });
+                
+                //zpais do ciasteczek
+                //Cookies.set('categories', d.categories.join(','));
+
+                
+                }
+        },
+     
+        columns: [
+             {
+                "className":      'details-control',
+//                "width":           "15%",
+                "orderable":      false,
+              "data":           null,
+                "defaultContent": ''
+            },
+        {data: 'id',
+                 "orderable": false,
+                render: function (data, type, row) {
+                return '<a href="{{ url('item/:data')}}">\n\
+                                      <img class="images" src="{{url('/photos/click.png')}}" alt="icon name"> \n\
+                \n\</a>'.replace(':data', data);
+                }},
+        {data: 'name'},
+        {data: 'price',
+       render: 
+         function (data, type, row) {
+           var num = $.fn.dataTable.render.number( ',', '.', 2, '$' ).display(data); 
+           if(data<10)
+               return '<strong>'+num+'</strong>';
+           else
+           return '<span>'+num+'</span>';
+           
+       }
+                                  },
+        {data: 'category.name'},
+        {data: 'tags[].name',
+         "orderable": false,
+         render: function (data, type, row) {
+             var html = "";
+                    for (i = 0; i < data.length; i++){
+                          if(data.toString() == "Promocja")
+                                html+='<span style="color:red">'+data[i]+'</span><br>';
+                         else
+                               html+= data[i]+'<br>';
+                       }
+            return html;
+    }
+        },
+                           {
+                data: null,
+                               "orderable": false,
+                className: "center",
+                defaultContent: '<a href="" class="editor_edit">Edit</a> / <a href="" class="editor_remove">Delete</a>'
+            }
+            
+                ],
+                        "columnDefs": [
+                        { "targets": 5},
+                           {"width": "20%", "targets": 5},
+                            {"width": "17%", "targets": 6},
+                            {"className": "dt-center", "targets": "_all"}
+                        ]
+
+                });
+    
+    
+                
+        $('.kateg, .tagi').click(function (e) {
+        table.draw();
+        });
+        
+        
+        
+         
+             //informacje o zamówieniach
+        $('#items-table tbody').on('click', 'td.details-control', function () {           
+            
+            var tr = $(this).closest('tr');
+            var row = table.row( tr );
+            
+            if ( row.child.isShown() ) {
+                row.child.hide();
+                tr.removeClass('details');
+            }
+            else {
+                row.child( format(row.data()) ).show();
+                tr.addClass('details');
+            }
+        } );
+
+        function format ( rowData ) {
+            var div = $('<div/>')
+                .addClass( 'loading' )
+                .text( 'Loading...' );
+
+            $.ajax( {
+                url: "{{route('order.info')}}",
+                data: {
+                    id: rowData.id
+                },  
+                //dataType: 'json',
+                success: function (response) {                           
+                    div
+                        .html(response )
+                        .removeClass( 'loading' );
+                }
+            } );
+
+            return div;
+        }
+        
+              
+
+             
+ 
+             } );   
+        </script>
+        
+   
+        
+
+
+
+
+
+
+@endpush
+
+
+

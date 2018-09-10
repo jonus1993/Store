@@ -14,58 +14,52 @@ use Illuminate\Database\Eloquent\Builder;
 //use Illuminate\Support\Facades\Validator;
 //use App\Providers\ValidatorServiceProvider;
 
-class Items extends Model {
-
+class Items extends Model
+{
     use Rating;
 
-    public function generateToken() {
+    public function generateToken()
+    {
         $this->api_token = str_random(60);
         $this->save();
 
         return $this->api_token;
     }
 
-    public function saveItem($request, $itemID = null) {
+    public function saveItem($request, Items $item = null)
+    {
 //        $this->doValidation($request);
-        $request->validated();
+//        $request->validated();
         $input = $request->all();
 
-        if ($itemID == null) {
+        if ($item == null) {
             $item = new Items();
-            $item->fill($input)->save();
-        } else {
-            $item = Items::where('id', '=', $itemID)->first();
-
-            //wysłanie wiadomości dla subskryb <- jakoś tak antów
-            //opóźnienie wiadomości należy dodać  ->delay($when));
-            $when = now()->addMinutes(10);
-
-            $item->fill($input);
-
-            if ($input['price'] < $item->price) {
-                $item->save();
-                $users = NotifiPrice::where('item_id', $itemID)->with('item')->with('user')->get();
-                foreach ($users as $user) {
-                    $user->user->notify((new PriceDown($users[0]->item))->delay($when));
-                }
-            }
         }
-
+        $item->fill($input);
         //dodawanie/zmienianie zdjęcia
         if (Input::has('photo_name')) {
             File::delete('photos/' . $item->photo_name);
             $item->photo_name = $this->addPhoto($request);
-            $item->save();
         }
-
-
+        $item->save();
+           
+        //wysłanie wiadomości dla subskryb <- jakoś tak antów
+        //opóźnienie wiadomości należy dodać  ->delay($when));
+        if ($input['price'] < $item->price) {
+            $users = NotifiPrice::where('item_id', $item->id)->with('item')->with('user')->get();
+            $when = now()->addMinutes(10);
+            foreach ($users as $user) {
+                $user->user->notify((new PriceDown($users[0]->item))->delay($when));
+            }
+        }
         //dodawanie tagów
         if (Input::has('tags')) {
             $item->tags()->sync($request->input('tags'));
         }
     }
 
-    protected function addPhoto($request) {
+    protected function addPhoto($request)
+    {
 //        $file = $request->file('photo_name');
 //
 //        // generate a new filename. getClientOriginalExtension() for the file extension
@@ -88,7 +82,8 @@ class Items extends Model {
         return $photoName;
     }
 
-    protected function doValidation(Request $request) {
+    protected function doValidation(Request $request)
+    {
 
         //        Validator::extend('numericarray', function($attribute, $value, $parameters) {
 //            if (is_array($value)) {
@@ -114,20 +109,22 @@ class Items extends Model {
         'id', 'name', 'category_id', 'price', 'photo_name'
     ];
 
-    public function tags() {
+    public function tags()
+    {
         return $this->belongsToMany(Tags::class, 'item_tags', 'item_id', 'tag_id')->withTimestamps();
     }
 
-    public function category() {
+    public function category()
+    {
         return $this->belongsTo(Categories::class, 'category_id');
     }
 
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
 
         static::addGlobalScope('not_deleted', function ($builder) {
             $builder->where('is_deleted', '<>', 1);
         });
     }
-
 }

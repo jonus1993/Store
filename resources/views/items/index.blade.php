@@ -77,7 +77,7 @@ Colours
 
                 <td>
                     @if(!$item->is_deleted)
-                    <a class="btn btn-info" href="{{route('item'.(auth()->id() ? '2' : '').'.addToCart', ['item' => $item])}}">ADD</a>
+                    <a class="btn btn-success" href="{{route('item'.(auth()->id() ? '2' : '').'.addToCart', ['item' => $item])}}">ADD</a>
                     @else
                     <button type="button" class="btn btn-dark" disabled>Out of stock</button>
                     @endif
@@ -90,8 +90,12 @@ Colours
                 <td><a class="btn btn-info" href="{{route('item.edit', ['id' => $item->id])}}">EDIT</a></td>
                 @endcan
                 @if(auth()->user()->isAdmin())
+                
+            
 
-                <td><a class="btn btn-info" href="{{route('item.del',  $item)}}">DEL</a></td>
+                <td>     {{ Form::open(['method' => 'DELETE', 'route' => ['item.destroy', $item]]) }}
+                {{ Form::submit('DEL', ['class' => 'btn btn-danger']) }}
+                {{ Form::close() }}</td>
 
                 @endif
                 @endauth

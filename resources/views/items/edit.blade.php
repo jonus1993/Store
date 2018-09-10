@@ -20,13 +20,14 @@ Add Colour
 @endif
 <div>
     @if($item->photo_name == null)
-    <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/421.png')}}" alt="No Image"/>
+    <img class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/421.png')}}" alt="No Image" />
     @else
-    <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/'.$item->photo_name)}}" alt="No Image"/>
+    <img class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/'.$item->photo_name)}}" alt="No Image" />
     @endif
 </div>
-<form action="{{route('item.edit', $item->id)}}" method="post" enctype="multipart/form-data">
+<form action="{{route('item.update', $item->id)}}" method="post" enctype="multipart/form-data">
     @csrf
+    <input name="_method" type="hidden" value="PUT">
     <div class="form-group">
         <label for="name">colour name:</label>
         <input type="text" class="form-control" name="name" value="{{ old('name', $item->name) }}" id="name">
@@ -39,11 +40,10 @@ Add Colour
         <label for="category">category:</label>
         <select class="form-control" name="category_id" id="category">
             @foreach($categories as $cat)
-            <option value="{{ $cat->id }}" 
-                    @if ($cat->id == old('category_id', $item->category_id))) 
-                    selected="selected"
-                    @endif 
-                    >{{ $cat->name }}</option>
+            <option value="{{ $cat->id }}" @if ($cat->id == old('category_id', $item->category_id)))
+                selected="selected"
+                @endif
+                >{{ $cat->name }}</option>
             @endforeach
         </select>
     </div>
@@ -58,9 +58,7 @@ Add Colour
         ?>
         @foreach($tags as $tag)
 
-        <label class="checkbox-inline"><input name="tags[]" type="checkbox" value="{{ $tag->id }}" 
-                                              {{ (in_array($tag->id, $itemTags) ? 'checked' : '' ) }}
-            >{{ $tag->name }}</label>
+        <label class="checkbox-inline"><input name="tags[]" type="checkbox" value="{{ $tag->id }}" {{ (in_array($tag->id, $itemTags) ? 'checked' : '' ) }}>{{ $tag->name }}</label>
         @endforeach
     </div>
     <div class="form-group">

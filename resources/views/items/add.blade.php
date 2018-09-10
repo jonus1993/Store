@@ -18,7 +18,7 @@ Add Colour
 @if (Session::has('message'))
    <div class="alert alert-info">{{ Session::get('message') }}</div>
 @endif
-<form action="{{route('item.create')}}" method="post" enctype="multipart/form-data">
+<form action="{{route('item.store')}}" method="post" enctype="multipart/form-data">
     @csrf
     <div class="form-group">
         <label for="name">colour name:</label>

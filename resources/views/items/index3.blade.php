@@ -6,13 +6,6 @@ Colours
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
-    td.details-control {
-    background: url("{{url('/open-iconic/svg/plus.svg')}}") no-repeat center center;
-    cursor: pointer;
-}
-tr.details td.details-control {
-    background: url("{{url('/open-iconic/svg/minus.svg')}}") no-repeat center center;
-}
  	
 th.dt-center, td.dt-center { text-align: center; }   
 
@@ -60,7 +53,7 @@ height: auto;
         <table class="table table-active table-bordered" id="items-table">
             <thead> 
                 <tr>
-                    <th>MORE</th>
+      
                     <th>GO2</th>
                     <th>NAME</th>
                     <th>PRICE</th>
@@ -157,16 +150,10 @@ var table = $('#items-table').DataTable({
         },
         rowId: 'photo_name',
         columns: [
-             {
-                "className":      'details-control',
-//                "width":           "15%",
-                "orderable":      false,
-              "data":           null,
-                "defaultContent": ''
-            },
+         
         {data: 'id',
                 render: function (data, type, row) {
-                return '<a href="{{ route('item.get', ':data')}}">\n\
+                return '<a href="{{ url('item/:data')}}">\n\
                                       <img class="images" src="{{url('/photos/click.png')}}" alt="icon name"> \n\
                 \n\</a>'.replace(':data', data);
                 }},
@@ -212,9 +199,9 @@ var table = $('#items-table').DataTable({
                                 }},
                 ],
                         "columnDefs": [
-                        {"orderable": false, "targets": 5},
-                           {"width": "20%", "targets": 5},
-                            {"width": "17%", "targets": 6},
+                        {"orderable": false, "targets": 4},
+                           {"width": "20%", "targets": 4},
+                            {"width": "17%", "targets": 5},
                             {"className": "dt-center", "targets": "_all"}
                         ]
 
@@ -224,48 +211,7 @@ var table = $('#items-table').DataTable({
         table.draw();
         });
         
-        
-        
-         
-             //informacje o zamówieniach
-        $('#items-table tbody').on('click', 'td.details-control', function () {           
-            
-            var tr = $(this).closest('tr');
-            var row = table.row( tr );
-            
-            if ( row.child.isShown() ) {
-                row.child.hide();
-                tr.removeClass('details');
-            }
-            else {
-                row.child( format(row.data()) ).show();
-                tr.addClass('details');
-            }
-        } );
-
-        function format ( rowData ) {
-            var div = $('<div/>')
-                .addClass( 'loading' )
-                .text( 'Loading...' );
-
-            $.ajax( {
-                url: "{{route('order.info')}}",
-                data: {
-                    id: rowData.id
-                },  
-                //dataType: 'json',
-                success: function (response) {                           
-                    div
-                        .html(response )
-                        .removeClass( 'loading' );
-                }
-            } );
-
-            return div;
-        }
-        
-              
-        
+                
         //pokazywanie zdjęcia
         $('#items-table').on( 'click', 'tr', function () {           
             var id = table.row( this ).id();

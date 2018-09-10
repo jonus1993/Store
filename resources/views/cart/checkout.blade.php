@@ -1,10 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Checkout')
 @section('styles')
-<style>
-body {background-color: powderblue;}
-h1   {color: blue;}
-</style>
+
 @endsection
 @section('content')
 <h1>Finish your order!</h1>

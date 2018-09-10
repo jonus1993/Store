@@ -15,7 +15,7 @@
                 <a class="nav-link" href="{{ url('/nbp') }}">NBP</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url('/items') }}">Items</a>
+                <a class="nav-link" href="{{ url('/item') }}">Items</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('/items3') }}">ItemsDT</a>
@@ -28,6 +28,9 @@
             <script src="http://malsup.github.com/jquery.form.js"></script>
             <li class="nav-item">
                 <a href="{{route('item.create')}}" rel="modal:open" class="nav-link">ADD item</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{route('moderator.panel')}}" class="nav-link">Manage Items</a>
             </li>
             @endcan
             <!--jeżeli użytkownik to admin -->

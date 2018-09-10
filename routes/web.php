@@ -3,16 +3,7 @@
 use App\Tags;
 use App\Categories;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/nbp', function () {
-    return view('nbp');
-});
-
 Route::prefix('items')->group(function () {
-    Route::get('/', 'ItemsController@index');
     Route::post('/', 'ItemsController@postIndex')->name('filter.data');
     Route::get('/{item}/{qty?}', [
         'uses' => 'ItemsController@getAddToCart',
@@ -35,12 +26,6 @@ Route::get(
     }
 )->name('forgetCart');
 
-Route::get('/show/{item}', [
-    'uses' => 'ItemsController@getItem',
-    'as' => 'item.get'
-]);
-
-
 
 Route::get('/save_notifi/{id}', [
     'uses' => 'RatingController@saveNotfication',
@@ -51,32 +36,6 @@ Route::get('/add_rate/{item}/{rate}', [
     'uses' => 'RatingController@addRate',
     'as' => 'add.rate'
 ]);
-
-
-
-Route::prefix('item')->middleware('can:moderator-allowed')->group(function () {
-    
-    Route::get('/new/', [
-        'uses' => 'ModeratorController@createNewItem',
-        'as' => 'item.create'
-    ]);
-    Route::post('/new', [
-        'uses' => 'ModeratorController@saveNewItem',
-        'as' => 'item.create'
-    ]);
-
-    Route::get('/edit/{item}', [
-        'uses' => 'ModeratorController@editItem',
-        'as' => 'item.edit'
-    ]);
-    Route::post('/edit/{id}', [
-        'uses' => 'ModeratorController@updateItem',
-        'as' => 'item.edit'
-    ]);
-    Route::get('/del/{item}', 'ModeratorController@deleteItem')->name('item.del');
-});
-
-
 
 
 Route::get('/checkout', [
@@ -106,8 +65,8 @@ Route::get('/order/{orderid}/{flag?}', [
 ]);
 
 
-//grupa routingów z prefixem /address/
-Route::resource('address', 'AddressController');
+
+
 
 Route::prefix('manage')->group(function () {
     Route::get('/', 'ManageController@getUserslist')->name('manage');
@@ -130,6 +89,12 @@ Route::get('/items3', function () {
     $categories = Categories::all();
     return view('items.index3', compact('tags', 'categories'));
 })->name('datatables2');
+
+Route::middleware('can:moderator-allowed')->get('/moderator', function () {
+    $tags = Tags::all();
+    $categories = Categories::all();
+    return view('items.moderator', compact('tags', 'categories'));
+})->name('moderator.panel');
 
 Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');
 Route::get('/items2/order.info/', 'DatatablesController@getOrderInfo')->name('order.info');
@@ -161,14 +126,7 @@ Route::get('/cart2/delete', [
 ]);
 
 
-Route::auth();
 
-Route::fallback(function () {
-    return "no chyba nie...";
-});
-
-//z automatu przy auth sie tworzą
-Auth::routes();
 
 Route::get('/home', 'HomeController')->name('home');
 
@@ -177,7 +135,6 @@ Route::prefix('/home2')->group(function () {
         return view('home2');
     })->name('home2');
 
-//    Route::get('/data', 'AddressController@getAddresses')->name('home2.data');
     Route::get('/form', function () {
         return view('address.form');
     })->name('home2.form');
@@ -187,3 +144,24 @@ Route::prefix('/home2')->group(function () {
         'as' => 'address.add2'
     ]);
 });
+
+
+Route::auth();
+
+Route::fallback(function () {
+    return "no chyba nie...";
+});
+
+//z automatu przy auth sie tworzą
+Auth::routes();
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/nbp', function () {
+    return view('nbp');
+});
+
+Route::resource('item', 'ModeratorController');
+Route::resource('address', 'AddressController');

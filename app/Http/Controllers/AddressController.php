@@ -8,27 +8,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Validation\AddressValidator;
 
-
 class AddressController extends Controller
 {
+    protected $address;
     public function __construct()
     {
         $this->middleware('auth');
-    }
-
-  
-
-    public function index()
-    {
-        $addresses = new Address();
-
-        return view('address.list')->with('addresses', $addresses->getAddresses());
+        $this->address = new Address();
     }
     
-    public function show($id)
+ 
+    public function index()
     {
-        return redirect('/home');
+        return view('address.list')->with('addresses', $this->address->getAddresses());
     }
+    
+//    public function show($id)
+//    {
+//        return redirect('/home');
+//    }
     
     
     public function create()
@@ -45,8 +43,7 @@ class AddressController extends Controller
 
     public function store(Request $request)
     {
-        $address = new Address();
-        $address->store($request);
+        $this->address->store($request);
 
         Session::flash('message', "Pomyślnie dodano");
         return redirect($request->input('last_url', '/home'));
@@ -54,8 +51,7 @@ class AddressController extends Controller
     
     public function store2(Request $request)
     {
-        $address = new Address();
-        $address = $address->store($request);
+       
 
 //        try {
 //            $address->store($request);
@@ -65,10 +61,8 @@ class AddressController extends Controller
 //        }
 
       
-        return view('Address.list_item', ['address' => $address]);
+        return view('Address.list_item', ['address' => $this->address->store($request)]);
     }
-
-  
 
     public function edit(Address $address)
     {
@@ -81,19 +75,15 @@ class AddressController extends Controller
         return view('address.edit', compact('address'));
     }
 
- 
-
     public function update(Request $request, Address $address)
     {
         $this->authorization($address);
-                $validation = new AddressValidator();
-        $validation->check($request);
-        $input = $request->all();
-        $address->fill($input)->save();
+        
+        $address->store($request, $address);
         if (request()->expectsJson()) {
-            return view('Address.list_item', ['address' => $address]);
+            return view('Address.list_item', compact('address'));
         }
-         Session::flash('message', "Pomyślnie wyedytowano");
+        Session::flash('message', "Pomyślnie wyedytowano");
         return redirect('/home');
     }
 

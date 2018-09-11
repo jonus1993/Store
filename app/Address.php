@@ -10,11 +10,12 @@ use App\Validation\AddressValidator;
 class Address extends Model {
     
     
-       public function store(Request $request) {
+       public function store(Request $request, Address $address = null) {
         $validation = new AddressValidator();
         $validation->check($request);
         $input = $request->all();
-        $address = new Address();
+        if($address == null)
+             $address = new Address();
         $address->user_id = auth()->id();
         $address->fill($input)->save();
         return $address;

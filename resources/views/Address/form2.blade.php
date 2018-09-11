@@ -13,20 +13,24 @@
 
         <input name="addressID" type="hidden" class="form-control" value="address{{$address->id}}">
         <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" name="name" id="name" value="{{$address->name}}" required>
+    </div>
+        <div class="form-group">
             <label for="street">Street address:</label>
-            <input type="text" class="form-control" name="street" id="street" value="{{$address->street}}">
+            <input type="text" class="form-control" name="street" id="street" value="{{$address->street}}" required>
         </div>
         <div class="form-group">
             <label for="city">City:</label>
-            <input type="text" class="form-control" name="city" id="city" value="{{$address->city}}">
+            <input type="text" class="form-control" name="city" id="city" value="{{$address->city}}" required>
         </div>
         <div class="form-group">
             <label for="zip_code">Zip-code:</label>
-            <input type="text" class="form-control" name="zip_code" id="zip_code" value="{{$address->zip_code}}">
+            <input type="text" class="form-control" name="zip_code" id="zip_code" value="{{$address->zip_code}}" required>
         </div>
         <div class="form-group">
             <label for="phone">Phone:</label>
-            <input type="text" class="form-control" name="phone" id="phone" value="{{$address->phone}}">
+            <input type="text" class="form-control" name="phone" id="phone" value="{{$address->phone}}" required>
         </div>
 
         <button id="submitbtn" type="submit" class="btn btn-primary" disabled>Edit Address</button>

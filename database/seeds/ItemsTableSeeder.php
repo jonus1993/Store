@@ -15,8 +15,9 @@ class ItemsTableSeeder extends Seeder
         for ($i=0; $i<33; $i++) {
             $item = new Items();
             $item->name = $faker-> colorName;
-            $item->price = $faker->randomFloat(2, 1, 100);
+            $item->price = $faker->randomFloat(2, 0, 100);
             $item->category_id = $faker->numberBetween(1, 6);
+            $item->is_deleted = 0;
             $item->save();
             $item->tags()->attach($faker->numberBetween(1, 6));
             }

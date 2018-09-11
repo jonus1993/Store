@@ -3,7 +3,8 @@
 
     <label for="adrs{{$address['id']}}">
      <input id="adrs{{$address['id']}}" checked="checked" type="radio" name="address_id" value="{{$address['id']}}">
-    <strong>  {{$address['street']}}</strong> <br>
+    <strong>  {{$address['name']}}</strong> <br>
+    Street:  {{$address['street']}} <br>
     City: {{$address['city']}} <br>
     Zip Code: {{$address['zip_code']}} <br>
     Phone: {{$address['phone']}} <br>

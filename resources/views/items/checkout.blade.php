@@ -19,23 +19,23 @@ Checkout order
 <form action="{{route('checkout')}}" method="post">
     <div class="form-group">
         <label for="name">Name:</label>
-        <input type="text" class="form-control" name="name" id="who" required="">
+        <input type="text" class="form-control" name="name" id="name" value="{{old('name')}}" required>
     </div>
     <div class="form-group">
         <label for="street">Street address:</label>
-        <input type="text" class="form-control" name="street" id="street" required="">
+        <input type="text" class="form-control" name="street" id="street" value="{{old('street')}}" required>
     </div>
     <div class="form-group">
         <label for="city">City:</label>
-        <input type="text" class="form-control" name="city" id="city" required="">
+        <input type="text" class="form-control" name="city" id="city" value="{{old('city')}}" required>
     </div>
     <div class="form-group">
         <label for="zipcode">Zip-code:</label>
-        <input type="text" class="form-control" name="zip_code" id="zipcode" required="">
+        <input type="text" class="form-control" name="zip_code" id="zip_code" value="{{old('zip_code')}}" required>
     </div>
     <div class="form-group">
         <label for="phone">Phone:</label>
-        <input type="text" class="form-control" name="phone" id="phone" required="">
+        <input type="text" class="form-control" name="phone" id="phone" value="{{old('phone')}}" required>
     </div>
     {{ csrf_field() }}
     <button type="submit" class="btn btn-primary">Make an Order</button>

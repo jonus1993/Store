@@ -4,14 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use App\Http\Controllers\AddressController;
+use App\Validation\AddressValidator;
+
 
 class Address extends Model {
     
     
        public function store(Request $request) {
-        $validation = new AddressController();
-        $validation->addressValidation($request);
+        $validation = new AddressValidator();
+        $validation->check($request);
         $input = $request->all();
         $address = new Address();
         $address->user_id = auth()->id();
@@ -25,7 +26,7 @@ class Address extends Model {
     }
 
     protected $fillable = [
-        'street', 'zip_code', 'city', 'phone'
+        'street', 'name', 'zip_code', 'city', 'phone'
     ];
     protected $hidden = [
         'user_id',

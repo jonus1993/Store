@@ -82,29 +82,7 @@ class Items extends Model
         return $photoName;
     }
 
-    protected function doValidation(Request $request)
-    {
-
-        //        Validator::extend('numericarray', function($attribute, $value, $parameters) {
-//            if (is_array($value)) {
-//                foreach ($value as $v) {
-//                    if (!is_int($v))
-//                        return false;
-//                } return true;
-//            } return is_int($value);
-//        });
-
-        $request->validate([
-            'name' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
-            'price' => "required|regex:/^\d*(\.\d{1,2})?$/",
-            'photo_name' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable',
-            'category_id' => 'required|numeric',
-            array('tags' => 'nullable|numericarray'),
-                //            'tags' => 'nullable|array',
-//            'tags.*' => 'integer'
-        ]);
-    }
-
+ 
     protected $fillable = [
         'id', 'name', 'category_id', 'price', 'photo_name'
     ];

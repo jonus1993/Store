@@ -12,7 +12,7 @@ Home
 <div id="addresses" class="row">
     @foreach($addresses as $address)
     <address class="col-md-3">
-        <strong>Address {{$address['id']}}</strong><br>
+        <strong>{{$address['name']}}</strong><br>
         Street: {{$address['street']}} <br>
         City: {{$address['city']}} <br>
         Zip Code: {{$address['zip_code']}} <br>

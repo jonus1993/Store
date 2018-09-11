@@ -3,25 +3,27 @@
     <div id="errors"> </div>
 
     <form id="addressForm" action="{{route('address.add2')}}" method="post">
-
         <div class="form-group">
-            <label for="street">Street address:</label>
-            <input type="text" class="form-control" name="street" id="street">
-        </div>
-
-        <div class="form-group">
-            <label for="city">City:</label>
-            <input type="text" class="form-control" name="city" id="city">
-        </div>
-        <div class="form-group">
-            <label for="zip_code">Zip-code:</label>
-            <input type="text" class="form-control" name="zip_code" id="zip_code">
-        </div>
-        <div class="form-group">
-            <label for="phone">Phone:</label>
-            <input type="text" class="form-control" name="phone" id="phone">
-        </div>
-        {{ csrf_field() }}
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" name="name" id="name" value="{{old('name')}}" required>
+    </div>
+    <div class="form-group">
+        <label for="street">Street address:</label>
+        <input type="text" class="form-control" name="street" id="street" value="{{old('street')}}" required>
+    </div>
+    <div class="form-group">
+        <label for="city">City:</label>
+        <input type="text" class="form-control" name="city" id="city" value="{{old('city')}}" required>
+    </div>
+    <div class="form-group">
+        <label for="zipcode">Zip-code:</label>
+        <input type="text" class="form-control" name="zip_code" id="zip_code" value="{{old('zip_code')}}" required>
+    </div>
+    <div class="form-group">
+        <label for="phone">Phone:</label>
+        <input type="text" class="form-control" name="phone" id="phone" value="{{old('phone')}}" required>
+    </div>
+    {{ csrf_field() }}
         <button id="submitbtn" type="submit" class="btn btn-primary" disabled>Add Address</button>
 
     </form>

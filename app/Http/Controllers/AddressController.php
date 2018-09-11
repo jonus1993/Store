@@ -6,6 +6,8 @@ use Exception;
 use App\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Validation\AddressValidator;
+
 
 class AddressController extends Controller
 {
@@ -29,7 +31,7 @@ class AddressController extends Controller
     }
     
     
-      public function create()
+    public function create()
     {
         return view('address.index');
     }
@@ -84,12 +86,14 @@ class AddressController extends Controller
     public function update(Request $request, Address $address)
     {
         $this->authorization($address);
-        $this->addressValidation($request);
+                $validation = new AddressValidator();
+        $validation->check($request);
         $input = $request->all();
         $address->fill($input)->save();
         if (request()->expectsJson()) {
             return view('Address.list_item', ['address' => $address]);
         }
+         Session::flash('message', "Pomyślnie wyedytowano");
         return redirect('/home');
     }
 
@@ -108,15 +112,5 @@ class AddressController extends Controller
         if ($address->user_id != auth()->id()) {
             return abort(403, 'Unauthorized action.');
         }
-    }
-
-    public function addressValidation(Request $request)
-    {
-        $request->validate([
-            'street' => 'bail|required|min:4|max:255|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9., \/]+$/',
-            'city' => 'required|min:2|max:128|regex:/^[A-ZĄŻŹĘŚĆŁÓa-ząćłśóżźę0-9.]+$/',
-            'zip_code' => 'required|size:6|regex:[[0-9][0-9]-[0-9][0-9][0-9]]',
-            'phone' => 'required|numeric',
-        ]);
     }
 }

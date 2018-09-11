@@ -13,6 +13,10 @@ Route::prefix('cart')->group(function () {
     })->name('forgetCart');
 
     Route::get('/checkout', 'CartController@getCheckout')->name('checkout');
+    Route::post('/checkout', [
+    'uses' => 'GuestsOrdersController@postCheckout',
+    'as' => 'checkout'
+]);
 });
 
 Route::get('/save_notifi/{id}', [
@@ -23,11 +27,6 @@ Route::get('/save_notifi/{id}', [
 Route::get('/add_rate/{item}/{rate}', [
     'uses' => 'RatingController@addRate',
     'as' => 'add.rate'
-]);
-
-Route::post('/checkout', [
-    'uses' => 'GuestsOrdersController@postCheckout',
-    'as' => 'checkout'
 ]);
 
 

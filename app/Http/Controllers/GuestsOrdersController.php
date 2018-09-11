@@ -9,10 +9,10 @@ use App\Cart;
 use App\Items;
 use App\GuestsOrders_Items;
 
-class GuestsOrdersController extends Controller {
-
-    public function postCheckout(Request $request) {
-
+class GuestsOrdersController extends Controller
+{
+    public function postCheckout(Request $request)
+    {
         if (!Session::has('cart')) {
             return view("cart.emptycart");
         }
@@ -49,5 +49,4 @@ class GuestsOrdersController extends Controller {
 
         return view('orders.finished', ['orderid' => $order->id]);
     }
-
 }

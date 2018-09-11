@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use View;
+use Illuminate\Support\Facades\Cache;
 use App\Cart2;
 use App\Cart_Items;
 use App\Tags;
@@ -20,6 +21,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $tags = Cache::get('tags', function () {
+            return  $tags = Tags::all();
+        });
+        $categories = Cache::get('categories', function () {
+            return  $categories = Categories::all();
+        });
+        View::share(['tags' => $tags,'categories' => $categories]);
+   
         //add configuration
         View::composer('partials.header', function ($view) {
             $cart = Cart2::where('user_id', Auth::id())->first();

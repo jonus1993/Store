@@ -1,31 +1,19 @@
 <?php
 
-use App\Tags;
-use App\Categories;
 
-Route::prefix('items')->group(function () {
-    Route::post('/', 'ItemsController@postIndex')->name('filter.data');
-    Route::get('/{item}/{qty?}', [
-        'uses' => 'ItemsController@getAddToCart',
-        'as' => 'item.addToCart'
-    ]);
-});
-
-Route::get('/dist/{item}', [
-    'uses' => 'ItemsController@delFromCart',
-    'as' => 'item.sesdelete'
-]);
-
-Route::get(
-    '/distAll',
-    function () {
+Route::prefix('cart')->group(function () {
+    Route::get('item/add/{item}/{qty?}', 'CartController@getAddToCart')->name('item.addToCart');
+    Route::get('item/dist/{item}', 'CartController@delFromCart')->name('item.sesdelete');
+    Route::get('/get', 'CartController@getCart')->name('goToCart');
+    Route::get('/item/distAll', function () {
         if (Session::has('cart')) {
             Session::forget('cart');
         }
         return view("cart.index");
-    }
-)->name('forgetCart');
+    })->name('forgetCart');
 
+    Route::get('/checkout', 'CartController@getCheckout')->name('checkout');
+});
 
 Route::get('/save_notifi/{id}', [
     'uses' => 'RatingController@saveNotfication',
@@ -35,12 +23,6 @@ Route::get('/save_notifi/{id}', [
 Route::get('/add_rate/{item}/{rate}', [
     'uses' => 'RatingController@addRate',
     'as' => 'add.rate'
-]);
-
-
-Route::get('/checkout', [
-    'uses' => 'ItemsController@getCheckout',
-    'as' => 'checkout'
 ]);
 
 Route::post('/checkout', [
@@ -66,8 +48,6 @@ Route::get('/order/{orderid}/{flag?}', [
 
 
 
-
-
 Route::prefix('manage')->group(function () {
     Route::get('/', 'ManageController@getUserslist')->name('manage');
     Route::get('/del/{user}', 'ManageController@deleteUser')->name('del.user');
@@ -79,21 +59,15 @@ Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');
 
 
 Route::get('/items2', function () {
-    $tags = Tags::all();
-    $categories = Categories::all();
-    return view('items.index2', compact('tags', 'categories'));
+    return view('items.index2');
 })->name('datatables');
 
 Route::get('/items3', function () {
-    $tags = Tags::all();
-    $categories = Categories::all();
-    return view('items.index3', compact('tags', 'categories'));
+    return view('items.index3');
 })->name('datatables2');
 
 Route::middleware('can:moderator-allowed')->get('/moderator', function () {
-    $tags = Tags::all();
-    $categories = Categories::all();
-    return view('items.moderator', compact('tags', 'categories'));
+    return view('items.moderator');
 })->name('moderator.panel');
 
 Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');
@@ -106,26 +80,27 @@ Route::get(
         ]
 );
 
-Route::get('/checkout2', [
+
+Route::prefix('/cart2')->group(function () {
+Route::get('/checkout', [
     'uses' => 'DatatablesController@getCheckout',
     'as' => 'checkout2'
 ]);
 
-Route::get('/cart', 'ItemsController@getCart')->name('goToCart');
-Route::get('/cart2', 'DatatablesController@getCartView')->name('goToCart2');
+Route::get('/get', 'DatatablesController@getCartView')->name('goToCart2');
 
 
-Route::get('/cart2/del/{item}', [
+Route::get('/delete/{item}', [
     'uses' => 'DatatablesController@delFromCart',
     'as' => 'item2.delFromCart'
 ]);
 
-Route::get('/cart2/delete', [
+Route::get('deleteAll', [
     'uses' => 'DatatablesController@delCart',
     'as' => 'delete.cart'
 ]);
 
-
+});
 
 
 Route::get('/home', 'HomeController')->name('home');
@@ -163,5 +138,5 @@ Route::get('/nbp', function () {
     return view('nbp');
 });
 
-Route::resource('item', 'ModeratorController');
+Route::resource('item', 'ItemsController');
 Route::resource('address', 'AddressController');

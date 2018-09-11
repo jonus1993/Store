@@ -74,7 +74,6 @@ height: auto;
 <!-- DataTables -->
 <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script src="http://malsup.github.com/jquery.form.js"></script> 
-<!--<script src="/path/to/jquery.cookie.js"></script>-->
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script>
 

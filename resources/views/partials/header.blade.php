@@ -15,7 +15,7 @@
                 <a class="nav-link" href="{{ url('/nbp') }}">NBP</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url('/item') }}">Items</a>
+                <a class="nav-link" href="{{ route('item.index') }}">Items</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('/items3') }}">ItemsDT</a>

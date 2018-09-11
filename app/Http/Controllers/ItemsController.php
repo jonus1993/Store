@@ -2,20 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Cart;
 use App\Items;
 use App\Tags;
+use App\ItemTag;
 use App\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Http\Requests\ItemAddPost;
 
 class ItemsController extends Controller
 {
-    public function postIndex(Request $request)
+    public function __construct()
     {
-        $tags = Tags::all();
-        $categories = Categories::all();
+        $this->middleware('can:delete, App\User')->only('destroy');
+        $this->middleware('can:moderator-allowed')->except('show', 'index');
+    }
 
+//    public function callAction($method, $parameters)
+//    {
+//        //sprawdzam czy użytkownik ma uprawnienia do zapisania konfiguracji
+//        //$this->authorize('konfiguracja-save');
+//        if (!\Auth::user()->isAdmin()) {
+//            return redirect(route('home'))->with('error', trans('messages.access_denied'));
+//        }
+//
+//        return parent::callAction($method, $parameters);
+//    }
+    
+    public function index(Request $request)
+    {
         if (!$request->has('tags') && !$request->has('categories')) {
             $items = Items::paginate(11);
         } else {
@@ -28,8 +43,6 @@ class ItemsController extends Controller
             if ($catInput === null) {
                 $catInput = Categories::select('id')->get();
             }
-
-
             $tagIds = Tags::select('id')->whereIn('friend_name', $tagInput)->get();
             $items = Items::whereIn('category_id', $catInput)
                     ->whereHas('tags', function ($q) use ($tagIds) {
@@ -38,54 +51,56 @@ class ItemsController extends Controller
                     ->paginate(11);
         }
 
-        return view('items.index', compact('items', 'tags', 'categories'));
+        return view('items.index')->with('items', $items);
     }
 
-    public function getAddToCart(Request $request, Items $item, $qty = 1)
+    public function show(Items $item)
     {
-        $oldCart = Session::has('cart') ? Session::get('cart') : null;
-        $cart = new Cart($oldCart);
-        $cart->add($item, $item->id, $qty);
-        $request->session()->put('cart', $cart);
+        $avgrate = number_format($item->avgRating, 1);
+        $allrates = $item->countPositive;
 
+        return view('items.show', compact('item', 'avgrate', 'allrates'));
+    }
+    
+    public function create()
+    {
+        return view('items.add2');
+    }
+
+    public function store(ItemAddPost $request)
+    {
+        $item = new Items();
+        $item->saveItem($request);
+        
+        if (request()->expectsJson()) {
+            return null;
+        }
+
+        //dodawnia wiadomości po wykonanej akcji
+        Session::flash('message', trans('messages.itemCreated'));
+        return redirect()->route('item.create');
+    }
+
+    public function edit(Items $item)
+    {
+        return view('items.edit')->with('item', $item);
+    }
+
+    public function update(ItemAddPost $request, Items $item)
+    {
+        $item->saveItem($request, $item);
+
+        //dodawnia wiadomości po wykonanej akcji
+        Session::flash('message', trans('messages.itemEdited'));
         return redirect()->back();
     }
 
-    public function delFromCart(Request $request, Items $item)
+    public function destroy(Items $item)
     {
-        $oldCart = Session::has('cart') ? Session::get('cart') : null;
-        $cart = new Cart($oldCart);
-        $cart->del($item);
-
-        if ($cart->totalQty == 0) {
-            Session::forget('cart');
-        } else {
-            $request->session()->put('cart', $cart);
-        }
-
+        ItemTag::where('item_id', $item->id)->delete();
+        $item->is_deleted = 1;
+        $item->save();
+        Session::flash('message', trans("Pomyślnie usunięto"));
         return redirect()->back();
-    }
-
-    public function getCart()
-    {
-        if (!Session::has('cart')) {
-            return view("cart.index");
-        }
-        $oldCart = Session::get('cart');
-        $cart = new Cart($oldCart);
-
-        return view('cart.index', ['items' => $cart->items, 'totalQty' => $cart->totalQty, 'totalPrice' => $cart->totalPrice]);
-    }
-
-    public function getCheckout()
-    {
-        if (!Session::has('cart')) {
-            return view("cart.index");
-        }
-        $oldCart = Session::get('cart');
-        $cart = new Cart($oldCart);
-        $total = $cart->totalPrice;
-
-        return view('items.checkout', ['total' => $total]);
     }
 }

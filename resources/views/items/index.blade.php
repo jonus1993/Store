@@ -11,7 +11,7 @@ Colours
     <div class="col-2">
         <h3 class="w3-bar-item">Filtry</h3>
         <h4 class="w3-bar-item">Tagi</h4>
-        <form action="{{route('filter.data')}}" method="post">
+        <form action="{{route('item.index')}}" method="get">
             @csrf
 
             @foreach($tags as $tag)

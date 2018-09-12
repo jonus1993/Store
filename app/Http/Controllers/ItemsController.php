@@ -50,6 +50,9 @@ class ItemsController extends Controller
                     })
                     ->paginate(11);
         }
+        
+        
+  
 
         return view('items.index')->with('items', $items);
     }

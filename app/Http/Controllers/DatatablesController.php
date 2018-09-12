@@ -53,7 +53,7 @@ class DatatablesController extends Controller
                 $q->whereIn('tag_id', $tagIds);
             });
         }
-
+        
 
         return Datatables::of($items)->make();
     }

@@ -17,6 +17,13 @@ use Illuminate\Database\Eloquent\Builder;
 class Items extends Model
 {
     use Rating;
+    
+        /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['avgRating'];
 
     public function generateToken()
     {

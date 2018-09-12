@@ -29,8 +29,6 @@ Route::get('/add_rate/{item}/{rate}', [
     'as' => 'add.rate'
 ]);
 
-
-
 Route::post('/order', [
     'uses' => 'OrdersController@saveOrder',
     'as' => 'finishOrder'
@@ -45,8 +43,6 @@ Route::get('/order/{orderid}/{flag?}', [
     'as' => 'showOrder'
 ]);
 
-
-
 Route::prefix('manage')->group(function () {
     Route::get('/', 'ManageController@getUserslist')->name('manage');
     Route::get('/del/{user}', 'ManageController@deleteUser')->name('del.user');
@@ -54,8 +50,6 @@ Route::prefix('manage')->group(function () {
 });
 
 Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');
-
-
 
 Route::get('/items2', function () {
     return view('items.index2');
@@ -79,26 +73,24 @@ Route::get(
         ]
 );
 
-
 Route::prefix('/cart2')->group(function () {
-Route::get('/checkout', [
+    Route::get('/checkout', [
     'uses' => 'DatatablesController@getCheckout',
     'as' => 'checkout2'
 ]);
 
-Route::get('/get', 'DatatablesController@getCartView')->name('goToCart2');
+    Route::get('/get', 'DatatablesController@getCartView')->name('goToCart2');
 
 
-Route::get('/delete/{item}', [
+    Route::get('/delete/{item}', [
     'uses' => 'DatatablesController@delFromCart',
     'as' => 'item2.delFromCart'
 ]);
 
-Route::get('deleteAll', [
+    Route::get('deleteAll', [
     'uses' => 'DatatablesController@delCart',
     'as' => 'delete.cart'
 ]);
-
 });
 
 

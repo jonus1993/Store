@@ -23,10 +23,10 @@ class AddressController extends Controller
         return view('address.list')->with('addresses', $this->address->getAddresses());
     }
     
-//    public function show($id)
-//    {
-//        return redirect('/home');
-//    }
+    public function show($id)
+    {
+        return redirect('/home');
+    }
     
     
     public function create()
@@ -50,8 +50,7 @@ class AddressController extends Controller
     }
     
     public function store2(Request $request)
-    {
-       
+    {      
 
 //        try {
 //            $address->store($request);
@@ -59,7 +58,6 @@ class AddressController extends Controller
 //            return response(view('home2')
 //                ->with('errors', $ex->validator->errors()), 422);
 //        }
-
       
         return view('Address.list_item', ['address' => $this->address->store($request)]);
     }

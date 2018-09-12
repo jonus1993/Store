@@ -68,7 +68,7 @@ Colours
             <tr>
                 <td>{{ $item->id }}</td>
                 <td>{{ $item->name }}</td>
-                <td></td>
+                <td>{{ number_format($item->avgRating, 1).' / '.$item->countPositive }}</td>
                 <td>{{ $item->price }}</td>
                 <td>{{ $item->category->name }}</td>
                 <td>@foreach($item->tags as $tag){{

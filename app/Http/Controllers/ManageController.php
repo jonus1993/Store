@@ -10,66 +10,60 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class ManageController extends Controller {
-
-    public function __construct() {
+class ManageController extends Controller
+{
+    public function __construct()
+    {
         $this->middleware('auth');
         $this->middleware('admin');
     }
 
-    public function getUserslist() {
-
+    public function getUserslist()
+    {
         $roles = Roles::all();
-        $users = User::with('roles')->get();
+        $users = User::withTrashed()->with('roles')->get();
 
         return view('manage', compact('users', 'roles'));
     }
 
-    public function deleteUser(User $user) {
-
+    public function deleteUser(User $user)
+    {
         $user->delete();
         return $this->getUserslist();
-        
     }
 
-    public function changeUser(Request $request) {
-
+    public function changeUser(Request $request)
+    {
         $request->validate([
-            'users_id' => 'bail|required',
-            'roles_id' => 'required'
+            'users_id' => 'bail|required|numeric',
+            'roles_id' => 'required',
+             array('roles_id' => 'numericarray'),
         ]);
-        
-        $userID = $request->users_id;
+    
+        $user = User::withTrashed()->find($request->users_id);
+        $user->roles()->detach();
         $roles = $request->get('roles_id');
-        RolesHasUsers::where('users_id',$userID )->delete();
 
         foreach ($roles as $roleID) {
-            $user = new RolesHasUsers();
-            $user->users_id = $userID;
-            $user->roles_id = $roleID;
-            $user->save();
+            $user->roles()->attach($roleID);
         }
-        
-          if (request()->expectsJson()) {
+
+        if (request()->expectsJson()) {
             return response("Change was made");
         }
 
         Session::flash('message', trans('messages.userRoleChanged'));
         return redirect(route('manage'));
     }
-    
-    
 
-    public function showAllorders() {
-
+    public function showAllorders()
+    {
         $guests = DB::table('guests_orders')->select('id', 'total_cost', 'total_items', 'created_at', DB::raw('"guest" AS new_column'));
 
         $orders = DB::table('orders')
                         ->select('id', 'total_cost', 'total_items', 'created_at', DB::raw('"user" AS new_column'))
                         ->union($guests)->get();
 
-
         return view('orders.allOrders', compact('orders'));
     }
-
 }

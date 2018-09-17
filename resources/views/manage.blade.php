@@ -54,7 +54,9 @@ Manage Users
                 {{ csrf_field() }}
             </form>
         </td>
-        <td><a href="{{ route ('del.user',$user->id)}}">DELETE</a> </td>
+
+        <td><button class="btn btn-danger" onclick="location.href='{{ route ('del.user',$user->id)}}'" {{ $user->deleted_at  ? 'disabled' : '' }}>DELETE</button>
+        </td>
 
     </tr>
     @endforeach

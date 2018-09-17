@@ -1,8 +1,10 @@
 
        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    
+    
 
-   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+   <nav  class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="{{url('/')}}">Home</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

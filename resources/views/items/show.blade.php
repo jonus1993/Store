@@ -3,16 +3,20 @@
 Colour
 @endsection
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+@section('styles') <style>
+    body {background-color: {{ $item->name  }};}
+</style>
+@endsection
 @section('content')
 
 <div class="w3-container w3-teal">
-    <h1>Kolorek {{ $item->name  }}</h1>
+    <h1>Kolorek {{ $item->name }}</h1>
 </div>
 <div>
     @if($item->photo_name == null)
-    <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/421.png')}}" alt="No Image"/>
+    <img class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/nophoto.png')}}" alt="No Image" />
     @else
-    <img  class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/'.$item->photo_name)}}" alt="No Image"/>
+    <img class="img-fluid rounded-circle mx-auto d-block" src="{{url('/photos/'.$item->photo_name)}}" alt="No Image" />
     @endif
 </div>
 <div class="form-group" id="rating-ability-wrapper">
@@ -25,13 +29,18 @@ Colour
         <span class="selected-rating">{{$avgrate}}</span><small> / 5</small>
     </h2>
     <span class="glyphicon glyphicon-user">Wszystkich ocen: {{$allrates}}</span><br>
-    @for ($i = 1; $i <= 5; $i++)
-    <a href="{{route('add.rate', ['item' => $item, 'star' => $i ])}}" type="button" class="btnrating btn btn-default btn-lg" data-attr="{{$i}}" id="rating-star-{{$i}}">
-        <i class="fa fa-star" aria-hidden="true"></i>
-    </a>
-    @endfor
-    <br>
-    <a href="{{route('notifi.save', $item->id)}}">Powiadom mnie kiedy cena spadnie</a>
+    @for ($i = 1; $i <= 5; $i++) @if(auth()->id())
+        <a href="{{route('add.rate', ['item' => $item, 'star' => $i ])}}" type="button" class="btnrating btn btn-default btn-lg" data-attr="{{$i}}" id="rating-star-{{$i}}">
+            <i class="fa fa-star" aria-hidden="true"></i>
+        </a>
+        @else
+        <a href="{{route('login')}}" type="button" class="btnrating btn btn-default btn-lg" data-attr="{{$i}}" id="rating-star-{{$i}}">
+            <i class="fa fa-star" aria-hidden="true"></i>
+        </a>
+        @endif
+        @endfor
+        <br>
+        <a style="color: blue;" href='{{url(auth()->id() ? 'notifi/'.$item->id : 'login')}}'>Powiadom mnie kiedy cena spadnie</a>
 
 
 </div>
@@ -48,8 +57,8 @@ Colour
         <td>{{ $item->id }}</td>
         <td>{{ $item->price }}</td>
         <td>{{ $item->category->name}}</td>
-        <td>@foreach($item->tags as $tag){{ 
-                $tag->name }} <br>
+        <td>@foreach($item->tags as $tag){{
+            $tag->name }} <br>
             @endforeach</td>
         <td>
             @if(!$item->is_deleted)
@@ -67,9 +76,9 @@ Colour
 
 @section('scripts')
 <script>
-    jQuery(document).ready(function ($) {
+    jQuery(document).ready(function($) {
 
-        $(".btnrating").on('click', (function (e) {
+        $(".btnrating").on('click', (function(e) {
 
             var previous_value = $("#selected_rating").val();
 
@@ -93,5 +102,6 @@ Colour
 
 
     });
+
 </script>
 @endsection

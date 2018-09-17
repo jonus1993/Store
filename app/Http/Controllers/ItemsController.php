@@ -100,9 +100,9 @@ class ItemsController extends Controller
 
     public function destroy(Items $item)
     {
-        ItemTag::where('item_id', $item->id)->delete();
         $item->is_deleted = 1;
         $item->save();
+        \App\Cart_Items::whereItem_id($item->id)->delete();
         Session::flash('message', trans("Pomyślnie usunięto"));
         return redirect()->back();
     }

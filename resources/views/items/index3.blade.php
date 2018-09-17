@@ -3,8 +3,8 @@
 Colours
 @endsection
 @section('styles')
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <link rel="stylesheet" href="{{url('/css/dataTables.min.css')}}">
 <style>
  	
 th.dt-center, td.dt-center { text-align: center; }   
@@ -57,6 +57,8 @@ height: auto;
                     <th>GO2</th>
                     <th>NAME</th>
                     <th>PRICE</th>
+                    <th>RATE</th>
+                    <th>No. RATE</th>
                     <th>CATEGORY</th>
                     <th>PROMOS</th>
                     <th>AMOUNT</th>
@@ -72,7 +74,8 @@ height: auto;
 @push('scripts')
 
 <!-- DataTables -->
-<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="{{url('/js/dataTables.min.js')}}"></script>
+
 <script src="http://malsup.github.com/jquery.form.js"></script> 
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script>
@@ -155,7 +158,8 @@ var table = $('#items-table').DataTable({
                 return '<a href="{{ url('item/:data')}}">\n\
                                       <img class="images" src="{{url('/photos/click.png')}}" alt="icon name"> \n\
                 \n\</a>'.replace(':data', data);
-                }},
+                }
+        },
         {data: 'name'},
         {data: 'price',
        render: function (data, type, row) {
@@ -166,6 +170,17 @@ var table = $('#items-table').DataTable({
            
        }
                                   },
+        {data: 'avgRating',
+        defaultContent: '0',
+        render: function ( data, type, row ) {
+            if (data == null)
+                data = 0;
+            var num = parseFloat(data).toFixed(1);
+          
+            return num;
+            }
+        },
+        {data: 'countPositive'},
         {data: 'category.name'},
         {data: 'tags[].name',
          render: function (data, type, row) {
@@ -198,9 +213,9 @@ var table = $('#items-table').DataTable({
                                 }},
                 ],
                         "columnDefs": [
-                        {"orderable": false, "targets": 4},
-                           {"width": "20%", "targets": 4},
-                            {"width": "17%", "targets": 5},
+                        {"orderable": false, "targets": 6},
+                           {"width": "20%", "targets": 6},
+                            {"width": "17%", "targets": 7},
                             {"className": "dt-center", "targets": "_all"}
                         ]
 

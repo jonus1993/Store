@@ -1,6 +1,5 @@
 <?php
 
-
 Route::prefix('cart')->group(function () {
     Route::get('item/add/{item}/{qty?}', 'CartController@getAddToCart')->name('item.addToCart');
     Route::get('item/dist/{item}', 'CartController@delFromCart')->name('item.sesdelete');
@@ -19,7 +18,7 @@ Route::prefix('cart')->group(function () {
 ]);
 });
 
-Route::get('/save_notifi/{id}', [
+Route::get('/notifi/{id}', [
     'uses' => 'RatingController@saveNotfication',
     'as' => 'notifi.save'
 ]);
@@ -127,6 +126,10 @@ Route::get('/', function () {
 
 Route::get('/nbp', function () {
     return view('nbp');
+});
+
+Route::get('/nbp/VUEjs', function () {
+    return view('nbpVUE');
 });
 
 Route::resource('item', 'ItemsController');

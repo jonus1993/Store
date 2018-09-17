@@ -23,7 +23,7 @@ class Items extends Model
      *
      * @var array
      */
-    protected $appends = ['avgRating'];
+    protected $appends = ['avgRating', 'countPositive'];
 
     public function generateToken()
     {

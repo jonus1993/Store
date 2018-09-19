@@ -3,9 +3,12 @@
 Colours
 @endsection
 @section('styles')
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <script src="http://malsup.github.com/jquery.form.js"></script>
+       <link rel="stylesheet" href="{{url('/css/dataTables.min.css')}}">
+    
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+           
+
+        
 <style>
     td.details-control {
     background: url("{{url('/open-iconic/svg/plus.svg')}}") no-repeat center center;
@@ -95,9 +98,12 @@ height: auto;
 @stop
 
 @push('scripts')
+          
+<!--          Modal-->
+           <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>      
 
 <!-- DataTables -->
-<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="{{url('/js/dataTables.min.js')}}"></script>
 <script src="http://malsup.github.com/jquery.form.js"></script> 
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 

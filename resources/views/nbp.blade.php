@@ -9,7 +9,9 @@ NBP
 @section('content')
 
 <h1>Waluty</h1>
-
+<div id="app">
+<example-component></example-component>
+</div>
 <table class="table table-active table-bordered" id="items-table">
     <thead> 
         <tr>
@@ -23,6 +25,8 @@ NBP
 @stop
 
 @push('scripts')
+
+<script src="{{asset('js/app.js')}}"></script>
 
 <!-- DataTables -->
 <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>

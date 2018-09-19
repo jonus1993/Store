@@ -74,6 +74,7 @@ class DatatablesController extends Controller
     {
         // ściagamy cały obiek item dzięki odebranemu id
 //        $item = Items::find($id);
+        
         if ($item->is_delted == 1) {
             abort(403, 'Unauthorized action.');
         }

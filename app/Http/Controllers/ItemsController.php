@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Items;
 use App\Tags;
 use App\ItemTag;
+use App\Cart_Items;
 use App\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -99,10 +100,12 @@ class ItemsController extends Controller
     }
 
     public function destroy(Items $item)
-    {
+    {   
+        Cart_Items::whereItem_id($item->id)->delete();
+        ItemTag::whereItem_id($item->id)->delete();
         $item->is_deleted = 1;
         $item->save();
-        \App\Cart_Items::whereItem_id($item->id)->delete();
+        
         Session::flash('message', trans("Pomyślnie usunięto"));
         return redirect()->back();
     }

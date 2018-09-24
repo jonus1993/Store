@@ -45,6 +45,7 @@
 
         var options = {
             success: function(data) {
+                    console.log(data);
 
                 $("#itemMsg").show().delay(125).hide(1000).children("span").text("New item added!");
 
@@ -55,6 +56,7 @@
                 var errors = data.responseJSON.errors;
                 var html = '';
                 for (var e in errors) {
+                    console.log(errors);
                     $("input[name='" + e + "']").addClass("alert alert-danger");
                     html += errors[e][0] + '<br>';
                 }

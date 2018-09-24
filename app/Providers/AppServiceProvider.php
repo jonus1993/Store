@@ -4,8 +4,6 @@ namespace App\Providers;
 
 use View;
 use Illuminate\Support\Facades\Cache;
-use App\Cart2;
-use App\Cart_Items;
 use App\Tags;
 use App\Categories;
 use Illuminate\Support\ServiceProvider;
@@ -31,12 +29,19 @@ class AppServiceProvider extends ServiceProvider
    
         //add configuration
         View::composer('partials.header', function ($view) {
-            $cart = Cart2::where('user_id', Auth::id())->first();
-            $count = 0;
-            if ($cart != null) {
-                $count = Cart_Items::where('cart_id', $cart->id)->sum('qty');
+            $user = Auth::user();
+            if ($user != null) {
+                $cart = $user->getCart();
+       
+                $count = 0;
+                if ($cart != null) {
+                    $cart_items = $cart->items()->get();
+                    foreach ($cart_items as $item) {
+                        $count += $item->pivot->qty;
+                    }
+                }
+                $view->with('cartQty', $count);
             }
-            $view->with('cartQty', $count);
         });
 
 //        View::composer('items.add2', function ($view) {

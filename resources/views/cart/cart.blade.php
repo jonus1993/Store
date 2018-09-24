@@ -15,10 +15,10 @@ DB Store Cart
     @foreach($cart_items as $item)
 
     <tr>
-        <td>{{ $item->item->name }}</td>
-        <td>{{ $item['qty'] }}</td>
-        <td>{{ $item->item->price*$item['qty'] }}</td>
-        <td><a class="btn btn-info" href="{{route('item2.delFromCart', $item)}}">DELETE</a></td>
+        <td>{{ $item->name }}</td>
+        <td>{{ $item->pivot->qty }}</td>
+        <td>{{ $item->price*$item->pivot->qty }}</td>
+        <td><a class="btn btn-info" href="{{route('item2.delFromCart', $item->id)}}">DELETE</a></td>
 
     </tr>
     @endforeach

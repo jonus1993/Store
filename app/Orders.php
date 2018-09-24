@@ -3,10 +3,15 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Order_Items;
+
 class Orders extends Model
-{
-    function orderItem() {
-        return $this->hasMany(Order_Items::class);
+{    
+     protected $fillable = [
+        'user_id', 'address_id', 'total_qty', 'total_cost',
+    ];
+     
+    public function cart() {
+        return $this->belongsTo(Cart2::class);
     }
+    
 }

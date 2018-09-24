@@ -29,28 +29,43 @@
     <p></p>
     <table class="table table-hover">
         <tr>
+            <th>ID</th>
             <th>NAME</th>
             <th>QUANTATY</th>
             <th>PRICE</th>
         </tr>
 
-        @foreach($cart['cart_items'] as $cart_item)
+        @foreach($cart['cart_items'] as $item)
         <tr>
-            <td>{{ $cart_item->item->name }}</td>
-            <td>{{ $cart_item->qty }}</td>
-            <td>{{ $cart_item->item->price }}</td>
+           <td>{{ $item->id }}</td>
+            <td>{{ $item->name }}</td>
+            <td>{{ $item->pivot->qty }}</td>
+            <td>{{ $item->price*$item->pivot->qty }}</td>
         </tr>
         @endforeach
         <tr>
+            <th>ID</th>
             <th>TOTAL</th>
             <th>{{ $cart['totalQty'] }}</th>
             <th>{{ $cart['totalPrice'] }}</th>
         </tr>
     </table>
-
+    <h3>Choose one of Your coupons to low a price</h3>
+ @foreach($cart['promos'] as $promo)
+   
+    <div class="form-check">
+      <label class="form-check-label" for="{{$promo->id}}">
+      <input class="form-check-input" type="radio" name="exampleRadios" id="{{$promo->id}}" value="{{$promo->code}}" checked>
+     
+      Value: <strong>{{$promo->value}}%</strong> 
+                    {{$promo->code}}       
+        
+      </label>
+    </div>
+        @endforeach
+        <span> OFF</span>
     <div style="float: right;">
-        <button class="btn btn-success" type="submit">MAKE ORDER</button></div>
-
+        <button class="btn btn-success" type="submit">MAKE ORDER</button></div>       
 </form>
 
 @stop

@@ -1,9 +1,9 @@
 <?php
 
 Route::prefix('cart')->group(function () {
-    Route::get('item/add/{item}/{qty?}', 'CartController@getAddToCart')->name('item.addToCart');
-    Route::get('item/dist/{item}', 'CartController@delFromCart')->name('item.sesdelete');
-    Route::get('/get', 'CartController@getCart')->name('goToCart');
+    Route::get('item/add/{item}/{qty?}', 'GuestCartController@getAddToCart')->name('item.addToCart');
+    Route::get('item/dist/{item}', 'GuestCartController@delFromCart')->name('item.sesdelete');
+    Route::get('/get', 'GuestCartController@getCart')->name('goToCart');
     Route::get('/item/distAll', function () {
         if (Session::has('cart')) {
             Session::forget('cart');
@@ -11,9 +11,9 @@ Route::prefix('cart')->group(function () {
         return view("cart.index");
     })->name('forgetCart');
 
-    Route::get('/checkout', 'CartController@getCheckout')->name('checkout');
+    Route::get('/checkout', 'GuestCartController@getCheckout')->name('checkout');
     Route::post('/checkout', [
-    'uses' => 'GuestsOrdersController@postCheckout',
+    'uses' => 'OrdersController@saveGorder',
     'as' => 'checkout'
 ]);
 });
@@ -37,57 +37,48 @@ Route::get('/allorders', [
     'uses' => 'OrdersController@showOrders',
     'as' => 'allOrders'
 ]);
-Route::get('/order/{orderid}/{flag?}', [
+Route::get('/order/{orderid}/', [
     'uses' => 'OrdersController@showOrder',
-    'as' => 'showOrder'
+    'as' => 'showOrderU'
 ]);
 
 Route::prefix('manage')->group(function () {
     Route::get('/', 'ManageController@getUserslist')->name('manage');
     Route::get('/del/{user}', 'ManageController@deleteUser')->name('del.user');
     Route::post('/cng', 'ManageController@changeUser')->name('chg.user');
+    Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');
+    Route::get('/orders/{order}', 'ManageController@showOrder')->name('showOrderA');
+    Route::get('/order/', 'ManageController@getOrderInfo')->name('order.info');
 });
 
-Route::get('/orders/', 'ManageController@showAllorders')->name('manageOrders');
 
-Route::get('/items2', function () {
-    return view('items.index2');
-})->name('datatables');
 
-Route::get('/items3', function () {
-    return view('items.index3');
-})->name('datatables2');
+
 
 Route::middleware('can:moderator-allowed')->get('/moderator', function () {
     return view('items.moderator');
 })->name('moderator.panel');
 
-Route::get('/items2/datatables.data/{category?}/{tags?}', 'DatatablesController@anyData')->name('datatables.data');
-Route::get('/items2/order.info/', 'DatatablesController@getOrderInfo')->name('order.info');
-Route::get(
-        '/items2/{item}/{qty?}',
-    [
-    'uses' => 'DatatablesController@getAddToCart',
+
+
+Route::get('/items2/{item}/{qty?}', [
+    'uses' => 'CartController@getAddToCart',
     'as' => 'item2.addToCart',
         ]
 );
 
 Route::prefix('/cart2')->group(function () {
     Route::get('/checkout', [
-    'uses' => 'DatatablesController@getCheckout',
+    'uses' => 'CartController@getCheckout',
     'as' => 'checkout2'
 ]);
-
-    Route::get('/get', 'DatatablesController@getCartView')->name('goToCart2');
-
-
-    Route::get('/delete/{item}', [
-    'uses' => 'DatatablesController@delFromCart',
+    Route::get('/get', 'CartController@getCartView')->name('goToCart2');
+    Route::get('/del/{item}', [
+    'uses' => 'CartController@delFromCart',
     'as' => 'item2.delFromCart'
 ]);
-
-    Route::get('deleteAll', [
-    'uses' => 'DatatablesController@delCart',
+    Route::get('destroy', [
+    'uses' => 'CartController@delCart',
     'as' => 'delete.cart'
 ]);
 });
@@ -132,5 +123,24 @@ Route::get('/nbp/VUEjs', function () {
     return view('nbpVUE');
 });
 
+Route::get('/test', function () {
+    return view('test');
+});
+
+Route::get('/itemes/datatables.data/{category?}/{tags?}', 'ItemsController@getItemsDT')->name('datatables.data');
+
+Route::get('/itemes/datatables', function () {
+    return view('items.index2');
+})->name('datatables');
+
+Route::get('/itemes/datatables2', function () {
+    return view('items.index3');
+})->name('item.datatables');
+
+Route::get('/itemes/add', function () {
+    return view('items.add');
+})->name('item.add');
+
 Route::resource('item', 'ItemsController');
+
 Route::resource('address', 'AddressController');

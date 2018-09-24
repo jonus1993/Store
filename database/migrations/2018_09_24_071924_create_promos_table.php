@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CartItems extends Migration
+class CreatePromosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CartItems extends Migration
      */
     public function up()
     {
-        Schema::create('cart_items', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('cart_id')->unsigned();
-            $table->foreign('cart_id')->references('id')->on('carts')->onDelete('cascade');
+        Schema::create('promos', function (Blueprint $table) {
+            $table->increments('id');           
+            $table->string('code');
+            $table->integer('value')->unsigned();
             $table->integer('item_id')->unsigned();
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
-            $table->integer('qty')->unsigned();
             $table->timestamps();
+             $table->softDeletes();
         });
     }
 
@@ -31,6 +31,6 @@ class CartItems extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cart_items');
+        Schema::dropIfExists('promos');
     }
 }

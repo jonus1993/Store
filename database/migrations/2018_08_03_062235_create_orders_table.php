@@ -11,9 +11,11 @@ class CreateOrdersTable extends Migration {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('cart_id')->unsigned();
+            $table->foreign('cart_id')->references('id')->on('carts')->onDelete('cascade');
             $table->integer('address_id')->unsigned();
             $table->foreign('address_id')->references('id')->on('addresses');
-            $table->integer('total_items')->unsigned();
+            $table->integer('total_qty')->unsigned();
             $table->float('total_cost');
             $table->timestamps();
         });

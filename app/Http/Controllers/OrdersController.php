@@ -3,34 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Mail\OrderPlaced;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
 use App\Orders;
-use App\Cart_Items;
-use App\Cart2;
-use App\Order_Items;
 use App\Address;
-use App\GuestsOrders_Items;
+use Illuminate\Support\Facades\Session;
+use App\CartGst;
+use App\Cart;
+use App\Validation\AddressValidator;
 
 class OrdersController extends Controller
 {
     protected $userid;
 
-    public function __construct()
-    {
-        //parent::__construct();
-        $this->middleware('auth');
-//        $this->userid = auth()->id();
-    }
-
-//     public function __get($name) {
-//        if (isset($this->data[$name]))
-//    }
-
 
     public function saveOrder(Request $request)
     {
         $this->userid = auth()->id();
+        
+        $user = auth()->user();
+        
         if ($request->has('address_id')) {
             $request->validate([
                 'address_id' => 'required|numeric',
@@ -41,39 +33,22 @@ class OrdersController extends Controller
             $addressID = $address->store($request);
         }
 
-        $cart = new Cart2();
-        $cart = $cart->getCartIns($this->userid);
+        $cart_items = $user->getCart()->items()->get();
 
+        $total_qty = 0;
+        $total_cost = 0;
 
-        $cartID = $cart->id;
-
-        $totalQty = Cart_Items::where('cart_id', $cartID)->sum('qty');
-        $cartItems = Cart_Items::where('cart_id', $cartID)->get();
-
-        $totalPrc = 0;
-        foreach ($cartItems as $totPrc) {
-            $totalPrc += $totPrc['qty'] * $totPrc->item->price;
+        foreach ($cart_items as $item) {
+            $qty = $item->pivot->qty;
+            $total_qty += $qty;
+            $total_cost += $item->price * $qty;
         }
+     
+        $user->getCart()->order()->attach([$user->id => ['address_id' => $addressID, 'total_cost' => $total_cost, 'total_qty' => $total_qty]]);
 
-        //tworzenie nowego zamówienia
-        $order = new Orders();
-        $order->user_id = $this->userid;
-        $order->address_id = $addressID;
-        $order->total_items = $totalQty;
-        $order->total_cost = $totalPrc;
-        $order->save();
+        $order = $user->orders()->orderBy('created_at', 'desc')->first();
 
-
-        //kopiowanie produktów z koszyka do zamówienia
-        foreach ($cartItems as $totPrc) {
-            $orderItems = new Order_Items();
-            $orderItems->order_id = $order->id;
-            $orderItems->item_id = $totPrc->item->id;
-            $orderItems->qty = $totPrc['qty'];
-            $orderItems->save();
-        }
-
-
+       
         //wysyłanie wiadomości dla klienta
 //        $orderM = Order_Items::where('order_id', $order->id)->with('item')->get();
 //
@@ -82,36 +57,54 @@ class OrdersController extends Controller
 //                ->send(new OrderPlaced($orderM));
 
 
+        return view('orders.finished', ['orderid' => $order->id]);
+    }
+    
+    
+      public function saveGorder(Request $request)
+    {
+        if (!Session::has('cart')) {
+            return view("cart.emptycart");
+        }
+        $oldCart = Session::get('cart');
+        $cart = new CartGst($oldCart);
+        
+        $validation = new AddressValidator();
+        $validation->check($request);
+        
+        $address = new Address();
+        $address = $address->store($request);
+        
+        $cartDB =  Cart::create(['user_id' => 1, 'state' =>  0]);
+        $cartDB->order()->attach([1 => ['address_id' => $address->id, 'total_cost' => $cart->totalPrice, 'total_qty' => $cart->totalQty]]);
+               
+       
+        foreach ($cart->items as $item) {
 
-        $cart->delete();
-
+            $cartDB->items()->attach([$item['item']->id => ['qty' => $item['qty']]]);
+        }
+        
+        $request->session()->forget('cart');
+        
+        $order = Orders::whereCart_id($cartDB->id)->first();
+        
         return view('orders.finished', ['orderid' => $order->id]);
     }
 
     public function showOrders()
     {
-        $this->userid = auth()->id();
-        $orders = Orders::where('user_id', $this->userid)->get();
+        $user = auth()->user();
+        $orders = $user->orders()->get();
         return view('orders.allOrders', compact('orders'));
     }
 
-    public function showOrder($orderId, $state = 1)
+    public function showOrder($orderID)
     {
-        if ($state == 1) {
-            $order = Orders::where('id', $orderId)->first();
-            if ($order->user_id == auth()->id() || auth()->user()->isAdmin()) {
-                $order = Order_Items::where('order_id', $orderId)->with('item')->get();
-            } else {
-                return abort(403, 'Unauthorized action.');
-            }
-        } else {
-            if (auth()->user()->isAdmin()) {
-                $order = GuestsOrders_Items::where('order_id', $orderId)->with('item')->get();
-            } else {
-                return abort(403, 'Unauthorized action.');
-            }
-        }
-
+        $user = auth()->user();
+        $order = $user->orders()->whereId($orderID)->first()->cart()->first()->items()->get();
+     
         return view('orders.Order', compact('order'));
     }
+    
+
 }

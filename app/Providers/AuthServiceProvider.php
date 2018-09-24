@@ -35,9 +35,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete', 'App\Policies\ModeratorPolicy@delete');
         //gate - decyduje czy użytkownik może się dostać do sekcji dla moderatorów
         Gate::define('moderator-allowed', function ($user) {
-            $user = RolesHasUsers::where('users_id', $user->id)->get()->toArray();
 
-            if (!!array_intersect([1, 2], array_column($user, 'roles_id'))) {
+            $role = $user->roles()->get()->toArray();
+
+            if (!!array_intersect(["Admin", "Modeartor"], array_column($role, 'name'))) {
                 return true;
             } else {
                 return false;

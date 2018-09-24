@@ -3,20 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Items;
-use App\Tags;
-use App\ItemTag;
-use App\Cart_Items;
 use App\Categories;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\ItemAddPost;
+use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Input;
+use Yajra\Datatables\Datatables;
+use App\Tags;
 
 class ItemsController extends Controller
 {
     public function __construct()
     {
         $this->middleware('can:delete, App\User')->only('destroy');
-        $this->middleware('can:moderator-allowed')->except('show', 'index');
+        $this->middleware('can:moderator-allowed')->except('show', 'index','getItemsDT');
     }
 
 //    public function callAction($method, $parameters)
@@ -82,7 +83,7 @@ class ItemsController extends Controller
 
         //dodawnia wiadomości po wykonanej akcji
         Session::flash('message', trans('messages.itemCreated'));
-        return redirect()->route('item.create');
+        return redirect()->route('item.add');
     }
 
     public function edit(Items $item)
@@ -109,4 +110,37 @@ class ItemsController extends Controller
         Session::flash('message', trans("Pomyślnie usunięto"));
         return redirect()->back();
     }
+    
+         //funkcja dla DataTables, pobiera dane ajaxem
+    public function getItemsDT()
+    {
+        $catInput = Input::get('categories');
+        $tagInput = Input::get('tags');
+
+        $items = Items::with('category')
+                ->with('tags');
+
+        if ($catInput != null) {
+            $items->whereIn('category_id', $catInput);
+            
+            //tworzenie ciasteczka dla kategorii, żeby pozaznaczać autmatycznie wybrane checkboxy
+            setcookie('categories', "");
+            $cookieCat = "";
+            foreach ($catInput as $catIndex) {
+                $cookieCat = $cookieCat.$catIndex . ',';
+            }
+            setcookie('categories', $cookieCat);
+        }
+        if ($tagInput != null) {
+            $tagIds = Tags::select('id')->whereIn('friend_name', $tagInput)->get();
+            $items->whereHas('tags', function ($q) use ($tagIds) {
+                $q->whereIn('tag_id', $tagIds);
+            });
+        }
+        
+
+        return Datatables::of($items)->make();
+    }
+    
+   
 }

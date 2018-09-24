@@ -14,23 +14,18 @@ Your order
             <th>PRICE</th>
             <th>QUANTYTY</th>
             <th>COST</th>
-
         </tr>
     </thead>
     <tbody>
         @php($i = 1)
         @foreach($order as $item)
-
         <tr class='clickable-row' data-href=''> 
             <td>{{ $i++ }}</td>
-            <td>{{ $item->item->name }}</td>
-            <td>{{ $item->item->price }}</td>
-            <td>{{ $item->qty }}</td>
-            <td>{{ $item->item->price*$item->qty }}</td>
-
-
+            <td>{{ $item->name }}</td>
+            <td>{{ $item->price }}</td>
+            <td>{{ $item->pivot->qty }}</td>
+            <td>{{ $item->price*$item->pivot->qty }}</td>
         </tr>
-
         @endforeach
     </tbody>
     <tfoot> 
@@ -41,7 +36,7 @@ Your order
             <th></th>
             <th></th>
         </tr>
-        </tfood>
+    </tfood>
 </table>
 
 @stop

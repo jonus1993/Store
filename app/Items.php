@@ -18,7 +18,7 @@ class Items extends Model
 {
     use Rating;
     
-        /**
+    /**
      * The accessors to append to the model's array form.
      *
      * @var array
@@ -48,6 +48,8 @@ class Items extends Model
             File::delete('photos/' . $item->photo_name);
             $item->photo_name = $this->addPhoto($request);
         }
+        
+        $item->is_deleted = 0;
         $item->save();
            
         //wysłanie wiadomości dla subskryb <- jakoś tak antów
@@ -103,6 +105,18 @@ class Items extends Model
     {
         return $this->belongsTo(Categories::class, 'category_id');
     }
+    
+    public function cart()
+    {
+        return $this->belongsToMany(Cart::class, 'cart_items', 'item_id', 'cart_id')->withPivot('qty')->withTimestamps();
+    }
+    
+     public function promo()
+    {
+        return $this->hasMany(Promo::class,'item_id');
+    }
+    
+    
 
     protected static function boot()
     {

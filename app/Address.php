@@ -16,14 +16,17 @@ class Address extends Model {
         $input = $request->all();
         if($address == null)
              $address = new Address();
-        $address->user_id = auth()->id();
+        $userID = auth()->id();
+        if($userID == null)
+            $userID = 1;       
+        $address->user_id = $userID;
         $address->fill($input)->save();
         return $address;
     }
     
       public function getAddresses() {
-        $userid = auth()->id();
-        return Address::where('user_id',  $userid)->get();
+        $userID = auth()->id();
+        return Address::where('user_id',  $userID)->get();
     }
 
     protected $fillable = [

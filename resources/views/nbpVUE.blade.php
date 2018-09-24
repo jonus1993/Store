@@ -3,11 +3,15 @@
 NBP by VUE
 @endsection
 @section('styles')
-
+<style>
+[v-cloak] {
+  display: none;
+}
+</style>
 @endsection
 @section('content')
 
-<div id="Itemlist">
+<div v-cloak id="Itemlist">
     <h1>Waluty</h1>
     <section v-if="errored">
         <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>

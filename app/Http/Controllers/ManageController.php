@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\RolesHasUsers;
 use App\Roles;
+use App\Orders;
+use App\Items;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class ManageController extends Controller
 {
@@ -58,12 +57,23 @@ class ManageController extends Controller
 
     public function showAllorders()
     {
-        $guests = DB::table('guests_orders')->select('id', 'total_cost', 'total_items', 'created_at', DB::raw('"guest" AS new_column'));
-
-        $orders = DB::table('orders')
-                        ->select('id', 'total_cost', 'total_items', 'created_at', DB::raw('"user" AS new_column'))
-                        ->union($guests)->get();
+        $orders = Orders::all();
 
         return view('orders.allOrders', compact('orders'));
+    }
+    
+    public function showOrder(Orders $order)
+    {
+        $order = $order->cart()->first()->items()->get();
+       
+        return view('orders.Order', compact('order'));
+    }
+    
+    public function getOrderInfo(Request $request)
+    {
+        $item = Items::find($request->id);
+        $orders = $item->cart()->get();
+      
+        return view('orders.table', compact('orders'));
     }
 }

@@ -21,13 +21,13 @@ All yourd orders
     <tbody>
         @foreach($orders as $order)
 
-        <tr class='clickable-row' data-href='{{route('showOrder', [$order->id, ($order->new_column == "guest") ? 2 : ""]) }}'> 
+        <tr class='clickable-row' data-href="{{ route('showOrder'.(auth()->user()->isAdmin() ? 'A' : 'U'), $order->id) }}"> 
             <td>{{ $order->id }}</td>
             <td>{{ $order->created_at }}</td>
-            <td>{{ $order->total_items }}</td>
+            <td>{{ $order->total_qty }}</td>
             <td>{{ $order->total_cost }}</td>
              @if(auth()->user()->isAdmin())
-            <td>{{ $order->new_column }}</td>
+            <td>{{ $order->user_id }}</td>
             @endif
         </tr>
 
@@ -39,7 +39,10 @@ All yourd orders
             <th></th>
             <th></th>
             <th></th>
+              @if(auth()->user()->isAdmin())
+
             <th></th>
+             @endif
         </tr>
         </tfood>
 </table>
@@ -54,6 +57,7 @@ All yourd orders
 <script>
 $(document).ready(function () {
     $('#items-table').DataTable({
+        serverSide: false,
         "language": {
             "lengthMenu": "Wyświetl _MENU_ pozycji na stronie",
             "zeroRecords": "Nic nie znaleziono",

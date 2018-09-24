@@ -75,8 +75,7 @@ height: auto;
                     <th>PRICE</th>
                     <th>CATEGORY</th>
                     <th>PROMOS</th>
-                    <th>EDIT/DEL</th>
-                    
+                    <th>EDIT/DEL</th>                   
                 </tr>
             </thead>
              <tfoot> 
@@ -87,8 +86,7 @@ height: auto;
                     <th>PRICE</th>
                     <th>CATEGORY</th>
                     <th>PROMOS</th>
-                    <th>EDIT/DEL</th>
-                    
+                    <th>EDIT/DEL</th>                    
                 </tr>
             </tfoot>
         </table>

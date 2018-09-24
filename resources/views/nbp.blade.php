@@ -9,9 +9,6 @@ NBP
 @section('content')
 
 <h1>Waluty</h1>
-<div id="app">
-<example-component></example-component>
-</div>
 <table class="table table-active table-bordered" id="items-table">
     <thead> 
         <tr>

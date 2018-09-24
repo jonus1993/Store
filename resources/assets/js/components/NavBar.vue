@@ -7,6 +7,7 @@
 
                     <div class="card-body">
                         I'm an example component.
+                           <a class="nav-link" href="">NBPVUE</a>
                     </div>
                 </div>
             </div>

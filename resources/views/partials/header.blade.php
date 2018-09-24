@@ -17,14 +17,16 @@
                 <a class="nav-link" href="{{ route('item.index') }}">Items</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url('/items3') }}">ItemsDT</a>
+                <a class="nav-link" href="{{ route('item.datatables') }}">ItemsDT</a>
             </li>
             @if(Route::has('login'))
             <!--jeżeli użytkownik autoryzowany-->
             @if(Auth::check())
 
             @can('moderator-allowed', Auth::user())
-           
+           <li class="nav-item">
+                <a href="{{route('item.add')}}" class="nav-link">Add Item</a>
+            </li>
             <li class="nav-item">
                 <a href="{{route('moderator.panel')}}" class="nav-link">Manage Items</a>
             </li>

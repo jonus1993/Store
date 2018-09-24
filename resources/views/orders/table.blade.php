@@ -5,7 +5,7 @@
             <th>ORDER NO.</th>         
             <th>DATE</th>
             <th>QUANTYTY</th>
-            <th>COST</th>
+
         </tr>
     </thead>
     <tbody>
@@ -13,10 +13,11 @@
         @foreach($orders as $order)
         <tr> 
             <td>{{ $i++ }}</td>
-            <td>{{ $order->order_id }}</td>
-            <td>{{ $order->created_at }}</td>
-            <td>{{ $order->qty }}</td>
-             <td>{{ $order->item->price*$order->qty }}</td>
+           
+            <td>{{$order->id}}</td>
+             <td>{{$order->updated_at}}</td>
+            <td>{{$order->pivot->qty}}</td>
+
         </tr>
         @endforeach
     </tbody>
@@ -26,7 +27,7 @@
             <th></th>
             <th></th>
             <th></th>   
-            <th></th>  
+           
         </tr>
         </tfood>
 </table>

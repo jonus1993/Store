@@ -151,6 +151,7 @@ return [
         Ghanem\Rating\RatingServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         'App\Providers\ComposerServiceProvider',
+        Barryvdh\Debugbar\ServiceProvider::class,
         
 
         /*
@@ -215,6 +216,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
 ];

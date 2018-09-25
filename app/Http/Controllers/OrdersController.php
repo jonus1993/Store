@@ -11,26 +11,33 @@ use Illuminate\Support\Facades\Session;
 use App\CartGst;
 use App\Cart;
 use App\Validation\AddressValidator;
+use App\Promo;
 
 class OrdersController extends Controller
 {
-    protected $userid;
-
-
     public function saveOrder(Request $request)
     {
-        $this->userid = auth()->id();
-        
         $user = auth()->user();
         
         if ($request->has('address_id')) {
             $request->validate([
                 'address_id' => 'required|numeric',
+                
             ]);
             $addressID = $request->input('address_id');
         } else {
             $address = new Address();
             $addressID = $address->store($request);
+        }
+        
+        
+        if ($request->has('coupon')) {
+        
+         $request->validate([
+                'coupon' => 'numeric',                
+            ]);
+         
+         $discount = Promo::find($request->input('coupon'));
         }
 
         $cart_items = $user->getCart()->items()->get();
@@ -41,6 +48,9 @@ class OrdersController extends Controller
         foreach ($cart_items as $item) {
             $qty = $item->pivot->qty;
             $total_qty += $qty;
+            if($item->id == $discount->item_id)
+                $total_cost += $item->price *((100-$discount->value)/100) * $qty;
+            else
             $total_cost += $item->price * $qty;
         }
      
@@ -61,7 +71,7 @@ class OrdersController extends Controller
     }
     
     
-      public function saveGorder(Request $request)
+    public function saveGorder(Request $request)
     {
         if (!Session::has('cart')) {
             return view("cart.emptycart");
@@ -80,7 +90,6 @@ class OrdersController extends Controller
                
        
         foreach ($cart->items as $item) {
-
             $cartDB->items()->attach([$item['item']->id => ['qty' => $item['qty']]]);
         }
         
@@ -105,6 +114,4 @@ class OrdersController extends Controller
      
         return view('orders.Order', compact('order'));
     }
-    
-
 }

@@ -15,9 +15,13 @@ class Promo extends Model
     ];
         
     protected $dates = ['deleted_at'];
+       protected $hidden = array('pivot');
+
 
      
        public function user() {
         return $this->belongsToMany(User::class)->withTimestamps();
     }
+    
+
 }

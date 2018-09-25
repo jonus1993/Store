@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
     
+    
     protected $dates = ['deleted_at'];
 
     /**
@@ -31,7 +32,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token'
     ];
 
     public function roles()
@@ -56,7 +57,7 @@ class User extends Authenticatable
     {
           return $this->belongsToMany(Promo::class,'promo_user','user_id','promo_id');
     } 
-   
+
     
     public function cart()
     {
@@ -77,4 +78,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Address::class);
     }
+    
+   
 }

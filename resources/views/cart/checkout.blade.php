@@ -35,7 +35,7 @@
             <th>PRICE</th>
         </tr>
 
-        @foreach($cart['cart_items'] as $item)
+        @foreach($cart_items as $item)
         <tr>
            <td>{{ $item->id }}</td>
             <td>{{ $item->name }}</td>
@@ -46,24 +46,25 @@
         <tr>
             <th>ID</th>
             <th>TOTAL</th>
-            <th>{{ $cart['totalQty'] }}</th>
-            <th>{{ $cart['totalPrice'] }}</th>
+            <th>{{ $totalQty }}</th>
+            <th>{{ $totalPrice }}</th>
         </tr>
     </table>
     <h3>Choose one of Your coupons to low a price</h3>
- @foreach($cart['promos'] as $promo)
+ @foreach($promos as $promo)
    
     <div class="form-check">
       <label class="form-check-label" for="{{$promo->id}}">
-      <input class="form-check-input" type="radio" name="exampleRadios" id="{{$promo->id}}" value="{{$promo->code}}" checked>
+      <input class="form-check-input" type="radio" name="coupon" id="{{$promo->id}}" value="{{$promo->id}}" checked>
      
       Value: <strong>{{$promo->value}}%</strong> 
                     {{$promo->code}}       
         
       </label>
     </div>
-        @endforeach
-        <span> OFF</span>
+      
+        <span> {{$promo->discount}}   OFF</span>
+          @endforeach
     <div style="float: right;">
         <button class="btn btn-success" type="submit">MAKE ORDER</button></div>       
 </form>

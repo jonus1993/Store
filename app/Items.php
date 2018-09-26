@@ -116,6 +116,10 @@ class Items extends Model
         return $this->hasMany(Promo::class,'item_id');
     }
     
+    public function rating() {
+        return $this->hasMany('\Ghanem\Rating\Models\Rating','ratingable_id');
+    }
+    
     
 
     protected static function boot()

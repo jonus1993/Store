@@ -55,20 +55,14 @@ Colours
                 <th>CATEGORY</th>
                 <th>PROMOS</th>
                 <th>TO CART</th>
-                @auth
-                @can('moderator-allowed', Auth::user())
-                <th>EDIT</th>
-                @endcan
-                @if(auth()->user()->isAdmin())
-                <th>DELETE</th>
-                @endif
-                @endauth
+            
             </tr>
+         
             @foreach($items as $item)
             <tr>
                 <td>{{ $item->id }}</td>
                 <td>{{ $item->name }}</td>
-                <td>{{ number_format($item->avgRating, 1).' / '.$item->countPositive }}</td>
+                <td>{{ number_format($item->rate, 1).' / '.$item->rate_sum }}</td>
                 <td>{{ $item->price }}</td>
                 <td>{{ $item->category->name }}</td>
                 <td>@foreach($item->tags as $tag){{
@@ -82,23 +76,7 @@ Colours
                     <button type="button" class="btn btn-dark" disabled>Out of stock</button>
                     @endif
                 </td>
-                @auth
-
-
-
-                @can('moderator-allowed', Auth::user())
-                <td><a class="btn btn-info" href="{{route('item.edit', ['id' => $item->id])}}">EDIT</a></td>
-                @endcan
-                @if(auth()->user()->isAdmin())
-                
-            
-
-                <td>     {{ Form::open(['method' => 'DELETE', 'route' => ['item.destroy', $item]]) }}
-                {{ Form::submit('DEL', ['class' => 'btn btn-danger']) }}
-                {{ Form::close() }}</td>
-
-                @endif
-                @endauth
+           
 
 
             </tr>

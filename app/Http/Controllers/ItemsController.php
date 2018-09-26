@@ -34,7 +34,7 @@ class ItemsController extends Controller
     public function index(Request $request)
     {
         if (!$request->has('tags') && !$request->has('categories')) {
-            $items = Items::paginate(11);
+            $items = Items::with('category')->with('tags')->with('rating')->paginate(10);
         } else {
             $tagInput = $request->input('tags');
             $catInput = $request->input('categories');
@@ -51,12 +51,15 @@ class ItemsController extends Controller
                         $q->whereIn('tag_id', $tagIds);
                     })
                     ->paginate(11);
+        }        
+        foreach ($items->items() as $item){
+            if($item->rating->first() != null){
+            $count = $item->rating->count('rating');
+            $rate = $item->rating->sum('rating')/$count;
+            $item->rate = $rate;
+            $item->rate_sum = $count;}
         }
-        
-        
-  
-
-        return view('items.index')->with('items', $items);
+         return view('items.index', compact('items'));
     }
 
     public function show(Items $item)

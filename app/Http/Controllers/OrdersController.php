@@ -28,8 +28,7 @@ class OrdersController extends Controller
         } else {
             $address = new Address();
             $addressID = $address->store($request);
-        }
-        
+        }       
         
         if ($request->has('coupon')) {
         
@@ -39,8 +38,9 @@ class OrdersController extends Controller
          
          $discount = Promo::find($request->input('coupon'));
         }
+        $cart = $user->getCart();
 
-        $cart_items = $user->getCart()->items()->get();
+        $cart_items = $cart->items()->get();
 
         $total_qty = 0;
         $total_cost = 0;
@@ -54,11 +54,11 @@ class OrdersController extends Controller
             $total_cost += $item->price * $qty;
         }
      
-        $user->getCart()->order()->attach([$user->id => ['address_id' => $addressID, 'total_cost' => $total_cost, 'total_qty' => $total_qty]]);
+        $cart->order()->attach([$user->id => ['address_id' => $addressID, 'total_cost' => $total_cost, 'total_qty' => $total_qty]]);
 
         $order = $user->orders()->orderBy('created_at', 'desc')->first();
 
-       
+
         //wysyłanie wiadomości dla klienta
 //        $orderM = Order_Items::where('order_id', $order->id)->with('item')->get();
 //

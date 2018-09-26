@@ -127,7 +127,7 @@ Route::get('/test', function () {
     return view('test');
 });
 
-Route::get('/itemes/datatables.data/{category?}/{tags?}', 'ItemsController@getItemsDT')->name('datatables.data');
+Route::get('/itemes/datatables.data', 'ItemsController@getItemsDT')->name('datatables.data');
 
 Route::get('/itemes/datatables', function () {
     return view('items.index2');

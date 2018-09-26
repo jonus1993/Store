@@ -170,7 +170,7 @@ var table = $('#items-table').DataTable({
            
        }
                                   },
-        {data: 'avgRating',
+        {data: 'rate',
         defaultContent: '0',
         render: function ( data, type, row ) {
             if (data == null)
@@ -180,7 +180,7 @@ var table = $('#items-table').DataTable({
             return num;
             }
         },
-        {data: 'countPositive'},
+        {data: 'rate_sum'},
         {data: 'category.name'},
         {data: 'tags[].name',
          render: function (data, type, row) {

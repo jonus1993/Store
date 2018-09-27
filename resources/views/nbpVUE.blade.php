@@ -78,12 +78,7 @@ NBP by VUE
                     .finally(() => this.loading = false)
             }
         });  
-        
-        $('#items-table').DataTable({
-        processing: true,
-        serverSide: false,
-        responsive: true,
- });
+
     });
   
 

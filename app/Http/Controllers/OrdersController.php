@@ -37,10 +37,8 @@ class OrdersController extends Controller
          
             $discount = Promo::find($request->input('coupon'));
         }
-     
                 
         $cart = $user->getCart();
-
         $cart_items = $cart->items()->get();
 
         $total_qty = 0;

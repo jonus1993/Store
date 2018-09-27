@@ -95,17 +95,6 @@ if(Cookies.get('categories'))
 else
     Cookies.remove('categories');
 
-//$(".kateg").change(function() {
-//    categories = [];
-//    $('.kateg:checked').each(function () {
-//        categories.push(this.value);           
-//    });
-//    
-//    Cookies.set('categories', categories.join(','));
-//});
-
-
-
 //zaznaczanie checkboxów z tagami
 if(Cookies.get('tags'))
     $.each(Cookies.get('tags').split(','), function(i, val) {

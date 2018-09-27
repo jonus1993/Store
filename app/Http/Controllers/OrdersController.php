@@ -28,30 +28,35 @@ class OrdersController extends Controller
         } else {
             $address = new Address();
             $addressID = $address->store($request);
-        }       
+        }
         
         if ($request->has('coupon')) {
-        
-         $request->validate([
-                'coupon' => 'numeric',                
+            $request->validate([
+                'coupon' => 'numeric',
             ]);
          
-         $discount = Promo::find($request->input('coupon'));
+            $discount = Promo::find($request->input('coupon'));
         }
+     
+                
         $cart = $user->getCart();
 
         $cart_items = $cart->items()->get();
 
         $total_qty = 0;
         $total_cost = 0;
-
+        
         foreach ($cart_items as $item) {
             $qty = $item->pivot->qty;
             $total_qty += $qty;
-            if($item->id == $discount->item_id)
-                $total_cost += $item->price *((100-$discount->value)/100) * $qty;
-            else
-            $total_cost += $item->price * $qty;
+            $item_price = $item->price * $qty;
+            if (isset($discount) && $item->id == $discount->item_id) {
+                $total_cost += $item_price *((100-$discount->value)/100);
+                $discount->used = 1;
+                $discount->save();
+            } else {
+                $total_cost += $item->price * $qty;
+            }
         }
      
         $cart->order()->attach([$user->id => ['address_id' => $addressID, 'total_cost' => $total_cost, 'total_qty' => $total_qty]]);

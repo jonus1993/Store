@@ -15,11 +15,12 @@ class PromoUser extends Migration
     {
         Schema::create('promo_user', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
+            $table->boolean('used');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('promo_id')->unsigned();
             $table->foreign('promo_id')->references('id')->on('promos')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

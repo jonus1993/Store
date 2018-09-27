@@ -50,7 +50,9 @@
             <th>{{ $totalPrice }}</th>
         </tr>
     </table>
+    @if($promos)
     <h3>Choose one of Your coupons to low a price</h3>
+    <div class="row">
  @foreach($promos as $promo)
    
     <div class="form-check">
@@ -61,10 +63,17 @@
                     {{$promo->code}}       
         
       </label>
+      <br>
+      <span> {{number_format($promo->discount,2)}}   OFF</span>
     </div>
       
-        <span> {{$promo->discount}}   OFF</span>
+        
+         &emsp;
           @endforeach
+          
+          </div>
+          @endif
+          
     <div style="float: right;">
         <button class="btn btn-success" type="submit">MAKE ORDER</button></div>       
 </form>

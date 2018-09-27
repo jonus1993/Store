@@ -72,7 +72,7 @@ class CartController extends Controller
         // jak nie ma to pustke zwracamy
         if ($cart === null) {
             return view('cart.emptycart');
-        }      
+        }
         $cart_items = $cart->items()->with('promo')->get();
 
         /* @var $cart_items \Illuminate\Database\Eloquent\Collection      */
@@ -101,45 +101,31 @@ class CartController extends Controller
         $totalPrice = 0;
 
         $promos = array();
-        $user_promos = $this->user->promo()->get()->toArray();
-
+        $user_promos = $this->user->promo()->get();
+       
         foreach ($cart_items as $item) {
             $qty = $item->pivot->qty;
             $totalQty += $qty;
-            $totalPrice += $item->price * $qty;
-            
-            if (!$item->promo->isEmpty()) {
-                $promo = $item->promo->toArray();
+            $item_price = $item->price * $qty;
+            $totalPrice += $item_price;
+            $item_promos = $item->promo;
+            if (!$item_promos->isEmpty()) {
+                $promo_match = $item_promos->intersect($user_promos);
 
-
-                if (in_array($promo[0], $user_promos)) {
-                    $promo = $item->promo->first();
-                    $promo->discount = ($item->price * ($promo->value/100)) * $qty;
-                    array_push($promos, $promo);
+                if (!$promo_match->isEmpty()) {
+                    foreach ($promo_match as $promo) {
+                        $promo->discount = $item_price * $promo->value / 100;
+                        array_push($promos, $promo);
+                    }
                 }
-//                   dd($item->promo->toArray());
-//                   dd($user_promos);
-//                    if($user_promos->contains('Promo', $item->promo[0]))
-//                        dd('cc');
-//                $filtered = $user_promos->filter(function ($value, $key) {
-//
-//                    return $value == $item->promo;
-//                });
-//                dd($filtered);
-//                $filtered->all();
-//                          array_push($promos, $promo);
-               
-                
-//                $promo = $user->promo()->whereItem_id($item->id)->first();
-//
-//                if ($promo != null) {
-//                      $promo->discount = ($item->price * ($promo->value/100)) * $qty;
-//
-//
-//                     array_push($promos, $promo);
+//                if (in_array($promo[0], $user_promos)) {
+//                    $promo = $item->promo->first();
+//                    $promo->discount = ($item->price * ($promo->value/100)) * $qty;
+//                    array_push($promos, $promo);
 //                }
             }
         }
+
         
         return view('cart.checkout', compact('cart_items', 'totalQty', 'totalPrice', 'promos'));
     }

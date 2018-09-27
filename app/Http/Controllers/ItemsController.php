@@ -53,8 +53,7 @@ class ItemsController extends Controller
         } else {
             $items = Items::with('category')->with('tags')->with('rating')->paginate(11);
         }
-        
-//        dd($items);
+
         $items = $this->getRates($items);
                 
         return view('items.index', compact('items'));
@@ -118,21 +117,6 @@ class ItemsController extends Controller
         $catInput = Input::get('categories');
         $tagInput = Input::get('tags');
         
-//        $items = Items::with('category')
-//                ->with('tags')->with('rating')->get();
-//
-//        if ($catInput != null) {
-//            $items = $items->whereIn('category_id', $catInput);
-//
-//            //tworzenie ciasteczka dla kategorii, żeby pozaznaczać autmatycznie wybrane checkboxy
-//            setcookie('categories', "");
-//            $cookieCat = "";
-//            foreach ($catInput as $catIndex) {
-//                $cookieCat = $cookieCat.$catIndex . ',';
-//            }
-//            setcookie('categories', $cookieCat);
-//        }
-//
 //        if ($tagInput != null) {
 //            $collection = new \Illuminate\Support\Collection;
 //            $tags = Tags::whereIn('friend_name', $tagInput)->with('items')->get();
@@ -143,26 +127,28 @@ class ItemsController extends Controller
 //
 //            $items = $collection->collapse();
 //        }
-        
-//        dd($items);
-        
-        if ($tagInput != null && $catInput != null) {
+
+        $items = Items::with('category')->with('tags')->with('rating');
+        setcookie('categories', "");
+        if ($catInput != null) {
+            $items->whereIn('category_id', $catInput);
+           
+            $cookieCat = "";
+            foreach ($catInput as $catIndex) {
+                $cookieCat = $cookieCat.$catIndex . ',';
+            }
+            setcookie('categories', $cookieCat);
+        }
+          
+        if ($tagInput != null) {
             $tagIds = Tags::select('id')->whereIn('friend_name', $tagInput)->get();
             
-            $items = Items::whereIn('category_id', $catInput)->whereHas('tags', function ($q) use ($tagIds) {
+            $items->whereHas('tags', function ($q) use ($tagIds) {
                 $q->whereIn('tag_id', $tagIds);
-            })->with('category')->with('tags')->with('rating')->get();
-        } elseif ($catInput != null) {
-            $items = Items::whereIn('category_id', $catInput)->with('category')->with('tags')->with('rating')->get();
-        } elseif ($tagInput != null) {
-            $tagIds = Tags::select('id')->whereIn('friend_name', $tagInput)->get();
-            $items = Items::whereHas('tags', function ($q) use ($tagIds) {
-                $q->whereIn('tag_id', $tagIds);
-            })->with('category')->with('tags')->with('rating')->get();
-        } else {
-            $items = Items::with('category')->with('tags')->with('rating')->get();
+            });
         }
-        $items = $this->getRates($items);
+
+        $items = $this->getRates($items->get());
   
         return Datatables::of($items)->make();
     }

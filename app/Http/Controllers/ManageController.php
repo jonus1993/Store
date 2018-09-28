@@ -6,6 +6,7 @@ use App\User;
 use App\Roles;
 use App\Orders;
 use App\Items;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -13,7 +14,6 @@ class ManageController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
         $this->middleware('admin');
     }
 
@@ -22,7 +22,7 @@ class ManageController extends Controller
         $roles = Roles::all();
         $users = User::withTrashed()->with('roles')->get();
 
-        return view('manage', compact('users', 'roles'));
+        return view('manage.users', compact('users', 'roles'));
     }
 
     public function deleteUser(User $user)
@@ -76,4 +76,6 @@ class ManageController extends Controller
       
         return view('orders.table', compact('orders'));
     }
+    
+  
 }

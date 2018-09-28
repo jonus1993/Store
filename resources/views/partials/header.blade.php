@@ -1,5 +1,5 @@
-<nav  class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{{url('/')}}">Home</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{{ url('/') }}">Home</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -19,28 +19,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('item.datatables') }}">ItemsDT</a>
             </li>
-            @if(Route::has('login'))
+
             <!--jeżeli użytkownik autoryzowany-->
             @if(Auth::check())
-
-            @can('moderator-allowed', Auth::user())
-           <li class="nav-item">
-                <a href="{{route('item.add')}}" class="nav-link">Add Item</a>
-            </li>
-            <li class="nav-item">
-                <a href="{{route('moderator.panel')}}" class="nav-link">Manage Items</a>
-            </li>
-            @endcan
-            <!--jeżeli użytkownik to admin -->
-            @if(auth()->user()->isAdmin())
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('manage') }}">Manage Users</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('manageOrders') }}">Manage Orders</a>
-            </li>
-            @endif
-
 
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('goToCart2') }}">Shopping Cart
@@ -50,7 +31,7 @@
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{Auth::user()->name}}
+                    {{ Auth::user()->name }}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="{{ url('/home') }}">MyAccount</a>
@@ -62,11 +43,27 @@
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+
                 </div>
             </li>
+            @can('moderator-allowed', Auth::user())
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Manage
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ route('item.add') }}">Add Item</a>
+                    <a class="dropdown-item" href="{{ route('moderator.panel') }}">Manage Items</a>
+                    @if(auth()->user()->isAdmin())
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('manage') }}">Manage Users</a>
+                    <a class="dropdown-item" href="{{ route('manageOrders') }}">Manage Orders</a>
+                    <a class="dropdown-item" href="{{ route('promo.index') }}">Manage Discounts</a>
 
+                    @endif
+                </div>
+            </li>
+            @endcan
 
             <!--jeżeli użytkownik nieautoryzowany-->
             @else
@@ -82,12 +79,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('register') }}">Register</a>
             </li>
-            @endif
-            @endif
 
-
+            @endif
 
         </ul>
-
     </div>
 </nav>

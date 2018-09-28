@@ -5,7 +5,6 @@
             <th>ORDER NO.</th>         
             <th>DATE</th>
             <th>QUANTYTY</th>
-
         </tr>
     </thead>
     <tbody>

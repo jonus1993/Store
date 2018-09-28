@@ -11,7 +11,7 @@ class Orders extends Model
     ];
      
     public function cart() {
-        return $this->belongsTo(Cart2::class);
+        return $this->belongsTo(Cart::class);
     }
     
 }

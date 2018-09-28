@@ -37,6 +37,7 @@ Route::get('/allorders', [
     'uses' => 'OrdersController@showOrders',
     'as' => 'allOrders'
 ]);
+
 Route::get('/order/{orderid}/', [
     'uses' => 'OrdersController@showOrder',
     'as' => 'showOrderU'
@@ -143,4 +144,7 @@ Route::get('/itemes/add', function () {
 
 Route::resource('item', 'ItemsController');
 
+Route::get('/promos/{id}', 'PromoController@restore')->name('promo.restore');
+
+Route::resource('promo', 'PromoController');
 Route::resource('address', 'AddressController');

@@ -1,7 +1,5 @@
 @extends('layouts.master')
-@section('title')
-All yourd orders
-@endsection
+@section('title', 'All yourd orders')
 @section('styles')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
 @endsection
@@ -13,25 +11,31 @@ All yourd orders
             <th>DATE</th>
             <th>ITEMS AMOUNT</th>
             <th>ORDER COST</th>
-             @if(auth()->user()->isAdmin())
             <th>WHO</th>
-            @endif
         </tr>
     </thead>
     <tbody>
-        @foreach($orders as $order)
-
-        <tr class='clickable-row' data-href="{{ route('showOrder'.(auth()->user()->isAdmin() ? 'A' : 'U'), $order->id) }}"> 
+           @if(auth()->user()->isAdmin())
+          @foreach($orders as $order)
+            <tr class='clickable-row' data-href="{{ route('showOrderA', $order->id) }}"> 
             <td>{{ $order->id }}</td>
             <td>{{ $order->created_at }}</td>
             <td>{{ $order->total_qty }}</td>
             <td>{{ $order->total_cost }}</td>
-             @if(auth()->user()->isAdmin())
             <td>{{ $order->user_id }}</td>
-            @endif
         </tr>
 
         @endforeach
+        @else
+         <tr class='clickable-row' data-href="{{ route('showOrderU', $order->id) }}"> 
+            <td>{{ $order->id }}</td>
+            <td>{{ $order->created_at }}</td>
+            <td>{{ $order->total_qty }}</td>
+            <td>{{ $order->total_cost }}</td>
+            <td>ME</td>
+        </tr>
+        
+         @endif
     </tbody>
     <tfoot> 
         <tr>
@@ -39,10 +43,6 @@ All yourd orders
             <th></th>
             <th></th>
             <th></th>
-              @if(auth()->user()->isAdmin())
-
-            <th></th>
-             @endif
         </tr>
         </tfood>
 </table>

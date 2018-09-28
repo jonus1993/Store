@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Promo extends Model
-{
-    
+{  
         use SoftDeletes; 
         
         protected $fillable = [
@@ -15,13 +14,17 @@ class Promo extends Model
     ];
         
     protected $dates = ['deleted_at'];
-       protected $hidden = array('pivot');
+    
+    protected $hidden = array('pivot');
 
-
-     
-       public function user() {
-        return $this->belongsToMany(User::class)->withTimestamps();
+    public function user() {
+        return $this->belongsToMany(User::class)->withPivot('used')->withTimestamps();
     }
     
+     public function item() {
+        return $this->belongsTo(Items::class);
+    }
+    
+        
 
 }

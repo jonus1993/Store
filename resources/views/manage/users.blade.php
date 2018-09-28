@@ -1,7 +1,5 @@
 @extends('layouts.master')
-@section('title')
-Manage Users
-@endsection
+@section('title','Manage Users')
 @section('content')
 
 <div class="w3-container w3-teal">

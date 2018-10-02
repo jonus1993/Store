@@ -7,6 +7,7 @@ use Ghanem\Rating\Traits\Ratingable as Rating;
 use Illuminate\Http\Request;
 use App\Notifications\PriceDown;
 use App\NotifiPrice;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Database\Eloquent\Builder;
@@ -113,7 +114,10 @@ class Items extends Model
     
      public function promo()
     {
-        return $this->hasMany(Promo::class,'item_id');
+       
+        $current_time = Carbon::now()->toDateTimeString();
+        $zero_time = "0000-00-00 00:00:00" ;
+        return $this->hasMany(Promo::class,'item_id')->where('start_at','<',$current_time)->where('end_at','>',$current_time)->orWhere('end_at',$zero_time);
     }
     
     public function rating() {

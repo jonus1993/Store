@@ -50,8 +50,7 @@ class OrdersController extends Controller
             $item_price = $item->price * $qty;
             if (isset($discount) && $item->id == $discount->item_id) {
                 $total_cost += $item_price *((100-$discount->value)/100);
-                $discount->user()->sync([$user->id => ['used' => 1]]);
-                
+                $discount->user()->sync([$user->id => ['used' => 1]]);                
             } else {
                 $total_cost += $item->price * $qty;
             }

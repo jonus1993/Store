@@ -7,8 +7,8 @@
 <h1>Finish your order!</h1>
 @if ($errors->any())
 
-    <div class="alert alert-danger">
-       <h4 style="color: red">Need to put an address.</h4>
+<div class="alert alert-danger">
+    <h4 style="color: red">Need to put an address.</h4>
 </div>
 @endif
 
@@ -37,7 +37,7 @@
 
         @foreach($cart_items as $item)
         <tr>
-           <td>{{ $item->id }}</td>
+            <td>{{ $item->id }}</td>
             <td>{{ $item->name }}</td>
             <td>{{ $item->pivot->qty }}</td>
             <td>{{ $item->price*$item->pivot->qty }}</td>
@@ -47,35 +47,29 @@
             <th>ID</th>
             <th>TOTAL</th>
             <th>{{ $totalQty }}</th>
-            <th>{{ $totalPrice }}</th>
+            <th id="totalPrice">{{ $totalPrice }}</th>
         </tr>
     </table>
     @if($promos)
     <h3>Choose one of Your coupons to low a price</h3>
     <div class="row">
- @foreach($promos as $promo)
-   
-    <div class="form-check">
-      <label class="form-check-label" for="{{$promo->id}}">
-      <input class="form-check-input" type="radio" name="coupon" id="{{$promo->id}}" value="{{$promo->id}}" checked>
-     
-      Value: <strong>{{$promo->value}}%</strong> 
-                    {{$promo->code}}       
-        
-      </label>
-      <br>
-      <span> {{number_format($promo->discount,2)}}   OFF</span>
+        @foreach($promos as $promo)
+        <div class="form-check">
+            <label class="form-check-label" for="{{$promo->id}}">
+                <input class="form-check-input jdk" type="radio" name="coupon" id="{{$promo->id}}" value="{{$promo->id}}" off="{{number_format($promo->discount,2)}}" checked>
+                Value: <strong>{{$promo->value}}%</strong>
+                {{$promo->code}}
+            </label>
+            <br>
+            <span> {{number_format($promo->discount,2)}} OFF</span>
+        </div>
+        &emsp;
+        @endforeach
     </div>
-      
-        
-         &emsp;
-          @endforeach
-          
-          </div>
-          @endif
-          
+    @endif
+
     <div style="float: right;">
-        <button class="btn btn-success" type="submit">MAKE ORDER</button></div>       
+        <button class="btn btn-success" type="submit">MAKE ORDER</button></div>
 </form>
 
 @stop
@@ -96,6 +90,27 @@
             $('#addresses').html(data);
         });
     }
+
+</script>
+
+<!--zmiana ceny podsumowania-->
+<script>
+    $(document).ready(function() {
+        var totalPrice = document.getElementById('totalPrice').innerHTML;
+        changePrice();
+
+        function changePrice() {
+            off = $('input[name=coupon]:checked').attr('off');
+            if(off != null){
+            after = parseFloat(totalPrice) - parseFloat(off);
+            document.getElementById('totalPrice').innerHTML = after;
+            }
+        }
+
+        $(".jdk").change(function() {
+            changePrice();
+        });
+    });
 
 </script>
 
@@ -136,7 +151,7 @@
 
         var addressID = $(this).attr('data-field');
         var url = "{{route('address.edit',':id')}}";
-        url = url.replace(':id',addressID);
+        url = url.replace(':id', addressID);
 
         $.get(url, function(data) {
             $('#addressDivForm').html(data);

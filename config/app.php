@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Warsaw',
 
     /*
     |--------------------------------------------------------------------------
@@ -150,7 +150,7 @@ return [
         'App\Providers\ValidatorServiceProvider',
         Ghanem\Rating\RatingServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        'App\Providers\ComposerServiceProvider',
+        
         Barryvdh\Debugbar\ServiceProvider::class,
         
 

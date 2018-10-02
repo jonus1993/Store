@@ -55,7 +55,7 @@ class User extends Authenticatable
     
      public function promo()
     {
-          return $this->belongsToMany(Promo::class,'promo_user','user_id','promo_id');
+          return $this->belongsToMany(Promo::class,'promo_user','user_id','promo_id')->where('used', '!=', 1);
     } 
 
     

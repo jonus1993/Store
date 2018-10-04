@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title', 'All yourd orders')
-@section('styles')
+@section('head')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
 @endsection
 @section('content')
@@ -44,7 +44,7 @@
             <th></th>
             <th></th>
         </tr>
-        </tfood>
+        </tfoot>
 </table>
 
 @stop

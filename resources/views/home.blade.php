@@ -1,8 +1,10 @@
 @extends('layouts.master')
-@section('title')
-Home
+@section('title', 'Home')
+@section('breadcrumb')
+{{ Breadcrumbs::render('home') }}
 @endsection
 @section('content')
+
 
 
 <!--wyświetlnia wiadomości-->

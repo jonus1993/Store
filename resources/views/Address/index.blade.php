@@ -1,6 +1,7 @@
 @extends('layouts.master')
-@section('title')
-    Add Address
+@section('title', 'Add Address')
+@section('breadcrumb')
+{{ Breadcrumbs::render('addAddress') }}
 @endsection
 @section('content')
 <h1>Add Your New Address</h1>

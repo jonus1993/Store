@@ -2,6 +2,9 @@
 @section('title')
 Edit Address
 @endsection
+@section('breadcrumb')
+{{ Breadcrumbs::render('editAddress',$address) }}
+@endsection
 @section('content')
 <h1>Edit Your Address</h1>
 <!--wyświetlnia wiadomości-->

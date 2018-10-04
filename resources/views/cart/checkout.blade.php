@@ -47,7 +47,7 @@
             <th>ID</th>
             <th>TOTAL</th>
             <th>{{ $totalQty }}</th>
-            <th id="totalPrice">{{ $totalPrice }}</th>
+            <th id="totalPrice">{{number_format($totalPrice,2)}}</th>
         </tr>
     </table>
     @if($promos)
@@ -103,7 +103,8 @@
             off = $('input[name=coupon]:checked').attr('off');
             if(off != null){
             after = parseFloat(totalPrice) - parseFloat(off);
-            document.getElementById('totalPrice').innerHTML = after;
+                price = after.toFixed(2);
+            document.getElementById('totalPrice').innerHTML = price;
             }
         }
 

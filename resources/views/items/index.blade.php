@@ -1,9 +1,10 @@
 @extends('layouts.master')
-@section('title')
-Colours
-@endsection
-@section('styles')
+
+@section('head')
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+@endsection
+@section('breadcrumb')
+{{ Breadcrumbs::render('items') }}
 @endsection
 @section('content')
 <div class="row">

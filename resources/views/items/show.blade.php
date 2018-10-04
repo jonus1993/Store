@@ -1,12 +1,15 @@
 @extends('layouts.master')
-@section('title')
-Colour
-@endsection
+@section('title',$item->name)
+@section('head')
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-@section('styles') <style>
-    body {background-color: {{ $item->name  }};}
-</style>
 @endsection
+@section('styles') 
+    body {background-color: {{ $item->name  }};}
+
+@endsection
+
+@section('breadcrumb', Breadcrumbs::render('item', $item))
+
 @section('content')
 
 <div class="w3-container w3-teal">

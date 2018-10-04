@@ -2,7 +2,7 @@
 @section('title')
 NBP
 @endsection
-@section('styles')
+@section('head')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 @endsection

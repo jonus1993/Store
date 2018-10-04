@@ -1,11 +1,10 @@
 @extends('layouts.master')
-@section('title')
-Colours
-@endsection
-@section('styles')
-
+@section('title', 'Items Datatables')
+@section('head')
     <link rel="stylesheet" href="{{url('/css/dataTables.min.css')}}">
-<style>
+@endsection
+
+@section('styles')
  	
 th.dt-center, td.dt-center { text-align: center; }   
 
@@ -15,9 +14,13 @@ max-height:100%;
 height: auto;
 }
 
-</style>
 @endsection
 @section('content')
+
+<div id="app">
+<example-component></example-component>
+</div>
+
 <div class="row">
 
     <div class="col-2" > 
@@ -72,7 +75,7 @@ height: auto;
 @stop
 
 @push('scripts')
-
+<script src="{{asset('js/app.js')}}"></script>
 <!-- DataTables -->
     <script src="{{url('/js/dataTables.min.js')}}"></script>
 
@@ -350,6 +353,7 @@ $('#items-table').on('keydown','.input-number',function (e) {
 
             }
 </script>
+
 
 
 

@@ -19,5 +19,11 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
 Vue.component('nav-bar', require('./components/NavBar.vue'));
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    created(){
+        Echo.private('user.'+{{ auth()->id() }})
+        .listen('ToCartAdded', (e) => {
+            console.log(e);
+        });
+    }
 });

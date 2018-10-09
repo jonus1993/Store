@@ -20,8 +20,8 @@ Vue.component('nav-bar', require('./components/NavBar.vue'));
 
 const app = new Vue({
     el: '#app',
-    created(){
-        Echo.private('user.'+{{ auth()->id() }})
+    mounted(){
+        Echo.channel('user')
         .listen('ToCartAdded', (e) => {
             console.log(e);
         });

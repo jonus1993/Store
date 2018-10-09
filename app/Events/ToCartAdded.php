@@ -31,6 +31,6 @@ class ToCartAdded implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('user.'.auth()->id());
+        return new Channel('user');
     }
 }

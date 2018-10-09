@@ -148,3 +148,18 @@ Route::get('/promos/{id}', 'PromoController@restore')->name('promo.restore');
 
 Route::resource('promo', 'PromoController');
 Route::resource('address', 'AddressController');
+
+Route::get('/test', 'GuestCartController@getTest')->name('get.test');
+
+
+Route::get('/event', function(){
+    event(new \App\Events\ToCartAdded());
+    
+    return 0;
+} );
+
+Route::post('/test/sms', 'GuestCartController@sendSMS')->name('sendSMS');
+
+Route::get('/test/gus', 'GuestCartController@apiGUS')->name('apiGUS');
+
+Route::get('/test/2gus', 'GuestCartController@apiGUS2')->name('apiGUS2');

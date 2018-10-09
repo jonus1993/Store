@@ -6,7 +6,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class addItemTest extends TestCase
+class setCategoryCookieTest extends TestCase
 {
     /**
      * A basic test example.
@@ -15,10 +15,8 @@ class addItemTest extends TestCase
      */
     public function testExample()
     {
-        $this->get(route('item.create'))
-            ->assertRedirect(route('login'));
-        
-        
-//        $this->assertTrue(true);
+        $this->get(route('item.index'))
+                   ->assertCookieMissing('categories')
+                ->assertSuccessful();
     }
 }
